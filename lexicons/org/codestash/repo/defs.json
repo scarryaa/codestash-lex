@@ -2,6 +2,67 @@
     "lexicon": 1,
     "id": "org.codestash.repo.defs",
     "defs": {
-        
+      "repository": {
+        "type": "object",
+        "required": ["name", "owner", "description", "created_at", "updated_at"],
+        "properties": {
+          "name": { "type": "string" },
+          "owner": { "type": "string" },
+          "description": { "type": "string" },
+          "created_at": { "type": "string", "format": "datetime" },
+          "updated_at": { "type": "string", "format": "datetime" },
+          "default_branch": { "type": "string" },
+          "homepage": { "type": "string", "format": "uri" },
+          "language": { "type": "string" },
+          "license": { "type": "string" },
+          "stars": { "type": "integer", "minimum": 0 },
+          "forks": { "type": "integer", "minimum": 0 },
+          "watchers": { "type": "integer", "minimum": 0 }
+        }
+      },
+      "commit": {
+        "type": "object",
+        "required": ["sha", "message", "author", "timestamp"],
+        "properties": {
+          "sha": { "type": "string" },
+          "message": { "type": "string" },
+          "author": { "type": "string" },
+          "timestamp": { "type": "string", "format": "datetime" }
+        }
+      },
+      "branch": {
+        "type": "object",
+        "required": ["name", "commit_sha"],
+        "properties": {
+          "name": { "type": "string" },
+          "commit_sha": { "type": "string" }
+        }
+      },
+      "issue": {
+        "type": "object",
+        "required": ["title", "author", "created_at"],
+        "properties": {
+          "title": { "type": "string" },
+          "author": { "type": "string" },
+          "created_at": { "type": "string", "format": "datetime" },
+          "updated_at": { "type": "string", "format": "datetime" },
+          "status": { "type": "string" },
+          "labels": { "type": "array", "items": { "type": "string" } }
+        }
+      },
+      "pull_request": {
+        "type": "object",
+        "required": ["title", "author", "created_at", "updated_at", "status"],
+        "properties": {
+          "title": { "type": "string" },
+          "author": { "type": "string" },
+          "created_at": { "type": "string", "format": "datetime" },
+          "updated_at": { "type": "string", "format": "datetime" },
+          "status": { "type": "string" },
+          "mergeable": { "type": "boolean" },
+          "labels": { "type": "array", "items": { "type": "string" } }
+        }
+      }
     }
-}
+  }
+  
