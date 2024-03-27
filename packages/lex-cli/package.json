@@ -1,6 +1,6 @@
 {
   "name": "@codestash-lex/lex-cli",
-  "version": "0.0.0",
+  "version": "0.0.4",
   "description": "TypeScript codegen tool for codestash-lex Lexicon schemas",
   "main": "dist/index.js",
   "repository": {
@@ -23,5 +23,10 @@
   "bugs": {
     "url": "https://github.com/scarryaa/codestash-lex/issues"
   },
-  "homepage": "https://github.com/scarryaa/codestash-lex#readme"
+  "homepage": "https://github.com/scarryaa/codestash-lex#readme",
+  "dependencies": {
+    "@codestash-lex/codestash": "workspace:^",
+    "@codestash-lex/lexicon": "workspace:^",
+    "commander": "^12.0.0"
+  }
 }

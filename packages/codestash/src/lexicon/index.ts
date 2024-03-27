@@ -1,0 +1,1 @@
+export { lexicons } from './lexicons';
