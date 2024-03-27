@@ -13,7 +13,7 @@
           "updated_at": { "type": "string", "format": "datetime" },
           "default_branch": { "type": "string" },
           "homepage": { "type": "string", "format": "uri" },
-          "language": { "type": "string" },
+          "languages": { "type": "array", "items": { "type": "string" } },
           "license": { "type": "string" },
           "stars": { "type": "integer", "minimum": 0 },
           "forks": { "type": "integer", "minimum": 0 },
@@ -64,5 +64,4 @@
         }
       }
     }
-  }
-  
+}

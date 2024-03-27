@@ -14,20 +14,10 @@ importers:
         specifier: workspace:^
         version: link:../lex-cli
 
-  packages/codestash:
-    dependencies:
-      '@codestash-lex/lexicon':
-        specifier: workspace:^
-        version: link:../lexicon
+  packages/codestash: {}
 
   packages/lex-cli:
     dependencies:
-      '@codestash-lex/codestash':
-        specifier: workspace:^
-        version: link:../codestash
-      '@codestash-lex/lexicon':
-        specifier: workspace:^
-        version: link:../lexicon
       commander:
         specifier: ^12.0.0
         version: 12.0.0

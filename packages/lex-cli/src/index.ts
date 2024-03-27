@@ -1,16 +1,17 @@
 import fs from 'fs';
 import path from 'path';
 import { Command } from 'commander';
+import glob from 'glob';
 
 const program = new Command();
 program.version('1.0.0');
 
 program
     .option('-o, --output <outputPath>', 'Output file path')
-    .arguments('<lexiconDirectory>')
-    .action((lexiconDirectory: string, options: { output: string }) => {
+    .arguments('<lexiconPattern>')
+    .action((lexiconPattern: string, options: { output: string }) => {
         const outputPath = options.output || 'output.ts';
-        generateTypescriptFromLexicons(lexiconDirectory, outputPath);
+        generateTypescriptFromLexicons(lexiconPattern, outputPath);
     });
 
 program.parse(process.argv);
@@ -28,59 +29,19 @@ function getPropType(propDef: any): string {
     }
 }
 
-function readDirectoryRecursive(directory: string, callback: (err: NodeJS.ErrnoException | null, files?: string[]) => void) {
-    let files: string[] = [];
-    fs.readdir(directory, { withFileTypes: true }, function (err, entries) {
+export function generateTypescriptFromLexicons(lexiconPattern: string, outputDir: string): void {
+    // Find all JSON files matching the pattern
+    glob(lexiconPattern, (err, lexiconFiles) => {
         if (err) {
-            callback(err);
-            return;
-        }
-        entries.forEach((entry) => {
-            const fullPath = path.join(directory, entry.name);
-            if (entry.isDirectory()) {
-                readDirectoryRecursive(fullPath, (err, subFiles) => {
-                    if (err) {
-                        callback(err);
-                        return;
-                    }
-                    if (subFiles) {
-                        files = files.concat(subFiles);
-                    }
-                });
-            } else if (entry.isFile() && path.extname(entry.name) === '.json') {
-                files.push(fullPath);
-            }
-        });
-        callback(null, files);
-    });
-}
-
-function writeTypescriptFile(outputPath: string, typescriptCode: string) {
-    // Ensure that the directory structure exists
-    const directory = path.dirname(outputPath);
-    fs.mkdirSync(directory, { recursive: true });
-
-    // Write the TypeScript code to the output file path
-    fs.writeFileSync(outputPath, typescriptCode, 'utf-8');
-}
-
-
-export function generateTypescriptFromLexicons(lexiconDirectory: string, outputDir: string): void {
-    // Read the directory recursively
-    readDirectoryRecursive(lexiconDirectory, (err, lexiconFiles) => {
-        if (err) {
-            console.error('Error reading lexicon files:', err);
+            console.error('Error finding lexicon files:', err);
             return;
         }
 
-        // Check if lexiconFiles is defined
-        if (!lexiconFiles) {
-            console.error('No lexicon files found.');
-            return;
-        }
+        // Filter out directories from the list of files
+        const jsonFiles = lexiconFiles.filter((file) => fs.statSync(file).isFile() && path.extname(file) === '.json');
 
-        // Generate TypeScript code for each lexicon file
-        lexiconFiles.forEach((lexiconFile) => {
+        // Generate TypeScript code for each JSON file
+        jsonFiles.forEach((lexiconFile) => {
             const lexicon = JSON.parse(fs.readFileSync(lexiconFile, 'utf-8'));
 
             // Generate TypeScript code for each definition in the lexicon
@@ -104,6 +65,7 @@ export function generateTypescriptFromLexicons(lexiconDirectory: string, outputD
     });
 }
 
+// Function to generate TypeScript code for a definition
 function generateTypescriptForDefinition(typeName: string, typeDefinition: any): string {
     let typescriptCode = `/**\n * Interface for ${typeName}\n */\n`;
     typescriptCode += `export interface ${typeName} {\n`;
@@ -137,6 +99,7 @@ export function is${typeName}(v: unknown): v is ${typeName} {
 \n`;
 }
 
+// Function to generate utility functions
 function generateUtilityFunctions(): string {
     return `
 /**
@@ -160,12 +123,13 @@ export function hasProp<K extends PropertyKey>(data: object, prop: K): data is R
 \n`;
 }
 
+// Function to generate "validateType" function
 function generateValidateTypeFunction(typeName: string, lexiconPath: string): string {
     const lexiconImport = "@codestash-lex/lexicon";
 
     return `
 import { ValidationResult } from '${lexiconImport}';
-import { lexicons } from '../../../../lexicons';
+import { isObj, hasProp } from '../../../../util';
 
 /**
  * Validates the given value against the ${typeName} type.
@@ -176,4 +140,14 @@ export function validate${typeName}(v: unknown): ValidationResult {
     return lexicons.validate('app.bsky.actor.defs#${typeName.toLowerCase()}', v);
 }
 \n`;
+}
+
+// Function to write TypeScript code to a file
+function writeTypescriptFile(outputPath: string, typescriptCode: string) {
+    // Ensure that the directory structure exists
+    const directory = path.dirname(outputPath);
+    fs.mkdirSync(directory, { recursive: true });
+
+    // Write the TypeScript code to the output file path
+    fs.writeFileSync(outputPath, typescriptCode, 'utf-8');
 }
