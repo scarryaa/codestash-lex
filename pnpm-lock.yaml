@@ -54,6 +54,19 @@ importers:
 
   packages/lexicon: {}
 
+  packages/pds:
+    dependencies:
+      '@atproto/xrpc':
+        specifier: ^0.5.0
+        version: 0.5.0
+      '@atproto/xrpc-server':
+        specifier: ^0.5.0
+        version: 0.5.0
+    devDependencies:
+      '@atproto/lex-cli':
+        specifier: workspace:^
+        version: link:../lex-cli
+
 packages:
 
   /@atproto/common-web@0.3.0:
