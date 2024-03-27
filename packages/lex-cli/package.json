@@ -1,8 +1,8 @@
 {
-  "name": "@codestash-lex/codestash",
+  "name": "@codestash-lex/lex-cli",
   "version": "0.0.0",
-  "description": "Implementation of a org.codestash App View (Codestash API)",
-  "main": "index.js",
+  "description": "TypeScript codegen tool for codestash-lex Lexicon schemas",
+  "main": "dist/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -11,10 +11,16 @@
     "url": "git+https://github.com/scarryaa/codestash-lex.git"
   },
   "keywords": [
+    "codestash-lex",
     "codestash",
-    "codestash-lex"
+    "lexicon"
   ],
-  "private": false,
+  "bin": {
+    "lex": "dist/index.js"
+  },
+  "scripts": {
+    "build": "tsc --build tsconfig.build.json"
+  },
   "author": "scarryaa",
   "license": "MIT",
   "bugs": {

@@ -1,0 +1,16 @@
+{
+  "name": "@codestash-lex/api",
+  "version": "0.0.0",
+  "description": "Client library for codestash-lex and codestash",
+  "main": "dist/index.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "keywords": [
+    "api",
+    "codestash-lex",
+    "codestash"
+  ],
+  "author": "scarryaa",
+  "license": "MIT"
+}
