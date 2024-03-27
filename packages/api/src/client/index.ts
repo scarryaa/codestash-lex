@@ -1,0 +1,1 @@
+export * as AppCodestashRepoDefs from './types/org/codestash/repo/defs';

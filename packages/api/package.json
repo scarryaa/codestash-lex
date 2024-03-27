@@ -4,6 +4,7 @@
   "description": "Client library for codestash-lex and codestash",
   "main": "dist/index.js",
   "scripts": {
+    "codegen": "node ../../packages/lex-cli/dist/index.js --output src/client/types/ ../../lexicons/org/codestash/*/*",
     "test": "jest"
   },
   "keywords": [
