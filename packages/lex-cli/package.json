@@ -1,30 +1,33 @@
 {
-  "name": "@codestash-lex/lex-cli",
-  "version": "0.1.5",
-  "description": "TypeScript codegen tool for codestash-lex Lexicon schemas",
-  "main": "dist/index.js",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/scarryaa/codestash-lex.git"
-  },
+  "name": "@atproto/lex-cli",
+  "version": "0.4.0",
+  "license": "MIT",
+  "description": "TypeScript codegen tool for atproto Lexicon schemas",
   "keywords": [
-    "codestash-lex",
-    "codestash",
+    "atproto",
     "lexicon"
   ],
+  "homepage": "https://atproto.com",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/bluesky-social/atproto",
+    "directory": "packages/lex-cli"
+  },
   "bin": {
     "lex": "dist/index.js"
   },
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "scripts": {
     "build": "tsc --build tsconfig.build.json"
   },
-  "author": "scarryaa",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/scarryaa/codestash-lex/issues"
-  },
-  "homepage": "https://github.com/scarryaa/codestash-lex#readme",
   "dependencies": {
-    "commander": "^12.0.0"
+    "@atproto/lexicon": "*",
+    "@atproto/syntax": "*",
+    "chalk": "^4.1.2",
+    "commander": "^9.4.0",
+    "ts-morph": "^16.0.0",
+    "yesno": "^0.4.0",
+    "zod": "^3.21.4"
   }
 }

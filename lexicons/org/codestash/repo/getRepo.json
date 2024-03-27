@@ -1,0 +1,29 @@
+{
+    "lexicon": 1,
+    "id": "org.codestash.repo.getRepo",
+    "defs": {
+      "main": {
+        "type": "query",
+        "description": "Get detailed information about a repository.",
+        "parameters": {
+          "type": "params",
+          "required": ["repo"],
+          "properties": {
+            "repo": {
+              "type": "string",
+              "format": "at-identifier",
+              "description": "Handle or DID of repository to fetch."
+            }
+          }
+        },
+        "output": {
+          "encoding": "application/json",
+          "schema": {
+            "type": "ref",
+            "ref": "org.codestash.repo.defs#repository"
+          }
+        }
+      }
+    }
+  }
+  

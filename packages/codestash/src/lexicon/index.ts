@@ -2,5 +2,5 @@
  * GENERATED CODE
  */
 
-import * as Orgcodestashrepodefs from './types/org/codestash/repo/defs'; 
-export * as Orgcodestashrepodefs from './types/org/codestash/repo/defs';
+import * as OrgCodestashRepoDefs from './types/org/codestash/repo/defs'; 
+export * as OrgCodestashRepoDefs from './types/org/codestash/repo/defs';

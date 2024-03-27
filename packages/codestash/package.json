@@ -6,7 +6,7 @@
   "bin": "dist/bin.js",
   "types": "dist/index.d.ts",
   "scripts": {
-    "codegen": "node ../../packages/lex-cli/dist/index.js --output src/lexicon/types/ ../../lexicons/org/codestash/*/*",
+    "codegen": "node ./node_modules/@atproto/lex-cli/dist/index.js gen-server ./src/client ../../lexicons/org/codestash/*/*",
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "tsc --build tsconfig.build.json"
   },
@@ -18,6 +18,9 @@
     "codestash",
     "codestash-lex"
   ],
+  "devDependencies": {
+    "@atproto/lex-cli": "workspace:^"
+  },
   "private": false,
   "author": "scarryaa",
   "license": "MIT",
@@ -26,5 +29,6 @@
   },
   "homepage": "https://github.com/scarryaa/codestash-lex#readme",
   "dependencies": {
+    "@atproto/xrpc-server": "^0.5.0"
   }
 }
