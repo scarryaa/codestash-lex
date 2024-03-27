@@ -64,6 +64,7 @@ function writeTypescriptFile(outputPath: string, typescriptCode: string) {
     fs.writeFileSync(outputPath, typescriptCode, 'utf-8');
 }
 
+
 export function generateTypescriptFromLexicons(lexiconDirectory: string, outputDir: string): void {
     // Read the directory recursively
     readDirectoryRecursive(lexiconDirectory, (err, lexiconFiles) => {
@@ -161,11 +162,10 @@ export function hasProp<K extends PropertyKey>(data: object, prop: K): data is R
 
 function generateValidateTypeFunction(typeName: string, lexiconPath: string): string {
     const lexiconImport = "@codestash-lex/lexicon";
-    const codeStashImport = "@codestash-lex/codestash";
 
     return `
 import { ValidationResult } from '${lexiconImport}';
-import { lexicons } from '${codeStashImport}';
+import { lexicons } from '../../../../lexicons';
 
 /**
  * Validates the given value against the ${typeName} type.
