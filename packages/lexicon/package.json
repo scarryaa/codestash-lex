@@ -1,0 +1,12 @@
+{
+  "name": "@codestash-lex/lexicon",
+  "version": "0.0.0",
+  "description": "",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc --build tsconfig.build.json",
+    "test": "jest"
+  },
+  "author": "scarryaa",
+  "license": "MIT"
+}
