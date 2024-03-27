@@ -1,6 +1,9 @@
+/**
+ * GENERATED CODE
+ */
+
 import { LexiconDoc, Lexicons } from '@atproto/lexicon';
 export const schemaDict = {
-
 OrgCodestashRepoDefs: {
   lexicon: 1,
   id: 'org.codestash.repo.defs',

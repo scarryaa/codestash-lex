@@ -1,1 +1,6 @@
-export * as AppCodestashRepoDefs from './types/org/codestash/repo/defs';
+/**
+ * GENERATED CODE
+ */
+
+import * as Orgcodestashrepodefs from './types/org/codestash/repo/defs'; 
+export * as Orgcodestashrepodefs from './types/org/codestash/repo/defs';
