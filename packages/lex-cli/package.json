@@ -3,9 +3,6 @@
   "version": "0.0.0",
   "description": "TypeScript codegen tool for codestash-lex Lexicon schemas",
   "main": "dist/index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/scarryaa/codestash-lex.git"
