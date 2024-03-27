@@ -6,7 +6,7 @@
   "bin": "dist/bin.js",
   "types": "dist/index.d.ts",
   "scripts": {
-    "codegen": "node ../../packages/lex-cli/dist ./src/lexicon ../../../lexicons/org/codestash/*/*",
+    "codegen": "node ../../packages/lex-cli/dist/index.js --output src/lexicon/types/ ../../lexicons/org/codestash/*/*",
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "tsc --build tsconfig.build.json"
   },

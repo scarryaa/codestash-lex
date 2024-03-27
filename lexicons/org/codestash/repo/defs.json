@@ -4,14 +4,14 @@
     "defs": {
       "repository": {
         "type": "object",
-        "required": ["name", "owner", "description", "created_at", "updated_at"],
+        "required": ["name", "owner", "description", "createdAt", "updatedAt"],
         "properties": {
           "name": { "type": "string" },
           "owner": { "type": "string" },
           "description": { "type": "string" },
-          "created_at": { "type": "string", "format": "datetime" },
-          "updated_at": { "type": "string", "format": "datetime" },
-          "default_branch": { "type": "string" },
+          "createdAt": { "type": "string", "format": "datetime" },
+          "updatedAt": { "type": "string", "format": "datetime" },
+          "defaultBranch": { "type": "string" },
           "homepage": { "type": "string", "format": "uri" },
           "languages": { "type": "array", "items": { "type": "string" } },
           "license": { "type": "string" },
@@ -32,36 +32,37 @@
       },
       "branch": {
         "type": "object",
-        "required": ["name", "commit_sha"],
+        "required": ["name", "commitSha"],
         "properties": {
           "name": { "type": "string" },
-          "commit_sha": { "type": "string" }
+          "commitSha": { "type": "string" }
         }
       },
       "issue": {
         "type": "object",
-        "required": ["title", "author", "created_at"],
+        "required": ["title", "author", "createdAt"],
         "properties": {
           "title": { "type": "string" },
           "author": { "type": "string" },
-          "created_at": { "type": "string", "format": "datetime" },
-          "updated_at": { "type": "string", "format": "datetime" },
+          "createdAt": { "type": "string", "format": "datetime" },
+          "updatedAt": { "type": "string", "format": "datetime" },
           "status": { "type": "string" },
           "labels": { "type": "array", "items": { "type": "string" } }
         }
       },
-      "pull_request": {
+      "pullRequest": {
         "type": "object",
-        "required": ["title", "author", "created_at", "updated_at", "status"],
+        "required": ["title", "author", "createdAt", "updatedAt", "status"],
         "properties": {
           "title": { "type": "string" },
           "author": { "type": "string" },
-          "created_at": { "type": "string", "format": "datetime" },
-          "updated_at": { "type": "string", "format": "datetime" },
+          "createdAt": { "type": "string", "format": "datetime" },
+          "updatedAt": { "type": "string", "format": "datetime" },
           "status": { "type": "string" },
           "mergeable": { "type": "boolean" },
           "labels": { "type": "array", "items": { "type": "string" } }
         }
       }
     }
-}
+  }
+  
