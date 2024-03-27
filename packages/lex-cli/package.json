@@ -1,6 +1,6 @@
 {
   "name": "@codestash-lex/lex-cli",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "TypeScript codegen tool for codestash-lex Lexicon schemas",
   "main": "dist/index.js",
   "repository": {

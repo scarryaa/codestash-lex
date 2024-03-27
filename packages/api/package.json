@@ -1,10 +1,11 @@
 {
   "name": "@codestash-lex/api",
-  "version": "0.0.0",
+  "version": "0.0.3",
   "description": "Client library for codestash-lex and codestash",
   "main": "dist/index.js",
   "scripts": {
     "codegen": "node ../../packages/lex-cli/dist/index.js --output src/client/types/ ../../lexicons/org/codestash/*/*",
+    "build": "tsc --build tsconfig.build.json",
     "test": "jest"
   },
   "keywords": [

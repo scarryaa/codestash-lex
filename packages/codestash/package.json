@@ -1,6 +1,6 @@
 {
   "name": "@codestash-lex/codestash",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "Implementation of a org.codestash App View (Codestash API)",
   "main": "dist/index.js",
   "bin": "dist/bin.js",

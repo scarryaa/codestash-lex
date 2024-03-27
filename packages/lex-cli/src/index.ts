@@ -200,7 +200,7 @@ ${processedIdsFormatted.map((formattedId, index) => `    ${formattedId}: '${proc
 
 function generateValidationFunctions(name: string) {
     const code = `
-export function is${toUpper(name)}(v: unknown): v is ${toUpper(name)} {
+export function is${upperFirst(name)}(v: unknown): v is ${upperFirst(name)} {
     return (
         isObj(v) &&
         hasProp(v, '$type') &&
@@ -209,7 +209,7 @@ export function is${toUpper(name)}(v: unknown): v is ${toUpper(name)} {
     )
 }
     
-export function validate${toUpper(name)}(v: unknown): ValidationResult {
+export function validate${upperFirst(name)}(v: unknown): ValidationResult {
     return lexicons.validate('app.bsky.actor.defs#${name}', v)
 }
 `;
@@ -225,13 +225,9 @@ function generatedCodeHeader(): string {
 
 function generateIndexFile(processedFiles: string[]): string {
     const exportStatements = processedFiles.map(relativePath => {
-        const moduleName = relativePath.split('/').map(part => part.charAt(0).toUpperCase() + part.slice(1)).join('');
+        const moduleName = relativePath.split(/\/|\\/).map(part => upperFirst(part)).join('');
         const moduleNameWithoutBackslashes = moduleName.replace(/\\/g, '');
         return `import * as ${moduleNameWithoutBackslashes} from './types/${relativePath}'; \nexport * as ${moduleNameWithoutBackslashes} from './types/${relativePath}';`.replaceAll('\\', '/');
     });
     return exportStatements.join('\n');
-}
-
-function toUpper(string: string) {
-    return string[0].toUpperCase() + string.substring(1);
 }
