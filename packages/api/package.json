@@ -11,6 +11,9 @@
     "codestash-lex",
     "codestash"
   ],
+  "devDependencies": {
+    "@codestash-lex/lex-cli": "workspace:^"
+  },
   "author": "scarryaa",
   "license": "MIT"
 }

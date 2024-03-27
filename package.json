@@ -1,0 +1,17 @@
+{
+  "name": "codestash-lex",
+  "version": "0.0.1",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "pnpm --recursive --stream build",
+    "dev": "pnpm --stream '/^dev:.+$/'"
+  },
+  "author": "scarryaa",
+  "license": "MIT",
+  "workspaces": {
+    "packages": [
+      "packages/*"
+    ]
+  }
+}
