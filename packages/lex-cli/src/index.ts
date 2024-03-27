@@ -30,7 +30,8 @@ function getPropType(propDef: any): string {
     }
 }
 
-let dir = '';
+let lexiconOutput = '';
+let lexiconsDefs: string[] = []; // Array to store lexicon definitions
 export function generateTypescriptFromLexicons(lexiconPattern: string, outputDir: string): void {
     // Find all JSON files matching the pattern
     glob(lexiconPattern, (err, lexiconFiles) => {
@@ -43,7 +44,7 @@ export function generateTypescriptFromLexicons(lexiconPattern: string, outputDir
         const jsonFiles = lexiconFiles.filter((file) => fs.statSync(file).isFile() && path.extname(file) === '.json');
 
         // Generate TypeScript code for each JSON file
-        jsonFiles.forEach((lexiconFile) => {
+        jsonFiles.forEach((lexiconFile, index) => {
             const lexicon = JSON.parse(fs.readFileSync(lexiconFile, 'utf-8'));
 
             // Get the relative directory path of the lexicon file
@@ -64,24 +65,23 @@ export function generateTypescriptFromLexicons(lexiconPattern: string, outputDir
                     // Construct the output file path based on the directory structure
                     const outputFileDir = path.join(outputDir, newRelativeDir);
                     const outputFile = path.join(outputFileDir, `${typeName}.ts`);
-                    dir = outputFileDir;
 
                     // Write the TypeScript code to the output file
                     writeTypescriptFile(outputFile, typescriptCode);
 
                     // Generate util.ts file after processing all lexicon files
                     const utilCode = generateUtilFile(typeName); // Pass the typeName
-                    const utilFilePath = path.join(outputDir, '../', 'types', '..', 'util.ts');
+                    const utilFilePath = path.join(outputDir, '..', 'util.ts');
                     writeTypescriptFile(utilFilePath, utilCode);
                 }
             }
-
-            const lexiconCode = generateLexiconFile(lexicon, lexiconFile, dir);
-            const lexiconFilePath = path.join(outputDir, '../', 'types', '..', 'lexicons.ts');
-            writeTypescriptFile(lexiconFilePath, lexiconCode);
         });
+
+        // Generate lexicon file after processing all lexicon files
+        generateLexiconFile(jsonFiles.map(lexiconFile => JSON.parse(fs.readFileSync(lexiconFile, 'utf-8'))), outputDir);
     });
 }
+
 
 // Function to generate TypeScript code for a definition
 function generateTypescriptForDefinition(typeName: string, typeDefinition: any): string {
@@ -149,76 +149,6 @@ export function hasProp<K extends PropertyKey>(
 `
 }
 
-let lexiconIds: Record<string, string> = {};
-function generateIndexFile(types: string[]): string {
-    let exportStatements = types.map(type => `export * from './${path.basename(type, '.ts')}';`).join('\n');
-    return exportStatements;
-}
-
-function generateLexiconFile(lexicon: any, lexiconFilePath: string, outputDir: string): string {
-    let schemaDict = '';
-    let lexiconId = lexicon.id.split('.').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join('');
-    lexiconIds[lexiconId] = lexicon.id; // Store lexicon ID in lexiconIds object
-
-    let lexiconVer = lexicon.lexicon;
-    let id = lexicon.id;
-    if (!lexiconId || !lexiconVer || !id) {
-        console.error(`Error: Missing or invalid id or version for lexicon in file: ${lexiconFilePath}`);
-        return '';
-    }
-
-    schemaDict += `lexicon: ${lexiconVer},\n`;
-    schemaDict += `id: '${id}',\n`;
-    schemaDict += `defs: {\n`;
-
-    const types: string[] = [];
-
-    for (const typeName in lexicon.defs) {
-        if (Object.prototype.hasOwnProperty.call(lexicon.defs, typeName)) {
-            types.push(typeName);
-            const key = camelCase(typeName.replace(/\./g, '_'));
-            schemaDict += `${key}: {\n`;
-            schemaDict += `  type: 'object',\n`;
-            schemaDict += `  required: ${JSON.stringify(lexicon.defs[typeName].required)},\n`;
-            schemaDict += `  properties: {\n`;
-
-            for (const propName in lexicon.defs[typeName].properties) {
-                if (Object.prototype.hasOwnProperty.call(lexicon.defs[typeName].properties, propName)) {
-                    const camelPropName = camelCase(propName);
-                    schemaDict += `    ${camelPropName}: ${JSON.stringify(lexicon.defs[typeName].properties[propName])},\n`;
-                }
-            }
-
-            schemaDict += `  },\n`;
-            schemaDict += `},\n`;
-        }
-    }
-    schemaDict += `},\n`;
-
-    const uppercasedLexiconId = makeFirstCharUpper(lexiconId); // Make the first character uppercase
-
-    // Construct the output for export
-    const output = `
-import { LexiconDoc, Lexicons } from '@atproto/lexicon'
-
-export const schemaDict = {
-    ${uppercasedLexiconId}: {
-        ${schemaDict}
-    }
-}
-
-export const schemas: LexiconDoc[] = Object.values(schemaDict) as LexiconDoc[];
-export const lexicons: Lexicons = new Lexicons(schemas);
-export const ids = ${JSON.stringify(lexiconIds)};
-`;
-
-    // Write index.ts file
-    const indexFilePath = path.join(outputDir, 'index.ts');
-    writeTypescriptFile(indexFilePath, generateIndexFile(types));
-
-    return output;
-}
-
 // Function to write TypeScript code to a file
 function writeTypescriptFile(outputPath: string, typescriptCode: string) {
     // Ensure that the directory structure exists
@@ -232,3 +162,79 @@ function writeTypescriptFile(outputPath: string, typescriptCode: string) {
 function makeFirstCharUpper(string: string) {
     return string[0].toUpperCase() + string.substring(1);
 }
+
+function generateLexiconFile(lexicons: any[], outputDir: string) {
+    let schemaDicts: string[] = []; // Array to store individual schema dictionaries
+    let processedIds: string[] = [];
+
+    lexicons.forEach((lexicon, index) => {
+        const lexiconId = lexicon.id.split('.').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join('');
+        const lexiconVer = lexicon.lexicon;
+        const id: any = lexicon.id;
+
+        if (!lexiconId || !lexiconVer || !id) {
+            console.error(`Error: Missing or invalid id or version for lexicon in file`);
+            return '';
+        }
+
+        // Add the ID to the processed IDs array
+        processedIds.push(id);
+
+        let schemaDict = `${index > 0 ? ',' : ''}\n${lexiconId}: {\n`;
+        schemaDict += `  lexicon: ${lexiconVer},\n`;
+        schemaDict += `  id: '${id}',\n`;
+        schemaDict += `  defs: {\n`;
+
+        for (const typeName in lexicon.defs) {
+            if (Object.prototype.hasOwnProperty.call(lexicon.defs, typeName)) {
+                const key = camelCase(typeName.replace(/\./g, '_'));
+                schemaDict += `    ${key}: {\n`;
+                schemaDict += `      type: 'object',\n`;
+                schemaDict += `      required: ${JSON.stringify(lexicon.defs[typeName].required)},\n`;
+                schemaDict += `      properties: {\n`;
+
+                for (const propName in lexicon.defs[typeName].properties) {
+                    if (Object.prototype.hasOwnProperty.call(lexicon.defs[typeName].properties, propName)) {
+                        const camelPropName = camelCase(propName);
+                        schemaDict += `        ${camelPropName}: ${JSON.stringify(lexicon.defs[typeName].properties[propName])},\n`;
+                    }
+                }
+
+                schemaDict += `      },\n`;
+                schemaDict += `    },\n`;
+            }
+        }
+        schemaDict += `  }\n`;
+        schemaDict += `}`;
+
+        schemaDicts.push(schemaDict); // Append the schema dictionary to the array
+    });
+
+    const processedIdsFormatted = processedIds.map(id =>
+        id
+            .split('.')
+            .map((part, index) => (index === 0 ? part : upperFirst(part)))
+            .join('')
+    );
+
+    // Push all schema dictionaries to the lexiconsDefs array
+    lexiconsDefs.push(...schemaDicts);
+    console.log(processedIdsFormatted.join(','))
+
+    // Construct the lexicon output from the combined schema dictionaries
+    lexiconOutput = `import { LexiconDoc, Lexicons } from '@atproto/lexicon';
+export const schemaDict = {\n${lexiconsDefs.join('\n')}};\n
+export const schemas: LexiconDoc[] = Object.values(schemaDict) as LexiconDoc[];
+export const lexicons: Lexicons = new Lexicons(schemas);
+export const ids = {
+${processedIdsFormatted.map((formattedId, index) => `    ${formattedId}: '${processedIds[index]}'`).join(',\n')}
+};
+`;
+
+    // Write the lexicon output to a file
+    const lexiconOutputPath = path.join(outputDir, '..', 'lexicons.ts');
+    writeTypescriptFile(lexiconOutputPath, lexiconOutput);
+}
+
+
+
