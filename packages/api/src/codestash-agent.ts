@@ -5,8 +5,9 @@ export class CodestashAgent extends AtpAgent {
         return this.api.org;
     }
 
-    ping: typeof this.api.org.codestash.
+    ping: typeof this.api.org.codestash.ping = (params, opts) =>
+        this.api.org.codestash.ping(params, opts);
 
-        getRepo: typeof this.api.org.codestash.repo.getRepo = (params, opts) =>
-            this.api.org.codestash.repo.getRepo(params, opts);
+    getRepo: typeof this.api.org.codestash.repo.getRepo = (params, opts) =>
+        this.api.org.codestash.repo.getRepo(params, opts);
 }
