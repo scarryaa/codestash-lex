@@ -7,9 +7,11 @@ import {
 } from '@atproto/xrpc'
 import { schemas } from './lexicons'
 import { CID } from 'multiformats/cid'
+import * as OrgCodestashPing from './types/org/codestash/ping'
 import * as OrgCodestashRepoDefs from './types/org/codestash/repo/defs'
 import * as OrgCodestashRepoGetRepo from './types/org/codestash/repo/getRepo'
 
+export * as OrgCodestashPing from './types/org/codestash/ping'
 export * as OrgCodestashRepoDefs from './types/org/codestash/repo/defs'
 export * as OrgCodestashRepoGetRepo from './types/org/codestash/repo/getRepo'
 
@@ -58,6 +60,17 @@ export class OrgCodestashNS {
   constructor(service: AtpServiceClient) {
     this._service = service
     this.repo = new OrgCodestashRepoNS(service)
+  }
+
+  ping(
+    params?: OrgCodestashPing.QueryParams,
+    opts?: OrgCodestashPing.CallOptions,
+  ): Promise<OrgCodestashPing.Response> {
+    return this._service.xrpc
+      .call('org.codestash.ping', params, undefined, opts)
+      .catch((e) => {
+        throw OrgCodestashPing.toKnownErr(e)
+      })
   }
 }
 

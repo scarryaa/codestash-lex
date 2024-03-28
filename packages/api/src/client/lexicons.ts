@@ -4,6 +4,37 @@
 import { LexiconDoc, Lexicons } from '@atproto/lexicon'
 
 export const schemaDict = {
+  OrgCodestashPing: {
+    lexicon: 1,
+    id: 'org.codestash.ping',
+    defs: {
+      main: {
+        type: 'query',
+        description: 'Ping the server.',
+        parameters: {
+          type: 'params',
+          properties: {
+            message: {
+              type: 'string',
+              description: 'Message to send for ping.',
+            },
+          },
+        },
+        output: {
+          encoding: 'application/json',
+          schema: {
+            type: 'object',
+            properties: {
+              message: {
+                type: 'string',
+                description: 'Response message from the server.',
+              },
+            },
+          },
+        },
+      },
+    },
+  },
   OrgCodestashRepoDefs: {
     lexicon: 1,
     id: 'org.codestash.repo.defs',
@@ -185,6 +216,7 @@ export const schemaDict = {
 export const schemas: LexiconDoc[] = Object.values(schemaDict) as LexiconDoc[]
 export const lexicons: Lexicons = new Lexicons(schemas)
 export const ids = {
+  OrgCodestashPing: 'org.codestash.ping',
   OrgCodestashRepoDefs: 'org.codestash.repo.defs',
   OrgCodestashRepoGetRepo: 'org.codestash.repo.getRepo',
 }

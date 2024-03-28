@@ -1,0 +1,31 @@
+{
+    "lexicon": 1,
+    "id": "org.codestash.ping",
+    "defs": {
+        "main": {
+            "type": "query",
+            "description": "Ping the server.",
+            "parameters": {
+                "type": "params",
+                "properties": {
+                    "message": {
+                        "type": "string",
+                        "description": "Message to send for ping."
+                    }
+                }
+            },
+            "output": {
+                "encoding": "application/json",
+                "schema": {
+                    "type": "object",
+                    "properties": {
+                        "message": {
+                            "type": "string",
+                            "description": "Response message from the server."
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

@@ -8,7 +8,6 @@ import { GeneratedAPI, FileDiff } from './types'
 export function readAllLexicons(paths: string[]): LexiconDoc[] {
   const docs: LexiconDoc[] = []
   for (const path of paths) {
-    console.log(path);
     if (!path.endsWith('.json') || !fs.statSync(path).isFile()) {
       continue
     }

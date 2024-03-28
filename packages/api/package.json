@@ -1,6 +1,6 @@
 {
   "name": "@codestash-lex/api",
-  "version": "0.0.4",
+  "version": "0.0.6",
   "description": "Client library for codestash-lex and codestash",
   "main": "dist/index.js",
   "scripts": {
