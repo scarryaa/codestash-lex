@@ -8,7 +8,8 @@
   "scripts": {
     "codegen": "node ./node_modules/@atproto/lex-cli/dist/index.js gen-server ./src/client ../../lexicons/org/codestash/*/*",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "tsc --build tsconfig.build.json"
+    "build": "tsc --build tsconfig.build.json",
+    "buf:gen": "buf generate ./proto"
   },
   "repository": {
     "type": "git",
@@ -19,7 +20,10 @@
     "codestash-lex"
   ],
   "devDependencies": {
-    "@atproto/lex-cli": "workspace:^"
+    "@atproto/lex-cli": "workspace:^",
+    "@bufbuild/buf": "^1.30.0",
+    "@bufbuild/protoc-gen-es": "^1.8.0",
+    "@connectrpc/protoc-gen-connect-es": "^1.4.0"
   },
   "private": false,
   "author": "scarryaa",
@@ -30,9 +34,14 @@
   "homepage": "https://github.com/scarryaa/codestash-lex#readme",
   "dependencies": {
     "@atproto/crypto": "^0.4.0",
+    "@atproto/identity": "^0.4.0",
     "@atproto/xrpc-server": "^0.5.0",
+    "@bufbuild/protobuf": "^1.8.0",
+    "@connectrpc/connect": "^1.4.0",
+    "@connectrpc/connect-node": "^1.4.0",
     "cors": "^2.8.5",
     "express": "^4.19.2",
-    "http-terminator": "^3.2.0"
+    "http-terminator": "^3.2.0",
+    "simple-git": "^3.24.0"
   }
 }

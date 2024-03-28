@@ -1,0 +1,28 @@
+syntax = "proto3";
+
+package codestash;
+option go_package = "./;codestash";
+
+import "google/protobuf/timestamp.proto";
+
+message Record {
+  bytes record = 1;
+  string cid = 2;
+  google.protobuf.Timestamp indexed_at = 3;
+  bool taken_down = 4;
+  google.protobuf.Timestamp created_at = 5;
+  google.protobuf.Timestamp sorted_at = 6;
+  string takedown_ref = 7;
+}
+
+message GetRepoRecordsRequest {
+  repeated string uris = 1;
+}
+
+message GetRepoRecordsResponse {
+  repeated Record records = 1;
+}
+
+service Service {
+  rpc GetRepoRecords(GetRepoRecordsRequest) returns (GetRepoRecordsResponse);
+}

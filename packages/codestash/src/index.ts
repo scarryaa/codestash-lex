@@ -8,6 +8,10 @@ import { ServerConfig } from './config';
 import { Keypair } from '@atproto/crypto'
 import events from 'events'
 import { AddressInfo } from 'net'
+import API, { health } from './api'
+
+export type { ServerConfigValues } from './config'
+export { ServerConfig } from './config'
 
 export class CodestashAppView {
     public ctx: AppContext;
@@ -26,11 +30,24 @@ export class CodestashAppView {
     }): CodestashAppView {
         const { config, signingKey } = opts;
         const app = express();
-        app.use(cors);
+        app.use(cors());
 
         const ctx = new AppContext({
             cfg: config
         })
+
+        let server = createServer({
+            validateResponse: config.debugMode,
+            payload: {
+                jsonLimit: 100 * 1024, // 100kb
+                textLimit: 100 * 1024, // 100kb
+                blobLimit: 5 * 1024 * 1024, // 5mb
+            },
+        })
+
+        server = API(server, ctx)
+
+        app.use(health.createRouter(ctx))
 
         return new CodestashAppView({ app, ctx });
     }
