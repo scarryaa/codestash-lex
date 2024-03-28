@@ -1,6 +1,9 @@
 {
     "name": "codestash-app-view-service",
     "private": true,
+    "scripts": {
+        "build": "tsc"
+    },
     "dependencies": {
       "@codestash-lex/codestash": "workspace:^",
       "@atproto/crypto": "*",
