@@ -13,13 +13,13 @@ export interface Repository {
   createdAt: string
   updatedAt: string
   defaultBranch?: string
-  url: string;
   homepage?: string
   languages?: string[]
   license?: string
   stars?: number
   forks?: number
   watchers?: number
+  url: string
   [k: string]: unknown
 }
 
@@ -27,12 +27,12 @@ export function isRepository(v: unknown): v is Repository {
   return (
     isObj(v) &&
     hasProp(v, '$type') &&
-    v.$type === 'org.codestash.repo.defs#repository'
+    v.$type === 'org.codestash.repository.defs#repository'
   )
 }
 
 export function validateRepository(v: unknown): ValidationResult {
-  return lexicons.validate('org.codestash.repo.defs#repository', v)
+  return lexicons.validate('org.codestash.repository.defs#repository', v)
 }
 
 export interface Commit {
@@ -47,12 +47,12 @@ export function isCommit(v: unknown): v is Commit {
   return (
     isObj(v) &&
     hasProp(v, '$type') &&
-    v.$type === 'org.codestash.repo.defs#commit'
+    v.$type === 'org.codestash.repository.defs#commit'
   )
 }
 
 export function validateCommit(v: unknown): ValidationResult {
-  return lexicons.validate('org.codestash.repo.defs#commit', v)
+  return lexicons.validate('org.codestash.repository.defs#commit', v)
 }
 
 export interface Branch {
@@ -65,12 +65,12 @@ export function isBranch(v: unknown): v is Branch {
   return (
     isObj(v) &&
     hasProp(v, '$type') &&
-    v.$type === 'org.codestash.repo.defs#branch'
+    v.$type === 'org.codestash.repository.defs#branch'
   )
 }
 
 export function validateBranch(v: unknown): ValidationResult {
-  return lexicons.validate('org.codestash.repo.defs#branch', v)
+  return lexicons.validate('org.codestash.repository.defs#branch', v)
 }
 
 export interface Issue {
@@ -87,12 +87,12 @@ export function isIssue(v: unknown): v is Issue {
   return (
     isObj(v) &&
     hasProp(v, '$type') &&
-    v.$type === 'org.codestash.repo.defs#issue'
+    v.$type === 'org.codestash.repository.defs#issue'
   )
 }
 
 export function validateIssue(v: unknown): ValidationResult {
-  return lexicons.validate('org.codestash.repo.defs#issue', v)
+  return lexicons.validate('org.codestash.repository.defs#issue', v)
 }
 
 export interface PullRequest {
@@ -110,10 +110,10 @@ export function isPullRequest(v: unknown): v is PullRequest {
   return (
     isObj(v) &&
     hasProp(v, '$type') &&
-    v.$type === 'org.codestash.repo.defs#pullRequest'
+    v.$type === 'org.codestash.repository.defs#pullRequest'
   )
 }
 
 export function validatePullRequest(v: unknown): ValidationResult {
-  return lexicons.validate('org.codestash.repo.defs#pullRequest', v)
+  return lexicons.validate('org.codestash.repository.defs#pullRequest', v)
 }

@@ -1,11 +1,12 @@
 /**
  * GENERATED CODE - DO NOT MODIFY
  */
-import { Headers, XRPCError } from '@atproto/xrpc'
+import express from 'express'
 import { ValidationResult, BlobRef } from '@atproto/lexicon'
-import { isObj, hasProp } from '../../../../util'
 import { lexicons } from '../../../../lexicons'
+import { isObj, hasProp } from '../../../../util'
 import { CID } from 'multiformats/cid'
+import { HandlerAuth, HandlerPipeThrough } from '@atproto/xrpc-server'
 
 export interface QueryParams {}
 
@@ -15,33 +16,25 @@ export interface InputSchema {
   [k: string]: unknown
 }
 
-export interface CallOptions {
-  headers?: Headers
-  qp?: QueryParams
+export interface HandlerInput {
   encoding: 'application/json'
+  body: InputSchema
 }
 
-export interface Response {
-  success: boolean
-  headers: Headers
+export interface HandlerError {
+  status: number
+  message?: string
+  error?: 'ExpiredToken' | 'InvalidToken'
 }
 
-export class ExpiredTokenError extends XRPCError {
-  constructor(src: XRPCError) {
-    super(src.status, src.error, src.message, src.headers)
-  }
+export type HandlerOutput = HandlerError | void
+export type HandlerReqCtx<HA extends HandlerAuth = never> = {
+  auth: HA
+  params: QueryParams
+  input: HandlerInput
+  req: express.Request
+  res: express.Response
 }
-
-export class InvalidTokenError extends XRPCError {
-  constructor(src: XRPCError) {
-    super(src.status, src.error, src.message, src.headers)
-  }
-}
-
-export function toKnownErr(e: any) {
-  if (e instanceof XRPCError) {
-    if (e.error === 'ExpiredToken') return new ExpiredTokenError(e)
-    if (e.error === 'InvalidToken') return new InvalidTokenError(e)
-  }
-  return e
-}
+export type Handler<HA extends HandlerAuth = never> = (
+  ctx: HandlerReqCtx<HA>,
+) => Promise<HandlerOutput> | HandlerOutput

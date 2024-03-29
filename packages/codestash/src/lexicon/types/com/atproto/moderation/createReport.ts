@@ -1,14 +1,15 @@
 /**
  * GENERATED CODE - DO NOT MODIFY
  */
-import { Headers, XRPCError } from '@atproto/xrpc'
+import express from 'express'
 import { ValidationResult, BlobRef } from '@atproto/lexicon'
-import { isObj, hasProp } from '../../../../util'
 import { lexicons } from '../../../../lexicons'
+import { isObj, hasProp } from '../../../../util'
 import { CID } from 'multiformats/cid'
+import { HandlerAuth, HandlerPipeThrough } from '@atproto/xrpc-server'
 import * as ComAtprotoModerationDefs from './defs'
-import * as ComAtprotoAdminDefs from '../admin/defs'
-import * as ComAtprotoRepoStrongRef from '../repo/strongRef'
+import * as ComAtprotoAdminDefs from '..admindefs'
+import * as ComAtprotoRepoStrongRef from '..\repostrongRef'
 
 export interface QueryParams {}
 
@@ -36,20 +37,30 @@ export interface OutputSchema {
   [k: string]: unknown
 }
 
-export interface CallOptions {
-  headers?: Headers
-  qp?: QueryParams
+export interface HandlerInput {
   encoding: 'application/json'
+  body: InputSchema
 }
 
-export interface Response {
-  success: boolean
-  headers: Headers
-  data: OutputSchema
+export interface HandlerSuccess {
+  encoding: 'application/json'
+  body: OutputSchema
+  headers?: { [key: string]: string }
 }
 
-export function toKnownErr(e: any) {
-  if (e instanceof XRPCError) {
-  }
-  return e
+export interface HandlerError {
+  status: number
+  message?: string
 }
+
+export type HandlerOutput = HandlerError | HandlerSuccess | HandlerPipeThrough
+export type HandlerReqCtx<HA extends HandlerAuth = never> = {
+  auth: HA
+  params: QueryParams
+  input: HandlerInput
+  req: express.Request
+  res: express.Response
+}
+export type Handler<HA extends HandlerAuth = never> = (
+  ctx: HandlerReqCtx<HA>,
+) => Promise<HandlerOutput> | HandlerOutput

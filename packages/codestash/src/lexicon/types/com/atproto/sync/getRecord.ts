@@ -1,11 +1,13 @@
 /**
  * GENERATED CODE - DO NOT MODIFY
  */
-import { Headers, XRPCError } from '@atproto/xrpc'
+import express from 'express'
+import stream from 'stream'
 import { ValidationResult, BlobRef } from '@atproto/lexicon'
-import { isObj, hasProp } from '../../../../util'
 import { lexicons } from '../../../../lexicons'
+import { isObj, hasProp } from '../../../../util'
 import { CID } from 'multiformats/cid'
+import { HandlerAuth, HandlerPipeThrough } from '@atproto/xrpc-server'
 
 export interface QueryParams {
   /** The DID of the repo. */
@@ -18,19 +20,27 @@ export interface QueryParams {
 }
 
 export type InputSchema = undefined
+export type HandlerInput = undefined
 
-export interface CallOptions {
-  headers?: Headers
+export interface HandlerSuccess {
+  encoding: 'application/vnd.ipld.car'
+  body: Uint8Array | stream.Readable
+  headers?: { [key: string]: string }
 }
 
-export interface Response {
-  success: boolean
-  headers: Headers
-  data: Uint8Array
+export interface HandlerError {
+  status: number
+  message?: string
 }
 
-export function toKnownErr(e: any) {
-  if (e instanceof XRPCError) {
-  }
-  return e
+export type HandlerOutput = HandlerError | HandlerSuccess | HandlerPipeThrough
+export type HandlerReqCtx<HA extends HandlerAuth = never> = {
+  auth: HA
+  params: QueryParams
+  input: HandlerInput
+  req: express.Request
+  res: express.Response
 }
+export type Handler<HA extends HandlerAuth = never> = (
+  ctx: HandlerReqCtx<HA>,
+) => Promise<HandlerOutput> | HandlerOutput

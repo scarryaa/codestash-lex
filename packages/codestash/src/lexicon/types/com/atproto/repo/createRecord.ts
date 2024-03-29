@@ -1,11 +1,12 @@
 /**
  * GENERATED CODE - DO NOT MODIFY
  */
-import { Headers, XRPCError } from '@atproto/xrpc'
+import express from 'express'
 import { ValidationResult, BlobRef } from '@atproto/lexicon'
-import { isObj, hasProp } from '../../../../util'
 import { lexicons } from '../../../../lexicons'
+import { isObj, hasProp } from '../../../../util'
 import { CID } from 'multiformats/cid'
+import { HandlerAuth, HandlerPipeThrough } from '@atproto/xrpc-server'
 
 export interface QueryParams {}
 
@@ -17,7 +18,7 @@ export interface InputSchema {
   /** The Record Key. */
   rkey?: string
   /** Can be set to 'false' to skip Lexicon schema validation of record data. */
-  validate?: boolean
+  validate: boolean
   /** The record itself. Must contain a $type field. */
   record: {}
   /** Compare and swap with the previous commit by CID. */
@@ -31,27 +32,31 @@ export interface OutputSchema {
   [k: string]: unknown
 }
 
-export interface CallOptions {
-  headers?: Headers
-  qp?: QueryParams
+export interface HandlerInput {
   encoding: 'application/json'
+  body: InputSchema
 }
 
-export interface Response {
-  success: boolean
-  headers: Headers
-  data: OutputSchema
+export interface HandlerSuccess {
+  encoding: 'application/json'
+  body: OutputSchema
+  headers?: { [key: string]: string }
 }
 
-export class InvalidSwapError extends XRPCError {
-  constructor(src: XRPCError) {
-    super(src.status, src.error, src.message, src.headers)
-  }
+export interface HandlerError {
+  status: number
+  message?: string
+  error?: 'InvalidSwap'
 }
 
-export function toKnownErr(e: any) {
-  if (e instanceof XRPCError) {
-    if (e.error === 'InvalidSwap') return new InvalidSwapError(e)
-  }
-  return e
+export type HandlerOutput = HandlerError | HandlerSuccess | HandlerPipeThrough
+export type HandlerReqCtx<HA extends HandlerAuth = never> = {
+  auth: HA
+  params: QueryParams
+  input: HandlerInput
+  req: express.Request
+  res: express.Response
 }
+export type Handler<HA extends HandlerAuth = never> = (
+  ctx: HandlerReqCtx<HA>,
+) => Promise<HandlerOutput> | HandlerOutput

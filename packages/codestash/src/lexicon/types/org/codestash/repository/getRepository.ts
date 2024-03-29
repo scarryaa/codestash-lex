@@ -7,15 +7,15 @@ import { lexicons } from '../../../../lexicons'
 import { isObj, hasProp } from '../../../../util'
 import { CID } from 'multiformats/cid'
 import { HandlerAuth, HandlerPipeThrough } from '@atproto/xrpc-server'
-import * as OrgCodestashRepoDefs from './defs'
+import * as OrgCodestashRepositoryDefs from './defs'
 
 export interface QueryParams {
   /** URL of the repository to fetch. */
-  repository: string;
+  repository: string
 }
 
 export type InputSchema = undefined
-export type OutputSchema = OrgCodestashRepoDefs.Repository
+export type OutputSchema = OrgCodestashRepositoryDefs.Repository
 export type HandlerInput = undefined
 
 export interface HandlerSuccess {

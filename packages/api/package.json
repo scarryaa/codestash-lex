@@ -4,7 +4,7 @@
   "description": "Client library for codestash-lex and codestash",
   "main": "dist/index.js",
   "scripts": {
-    "codegen": "node ./node_modules/@atproto/lex-cli/dist/index.js gen-api ./src/client ../../lexicons/org/codestash/*/* ../../lexicons/com/atproto/*/*",
+    "codegen": "node ../lex-cli/dist/index.js gen-api ./src/client ../../lexicons/org/codestash/*/* ../../lexicons/com/atproto/*/*",
     "build": "tsc --build tsconfig.build.json",
     "test": "jest"
   },
@@ -13,9 +13,6 @@
     "codestash-lex",
     "codestash"
   ],
-  "devDependencies": {
-    "@atproto/lex-cli": "workspace:^"
-  },
   "author": "scarryaa",
   "license": "MIT",
   "dependencies": {

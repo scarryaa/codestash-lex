@@ -7,7 +7,7 @@ import { isObj, hasProp } from '../../../../util'
 import { lexicons } from '../../../../lexicons'
 import { CID } from 'multiformats/cid'
 import * as ComAtprotoAdminDefs from './defs'
-import * as ComAtprotoRepoStrongRef from '../repo/strongRef'
+import * as ComAtprotoRepoStrongRef from '..\repostrongRef'
 
 export interface QueryParams {}
 
