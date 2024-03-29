@@ -8,12 +8,12 @@ import {
 import { schemas } from './lexicons'
 import { CID } from 'multiformats/cid'
 import * as OrgCodestashPing from './types/org/codestash/ping'
-import * as OrgCodestashRepoDefs from './types/org/codestash/repo/defs'
-import * as OrgCodestashRepoGetRepo from './types/org/codestash/repo/getRepo'
+import * as OrgCodestashRepoDefs from './types/org/codestash/repository/defs'
+import * as OrgCodestashRepoGetRepo from './types/org/codestash/repository/getRepository'
 
 export * as OrgCodestashPing from './types/org/codestash/ping'
-export * as OrgCodestashRepoDefs from './types/org/codestash/repo/defs'
-export * as OrgCodestashRepoGetRepo from './types/org/codestash/repo/getRepo'
+export * as OrgCodestashRepoDefs from './types/org/codestash/repository/defs'
+export * as OrgCodestashRepoGetRepo from './types/org/codestash/repository/getRepository'
 
 export class AtpBaseClient {
   xrpc: XrpcClient = new XrpcClient()
@@ -81,12 +81,12 @@ export class OrgCodestashRepoNS {
     this._service = service
   }
 
-  getRepo(
+  getRepository(
     params?: OrgCodestashRepoGetRepo.QueryParams,
     opts?: OrgCodestashRepoGetRepo.CallOptions,
   ): Promise<OrgCodestashRepoGetRepo.Response> {
     return this._service.xrpc
-      .call('org.codestash.repo.getRepo', params, undefined, opts)
+      .call('org.codestash.repository.getRepository', params, undefined, opts)
       .catch((e) => {
         throw OrgCodestashRepoGetRepo.toKnownErr(e)
       })

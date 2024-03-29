@@ -14,7 +14,7 @@ import {
 import { GetIdentityByDidResponse } from './proto/codestash_pb'
 
 type ReqCtx = {
-    req: express.Request
+    req: express.Request;
 }
 
 export enum RoleStatus {

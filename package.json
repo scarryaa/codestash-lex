@@ -13,5 +13,20 @@
     "packages": [
       "packages/*"
     ]
+  },
+  "devDependencies": {
+    "@types/jest": "^29.5.12",
+    "eslint-config-prettier": "9.1.0",
+    "prettier": "3.2.5"
+  },
+  "dependencies": {
+    "@types/node": "^20.11.30",
+    "@typescript-eslint/parser": "^7.4.0",
+    "eslint": "^8.0.1",
+    "eslint-config-standard": "^17.1.0",
+    "eslint-plugin-import": "^2.25.2",
+    "eslint-plugin-n": "^16",
+    "eslint-plugin-promise": "^6.0.0",
+    "jest": "^28.1.2"
   }
 }

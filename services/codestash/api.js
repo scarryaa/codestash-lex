@@ -20,10 +20,12 @@ dd.tracer
 const main = async () => {
     const env = getEnv()
     const config = ServerConfig.readEnv()
-    const signingKey = await Secp256k1Keypair.import(env.serviceSigningKey)
+    const signingKey = await Secp256k1Keypair.create();
 
     const codestash = CodestashAppView.create({ config, signingKey });
     await codestash.start();
+    console.log(codestash);
+    console.log(codestash.ctx.cfg.port);
 }
 
 const maybeParseInt = (str) => {

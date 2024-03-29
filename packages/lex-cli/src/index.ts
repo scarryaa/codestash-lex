@@ -81,6 +81,7 @@ program
   .action(async (outDir: string, lexiconPaths: string[]) => {
     const lexicons = readAllLexicons(lexiconPaths)
     const api = await genServerApi(lexicons)
+    console.log(api);
     const diff = genFileDiff(outDir, api)
     console.log('This will write the following files:')
     printFileDiff(diff)

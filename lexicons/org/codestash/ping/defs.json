@@ -1,20 +1,20 @@
 {
-    "lexicon": 1,
-    "id": "org.codestash.ping",
-    "defs": {
-      "ping": {
-        "type": "query",
-        "description": "Ping the server for testing purposes.",
-        "output": {
-          "encoding": "application/json",
-          "schema": {
-            "type": "object",
-            "properties": {
-              "message": { "type": "string" }
-            }
+  "lexicon": 1,
+  "id": "org.codestash.ping",
+  "defs": {
+    "ping": {
+      "type": "query",
+      "description": "Ping the server for testing purposes.",
+      "output": {
+        "encoding": "application/json",
+        "schema": {
+          "type": "object",
+          "properties": {
+            "message": { "type": "string" }
           }
         }
       }
     }
   }
+}
   
