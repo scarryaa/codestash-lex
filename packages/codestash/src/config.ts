@@ -7,15 +7,15 @@ export interface ServerConfigValues {
     port?: number
     publicUrl?: string
     serverDid: string
+    csyncHttpVersion?: '1.1' | '2'
     // external services
     dataplaneUrls: string[]
     dataplaneHttpVersion: ('1.1' | '2');
     dataplaneIgnoreBadTls?: boolean;
-    // bsyncUrl: string
-    bsyncApiKey?: string
-    bsyncHttpVersion?: '1.1' | '2'
-    bsyncIgnoreBadTls?: boolean
-    // courierUrl: string
+    csyncUrl: string
+    csyncApiKey?: string
+    csyncIgnoreBadTls?: boolean
+    courierUrl: string
     courierApiKey?: string
     courierHttpVersion?: '1.1' | '2'
     courierIgnoreBadTls?: boolean
@@ -73,19 +73,19 @@ export class ServerConfig {
         const labelsFromIssuerDids = process.env.BSKY_LABELS_FROM_ISSUER_DIDS
             ? process.env.BSKY_LABELS_FROM_ISSUER_DIDS.split(',')
             : []
-        // const bsyncUrl = process.env.BSKY_BSYNC_URL || undefined
-        // assert(bsyncUrl)
-        const bsyncApiKey = process.env.BSKY_BSYNC_API_KEY || undefined
-        // const bsyncHttpVersion = process.env.BSKY_BSYNC_HTTP_VERSION || '2'
-        const bsyncIgnoreBadTls = process.env.BSKY_BSYNC_IGNORE_BAD_TLS === 'true'
-        // assert(bsyncHttpVersion === '1.1' || bsyncHttpVersion === '2')
-        // const courierUrl = process.env.BSKY_COURIER_URL || undefined
-        // assert(courierUrl)
+        const csyncUrl = process.env.BSKY_CSYNC_URL || undefined
+        assert(csyncUrl)
+        const csyncApiKey = process.env.BSKY_CSYNC_API_KEY || undefined
+        const csyncHttpVersion = process.env.BSKY_CSYNC_HTTP_VERSION || '2'
+        const csyncIgnoreBadTls = process.env.BSKY_CSYNC_IGNORE_BAD_TLS === 'true'
+        assert(csyncHttpVersion === '1.1' || csyncHttpVersion === '2')
+        const courierUrl = process.env.BSKY_COURIER_URL || undefined
+        assert(courierUrl)
         const courierApiKey = process.env.BSKY_COURIER_API_KEY || undefined
         const courierHttpVersion = process.env.BSKY_COURIER_HTTP_VERSION || '2'
         const courierIgnoreBadTls =
             process.env.BSKY_COURIER_IGNORE_BAD_TLS === 'true'
-        // assert(courierHttpVersion === '1.1' || courierHttpVersion === '2')
+        assert(courierHttpVersion === '1.1' || courierHttpVersion === '2')
         const blobRateLimitBypassKey =
             process.env.BSKY_BLOB_RATE_LIMIT_BYPASS_KEY || undefined
         // single domain would be e.g. "mypds.com", subdomains are supported with a leading dot e.g. ".mypds.com"
@@ -118,13 +118,13 @@ export class ServerConfig {
             handleResolveNameservers,
             cdnUrl,
             blobCacheLocation,
-            // bsyncUrl,
-            bsyncApiKey,
-            // bsyncHttpVersion,
-            bsyncIgnoreBadTls,
-            // courierUrl,
+            csyncUrl,
+            csyncApiKey,
+            csyncHttpVersion,
+            csyncIgnoreBadTls,
+            courierUrl,
             courierApiKey,
-            // courierHttpVersion,
+            courierHttpVersion,
             courierIgnoreBadTls,
             blobRateLimitBypassKey,
             blobRateLimitBypassHostname,
@@ -176,6 +176,22 @@ export class ServerConfig {
 
     get cdnUrl() {
         return this.cfg.cdnUrl
+    }
+
+    get csyncUrl() {
+        return this.cfg.csyncUrl;
+    }
+
+    get csyncHttpVersion() {
+        return this.cfg.csyncHttpVersion;
+    }
+
+    get csyncIgnoreBadTls() {
+        return this.cfg.csyncIgnoreBadTls;
+    }
+
+    get csyncApiKey() {
+        return this.cfg.csyncApiKey;
     }
 }
 

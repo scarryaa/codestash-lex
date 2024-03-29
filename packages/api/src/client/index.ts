@@ -10,10 +10,12 @@ import { CID } from 'multiformats/cid'
 import * as OrgCodestashPing from './types/org/codestash/ping'
 import * as OrgCodestashRepoDefs from './types/org/codestash/repository/defs'
 import * as OrgCodestashRepoGetRepo from './types/org/codestash/repository/getRepository'
+import * as ComAtprotoSyncSubscribeRepos from './types/com/atproto/sync/subscribeRepos'
 
 export * as OrgCodestashPing from './types/org/codestash/ping'
 export * as OrgCodestashRepoDefs from './types/org/codestash/repository/defs'
 export * as OrgCodestashRepoGetRepo from './types/org/codestash/repository/getRepository'
+export * as ComAtprotoSyncSubscribeRepos from './types/com/atproto/sync/subscribeRepos'
 
 export class AtpBaseClient {
   xrpc: XrpcClient = new XrpcClient()

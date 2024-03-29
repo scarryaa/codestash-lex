@@ -40,6 +40,9 @@ message GetRepositoriesResponse {
 }
 
 service Service {
+    // Records
+      rpc GetRepositoryRecords(GetRepositoryRecordsRequest) returns (GetRepositoryRecordsResponse);
+
     // Repository
     rpc GetRepositories(GetRepositoriesRequest) returns (GetRepositoriesResponse);
 
@@ -108,4 +111,17 @@ message Empty {}
 
 message URLResponse {
     string url = 1;
+}
+
+message RepositoryRecordMeta {
+  bool violates_thread_gate = 1;
+}
+
+message GetRepositoryRecordsRequest {
+    repeated string uris = 1;
+}
+
+message GetRepositoryRecordsResponse {
+  repeated Record records = 1;
+  repeated RepositoryRecordMeta meta = 2;
 }

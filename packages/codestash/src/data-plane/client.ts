@@ -49,6 +49,18 @@ export const createDataPlaneClient = (
     }) as DataPlaneClient
 }
 
+export const getURL = async (client: DataPlaneClient): Promise<string | undefined> => {
+    try {
+        // Call the method to fetch the URL from the service
+        const response = await client.getURL({});
+        return response.url;
+    } catch (error) {
+        // Handle errors
+        console.error('Error fetching URL:', error);
+        return undefined;
+    }
+};
+
 export { Code }
 
 export const isDataplaneError = (

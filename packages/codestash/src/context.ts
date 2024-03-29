@@ -28,10 +28,6 @@ export class AppContext {
         return this.cfg.serverDid || 'did:example:test';
     }
 
-    get dataplaneUrls(): string[] {
-        return this.cfg.dataplaneUrls || [];
-    }
-
     get authVerifier(): AuthVerifier {
         return this.opts.authVerifier;
     }

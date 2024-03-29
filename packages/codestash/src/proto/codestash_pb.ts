@@ -680,3 +680,120 @@ export class URLResponse extends Message<URLResponse> {
   }
 }
 
+/**
+ * @generated from message codestash.RepositoryRecordMeta
+ */
+export class RepositoryRecordMeta extends Message<RepositoryRecordMeta> {
+  /**
+   * @generated from field: bool violates_thread_gate = 1;
+   */
+  violatesThreadGate = false;
+
+  constructor(data?: PartialMessage<RepositoryRecordMeta>) {
+    super();
+    proto3.util.initPartial(data, this);
+  }
+
+  static readonly runtime: typeof proto3 = proto3;
+  static readonly typeName = "codestash.RepositoryRecordMeta";
+  static readonly fields: FieldList = proto3.util.newFieldList(() => [
+    { no: 1, name: "violates_thread_gate", kind: "scalar", T: 8 /* ScalarType.BOOL */ },
+  ]);
+
+  static fromBinary(bytes: Uint8Array, options?: Partial<BinaryReadOptions>): RepositoryRecordMeta {
+    return new RepositoryRecordMeta().fromBinary(bytes, options);
+  }
+
+  static fromJson(jsonValue: JsonValue, options?: Partial<JsonReadOptions>): RepositoryRecordMeta {
+    return new RepositoryRecordMeta().fromJson(jsonValue, options);
+  }
+
+  static fromJsonString(jsonString: string, options?: Partial<JsonReadOptions>): RepositoryRecordMeta {
+    return new RepositoryRecordMeta().fromJsonString(jsonString, options);
+  }
+
+  static equals(a: RepositoryRecordMeta | PlainMessage<RepositoryRecordMeta> | undefined, b: RepositoryRecordMeta | PlainMessage<RepositoryRecordMeta> | undefined): boolean {
+    return proto3.util.equals(RepositoryRecordMeta, a, b);
+  }
+}
+
+/**
+ * @generated from message codestash.GetRepositoryRecordsRequest
+ */
+export class GetRepositoryRecordsRequest extends Message<GetRepositoryRecordsRequest> {
+  /**
+   * @generated from field: repeated string uris = 1;
+   */
+  uris: string[] = [];
+
+  constructor(data?: PartialMessage<GetRepositoryRecordsRequest>) {
+    super();
+    proto3.util.initPartial(data, this);
+  }
+
+  static readonly runtime: typeof proto3 = proto3;
+  static readonly typeName = "codestash.GetRepositoryRecordsRequest";
+  static readonly fields: FieldList = proto3.util.newFieldList(() => [
+    { no: 1, name: "uris", kind: "scalar", T: 9 /* ScalarType.STRING */, repeated: true },
+  ]);
+
+  static fromBinary(bytes: Uint8Array, options?: Partial<BinaryReadOptions>): GetRepositoryRecordsRequest {
+    return new GetRepositoryRecordsRequest().fromBinary(bytes, options);
+  }
+
+  static fromJson(jsonValue: JsonValue, options?: Partial<JsonReadOptions>): GetRepositoryRecordsRequest {
+    return new GetRepositoryRecordsRequest().fromJson(jsonValue, options);
+  }
+
+  static fromJsonString(jsonString: string, options?: Partial<JsonReadOptions>): GetRepositoryRecordsRequest {
+    return new GetRepositoryRecordsRequest().fromJsonString(jsonString, options);
+  }
+
+  static equals(a: GetRepositoryRecordsRequest | PlainMessage<GetRepositoryRecordsRequest> | undefined, b: GetRepositoryRecordsRequest | PlainMessage<GetRepositoryRecordsRequest> | undefined): boolean {
+    return proto3.util.equals(GetRepositoryRecordsRequest, a, b);
+  }
+}
+
+/**
+ * @generated from message codestash.GetRepositoryRecordsResponse
+ */
+export class GetRepositoryRecordsResponse extends Message<GetRepositoryRecordsResponse> {
+  /**
+   * @generated from field: repeated codestash.Record records = 1;
+   */
+  records: Record[] = [];
+
+  /**
+   * @generated from field: repeated codestash.RepositoryRecordMeta meta = 2;
+   */
+  meta: RepositoryRecordMeta[] = [];
+
+  constructor(data?: PartialMessage<GetRepositoryRecordsResponse>) {
+    super();
+    proto3.util.initPartial(data, this);
+  }
+
+  static readonly runtime: typeof proto3 = proto3;
+  static readonly typeName = "codestash.GetRepositoryRecordsResponse";
+  static readonly fields: FieldList = proto3.util.newFieldList(() => [
+    { no: 1, name: "records", kind: "message", T: Record, repeated: true },
+    { no: 2, name: "meta", kind: "message", T: RepositoryRecordMeta, repeated: true },
+  ]);
+
+  static fromBinary(bytes: Uint8Array, options?: Partial<BinaryReadOptions>): GetRepositoryRecordsResponse {
+    return new GetRepositoryRecordsResponse().fromBinary(bytes, options);
+  }
+
+  static fromJson(jsonValue: JsonValue, options?: Partial<JsonReadOptions>): GetRepositoryRecordsResponse {
+    return new GetRepositoryRecordsResponse().fromJson(jsonValue, options);
+  }
+
+  static fromJsonString(jsonString: string, options?: Partial<JsonReadOptions>): GetRepositoryRecordsResponse {
+    return new GetRepositoryRecordsResponse().fromJsonString(jsonString, options);
+  }
+
+  static equals(a: GetRepositoryRecordsResponse | PlainMessage<GetRepositoryRecordsResponse> | undefined, b: GetRepositoryRecordsResponse | PlainMessage<GetRepositoryRecordsResponse> | undefined): boolean {
+    return proto3.util.equals(GetRepositoryRecordsResponse, a, b);
+  }
+}
+

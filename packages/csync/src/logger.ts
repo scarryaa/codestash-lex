@@ -2,9 +2,9 @@ import pinoHttp from 'pino-http'
 import { subsystemLogger } from '@atproto/common'
 
 export const dbLogger: ReturnType<typeof subsystemLogger> =
-    subsystemLogger('bsync:db')
+    subsystemLogger('csync:db')
 export const httpLogger: ReturnType<typeof subsystemLogger> =
-    subsystemLogger('bsync')
+    subsystemLogger('csync')
 
 export const loggerMiddleware = pinoHttp({
     logger: httpLogger,

@@ -14,9 +14,15 @@ import { createDataPlaneClient } from './data-plane/client';
 import { Hydrator } from './hydration/hydrator';
 import { Views } from './views';
 import { ImageUriBuilder } from './image/uri';
+import { authWithApiKey as csyncAuth, createCsyncClient } from './csync'
 
+export * from './data-plane'
 export type { ServerConfigValues } from './config'
 export { ServerConfig } from './config'
+export { Database } from './data-plane/server/db'
+export { Redis } from './redis'
+export { AppContext } from './context'
+export { BackgroundQueue } from './data-plane/server/background'
 
 export class CodestashAppView {
     public ctx: AppContext;
@@ -55,6 +61,13 @@ export class CodestashAppView {
             adminPasses: config.adminPasswords,
         })
 
+        const bsyncClient = createCsyncClient({
+            baseUrl: config.csyncUrl,
+            httpVersion: config.csyncHttpVersion ?? '2',
+            nodeOptions: { rejectUnauthorized: !config.csyncIgnoreBadTls },
+            // @ts-ignore csync api key exists on ServerConfig
+            interceptors: config.csyncApiKey ? [csyncAuth(config.csyncApiKey)] : [],
+        })
 
         const ctx = new AppContext({
             cfg: config,

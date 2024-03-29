@@ -3,7 +3,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-import { Empty, GetDidsByHandlesRequest, GetDidsByHandlesResponse, GetIdentityByDidRequest, GetIdentityByDidResponse, GetIdentityByHandleRequest, GetIdentityByHandleResponse, GetLatestRevRequest, GetLatestRevResponse, GetRepositoriesRequest, GetRepositoriesResponse, URLResponse } from "./codestash_pb";
+import { Empty, GetDidsByHandlesRequest, GetDidsByHandlesResponse, GetIdentityByDidRequest, GetIdentityByDidResponse, GetIdentityByHandleRequest, GetIdentityByHandleResponse, GetLatestRevRequest, GetLatestRevResponse, GetRepositoriesRequest, GetRepositoriesResponse, GetRepositoryRecordsRequest, GetRepositoryRecordsResponse, URLResponse } from "./codestash_pb";
 import { MethodKind } from "@bufbuild/protobuf";
 
 /**
@@ -12,6 +12,17 @@ import { MethodKind } from "@bufbuild/protobuf";
 export const Service = {
   typeName: "codestash.Service",
   methods: {
+    /**
+     * Records
+     *
+     * @generated from rpc codestash.Service.GetRepositoryRecords
+     */
+    getRepositoryRecords: {
+      name: "GetRepositoryRecords",
+      I: GetRepositoryRecordsRequest,
+      O: GetRepositoryRecordsResponse,
+      kind: MethodKind.Unary,
+    },
     /**
      * Repository
      *

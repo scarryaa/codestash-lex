@@ -11,6 +11,7 @@ import { resHeaders } from "../../../utils";
 export default function (server: Server, ctx: AppContext) {
     const getRepository = createPipeline(skeleton, hydration, noRules, presentation)
     server.org.codestash.repo.getRepo({
+        // @ts-ignore TODO investigate this
         auth: ctx.authVerifier.optionalStandardOrRole,
         handler: async ({ auth, params, req }) => {
             const { viewer, includeTakedowns } = ctx.authVerifier.parseCreds(auth);

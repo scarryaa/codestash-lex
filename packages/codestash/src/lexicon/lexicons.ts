@@ -219,4 +219,5 @@ export const ids = {
   OrgCodestashPing: 'org.codestash.ping',
   OrgCodestashRepoDefs: 'org.codestash.repo.defs',
   OrgCodestashRepoGetRepo: 'org.codestash.repo.getRepo',
+  ComAtprotoSyncSubscribeRepos: 'com.atproto.sync.subscribeRepos'
 }

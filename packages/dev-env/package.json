@@ -1,0 +1,46 @@
+{
+  "name": "@atproto/dev-env",
+  "version": "0.3.2",
+  "license": "MIT",
+  "description": "Local development environment helper for atproto development",
+  "keywords": [
+    "atproto"
+  ],
+  "homepage": "https://atproto.com",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/bluesky-social/atproto",
+    "directory": "packages/dev-env"
+  },
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "bin": "dist/bin.js",
+  "scripts": {
+    "build": "tsc --build tsconfig.build.json",
+    "start": "../dev-infra/with-test-redis-and-db.sh node dist/bin.js"
+  },
+  "dependencies": {
+    "@atproto/api": "^0.12.2",
+    "@atproto/bsky": "^0.0.43",
+    "@atproto/bsync": "^0.0.3",
+    "@atproto/common-web": "^0.3.0",
+    "@atproto/crypto": "^0.4.0",
+    "@atproto/identity": "^0.4.0",
+    "@atproto/lexicon": "*",
+    "@atproto/ozone": "^0.1.5",
+    "@atproto/pds": "^0.4.11",
+    "@atproto/syntax": "*",
+    "@atproto/xrpc-server": "^0.5.0",
+    "@codestash-lex/api": "workspace:^",
+    "@codestash-lex/codestash": "workspace:^",
+    "@codestash-lex/csync": "workspace:^",
+    "@did-plc/lib": "^0.0.1",
+    "@did-plc/server": "^0.0.1",
+    "axios": "^0.27.2",
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
+    "get-port": "^5.1.1",
+    "multiformats": "^9.9.0",
+    "uint8arrays": "3.0.0"
+  }
+}
