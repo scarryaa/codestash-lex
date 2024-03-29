@@ -17,10 +17,9 @@
   "bin": "dist/bin.js",
   "scripts": {
     "build": "tsc --build tsconfig.build.json",
-    "start": "../dev-infra/with-test-redis-and-db.sh node dist/bin.js"
+    "start": "bash ../dev-infra/with-test-redis-and-db.sh node dist/bin.js"
   },
   "dependencies": {
-    "@atproto/api": "^0.12.2",
     "@atproto/bsky": "^0.0.43",
     "@atproto/bsync": "^0.0.3",
     "@atproto/common-web": "^0.3.0",

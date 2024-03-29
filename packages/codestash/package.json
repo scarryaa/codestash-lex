@@ -6,7 +6,7 @@
   "bin": "dist/bin.js",
   "types": "dist/index.d.ts",
   "scripts": {
-    "codegen": "node ../lex-cli/dist/index.js gen-server ./src/lexicon ../../lexicons/org/codestash/*/* ../../lexicons/com/atproto/*/*",
+    "codegen": "bash node ../lex-cli/dist/index.js gen-server ./src/lexicon ../../lexicons/org/codestash/*/* ../../lexicons/com/atproto/*/*",
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "tsc --build tsconfig.build.json",
     "start": "node --enable-source-maps dist/bin.js",
@@ -52,7 +52,7 @@
     "ioredis": "^5.3.2",
     "jose": "^5.2.3",
     "kysely": "^0.22.0",
-    "p-queue": "^8.0.1",
+    "p-queue": "^6.6.2",
     "pg": "^8.10.0",
     "pino": "^8.19.0",
     "pino-http": "^8.2.1",

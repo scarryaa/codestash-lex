@@ -3,7 +3,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-import { AddMuteOperationRequest, AddMuteOperationResponse, PingRequest, PingResponse, ScanMuteOperationsRequest, ScanMuteOperationsResponse } from "./csync_pb.ts";
+import { AddMuteOperationRequest, AddMuteOperationResponse, PingRequest, PingResponse, ScanMuteOperationsRequest, ScanMuteOperationsResponse } from "./csync_pb";
 import { MethodKind } from "@bufbuild/protobuf";
 
 /**
