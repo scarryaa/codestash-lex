@@ -14,7 +14,7 @@ import { Views } from '../../../../views'
 export default function (server: Server, ctx: AppContext) {
   const getProfile = createPipeline(skeleton, hydration, noRules, presentation)
   server.org.codestash.actor.getProfile({
-    // @ts-ignore TODO investigate this
+    //@ts-ignore TODO check this
     auth: ctx.authVerifier.optionalStandardOrRole,
     handler: async ({ auth, params, req }) => {
       const { viewer, includeTakedowns } = ctx.authVerifier.parseCreds(auth)
@@ -22,6 +22,7 @@ export default function (server: Server, ctx: AppContext) {
         viewer,
         includeTakedowns,
       })
+      console.log(viewer);
 
       const result = await getProfile({ ...params, hydrateCtx }, ctx)
 

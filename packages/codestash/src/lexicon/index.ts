@@ -155,7 +155,7 @@ export class OrgCodestashActorNS {
       OrgCodestashActorGetProfile.HandlerReqCtx<ExtractAuth<AV>>
     >,
   ) {
-    const nsid = 'org.codestash.actor.getProfile' // @ts-ignore
+    const nsid = 'org.codestash.actor.getProfile' // @ts-ignore this is fine
     return this._server.xrpc.method(nsid, cfg)
   }
 }
@@ -1070,11 +1070,11 @@ type HandlerRateLimitOpts<T> = SharedRateLimitOpts<T> | RouteRateLimitOpts<T>
 type ConfigOf<Auth, Handler, ReqCtx> =
   | Handler
   | {
-      auth?: Auth
-      opts?: HandlerOpts
-      rateLimit?: HandlerRateLimitOpts<ReqCtx> | HandlerRateLimitOpts<ReqCtx>[]
-      handler: Handler
-    }
+    auth?: Auth
+    opts?: HandlerOpts
+    rateLimit?: HandlerRateLimitOpts<ReqCtx> | HandlerRateLimitOpts<ReqCtx>[]
+    handler: Handler
+  }
 type ExtractAuth<AV extends AuthVerifier | StreamAuthVerifier> = Extract<
   Awaited<ReturnType<AV>>,
   { credentials: unknown }

@@ -1,4 +1,4 @@
-import { SkeletonHandler } from '@atproto/pds'
+import { SkeletonHandler } from '@codestash-lex/pds'
 import { TestServerParams } from './types'
 import { TestPlc } from './plc'
 import { TestPds } from './pds'
@@ -8,7 +8,7 @@ import { SeedClient } from './seed/client'
 
 export class TestNetworkNoAppView {
   feedGens: TestFeedGen[] = []
-  constructor(public plc: TestPlc, public pds: TestPds) {}
+  constructor(public plc: TestPlc, public pds: TestPds) { }
 
   static async create(
     params: Partial<TestServerParams> = {},

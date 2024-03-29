@@ -27,7 +27,7 @@
     "@atproto/identity": "^0.4.0",
     "@atproto/lexicon": "*",
     "@atproto/ozone": "^0.1.5",
-    "@atproto/pds": "^0.4.11",
+    "@codestash-lex/pds": "workspace:^",
     "@atproto/syntax": "*",
     "@atproto/xrpc-server": "^0.5.0",
     "@codestash-lex/api": "workspace:^",
