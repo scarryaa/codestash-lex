@@ -4,6 +4,274 @@
 import { LexiconDoc, Lexicons } from '@atproto/lexicon'
 
 export const schemaDict = {
+  OrgCodestashActorDefs: {
+    lexicon: 1,
+    id: 'org.codestash.actor.defs',
+    defs: {
+      userProfileBasic: {
+        type: 'object',
+        required: ['did', 'handle'],
+        properties: {
+          did: {
+            type: 'string',
+            format: 'did',
+          },
+          handle: {
+            type: 'string',
+            description: 'The handle of the user',
+          },
+          avatar: {
+            type: 'string',
+            format: 'uri',
+            description: "URL of the user's avatar",
+          },
+          bio: {
+            type: 'string',
+            description: 'Brief description of the user',
+          },
+          followerCount: {
+            type: 'integer',
+            description: 'Number of followers the user has',
+          },
+          followingCount: {
+            type: 'integer',
+            description: 'Number of users the user is following',
+          },
+          repositoryCount: {
+            type: 'integer',
+            description: 'Number of repositories the user has',
+          },
+          location: {
+            type: 'string',
+            description: 'Location of the user',
+          },
+          website: {
+            type: 'string',
+            format: 'uri',
+            description: "URL of the user's website",
+          },
+        },
+      },
+      userProfileDetailed: {
+        type: 'object',
+        required: ['did', 'handle'],
+        properties: {
+          did: {
+            type: 'string',
+            format: 'did',
+          },
+          handle: {
+            type: 'string',
+            description: 'The handle of the user',
+          },
+          avatar: {
+            type: 'string',
+            format: 'uri',
+            description: "URL of the user's avatar",
+          },
+          bio: {
+            type: 'string',
+            description: 'Brief description of the user',
+          },
+          followerCount: {
+            type: 'integer',
+            description: 'Number of followers the user has',
+          },
+          followingCount: {
+            type: 'integer',
+            description: 'Number of users the user is following',
+          },
+          repositoryCount: {
+            type: 'integer',
+            description: 'Number of repositories the user has',
+          },
+          location: {
+            type: 'string',
+            description: 'Location of the user',
+          },
+          website: {
+            type: 'string',
+            format: 'uri',
+            description: "URL of the user's website",
+          },
+          email: {
+            type: 'string',
+            description: 'Email address of the user',
+          },
+          company: {
+            type: 'string',
+            description: 'Company the user is associated with',
+          },
+          joinedAt: {
+            type: 'string',
+            format: 'datetime',
+            description: 'Timestamp of when the user joined',
+          },
+          lastActive: {
+            type: 'string',
+            format: 'datetime',
+            description: 'Timestamp of when the user was last active',
+          },
+        },
+      },
+      userProfileAdvanced: {
+        type: 'object',
+        required: ['did', 'handle'],
+        properties: {
+          did: {
+            type: 'string',
+            format: 'did',
+          },
+          handle: {
+            type: 'string',
+            description: 'The handle of the user',
+          },
+          avatar: {
+            type: 'string',
+            format: 'uri',
+            description: "URL of the user's avatar",
+          },
+          bio: {
+            type: 'string',
+            description: 'Brief description of the user',
+          },
+          followerCount: {
+            type: 'integer',
+            description: 'Number of followers the user has',
+          },
+          followingCount: {
+            type: 'integer',
+            description: 'Number of users the user is following',
+          },
+          repositoryCount: {
+            type: 'integer',
+            description: 'Number of repositories the user has',
+          },
+          location: {
+            type: 'string',
+            description: 'Location of the user',
+          },
+          website: {
+            type: 'string',
+            format: 'uri',
+            description: "URL of the user's website",
+          },
+          email: {
+            type: 'string',
+            description: 'Email address of the user',
+          },
+          company: {
+            type: 'string',
+            description: 'Company the user is associated with',
+          },
+          joinedAt: {
+            type: 'string',
+            format: 'datetime',
+            description: 'Timestamp of when the user joined',
+          },
+          lastActive: {
+            type: 'string',
+            format: 'datetime',
+            description: 'Timestamp of when the user was last active',
+          },
+          languages: {
+            type: 'array',
+            description: 'Programming languages the user is familiar with',
+            items: {
+              type: 'string',
+            },
+          },
+        },
+      },
+    },
+  },
+  OrgCodestashActorGetProfile: {
+    lexicon: 1,
+    id: 'org.codestash.actor.getProfile',
+    defs: {
+      main: {
+        type: 'query',
+        description:
+          'Get detailed profile view of an actor. Does not require auth, but contains relevant metadata with auth.',
+        parameters: {
+          type: 'params',
+          required: ['actor'],
+          properties: {
+            actor: {
+              type: 'string',
+              format: 'at-identifier',
+              description: 'Handle or DID of account to fetch profile of.',
+            },
+          },
+        },
+        output: {
+          encoding: 'application/json',
+          schema: {
+            type: 'ref',
+            ref: 'lex:org.codestash.actor.defs#userProfileDetailed',
+          },
+        },
+      },
+    },
+  },
+  OrgCodestashActorProfile: {
+    lexicon: 1,
+    id: 'org.codestash.actor.profile',
+    defs: {
+      main: {
+        type: 'record',
+        description: 'A declaration of a user profile.',
+        key: 'literal:self',
+        record: {
+          type: 'object',
+          properties: {
+            did: {
+              type: 'string',
+              format: 'did',
+            },
+            handle: {
+              type: 'string',
+              format: 'handle',
+              description: 'The handle of the user',
+            },
+            displayName: {
+              type: 'string',
+              description: 'The display name of the user',
+            },
+            bio: {
+              type: 'string',
+              description: 'Free-form profile description text.',
+              maxLength: 2560,
+            },
+            avatar: {
+              type: 'blob',
+              description:
+                "Small image to be displayed next to posts from account. AKA, 'profile picture'",
+              accept: ['image/png', 'image/jpeg'],
+              maxSize: 1000000,
+            },
+            banner: {
+              type: 'blob',
+              description:
+                'Larger horizontal image to display behind profile view.',
+              accept: ['image/png', 'image/jpeg'],
+              maxSize: 1000000,
+            },
+            location: {
+              type: 'string',
+              description: "The user's location",
+              maxLength: 100,
+            },
+            website: {
+              type: 'string',
+              format: 'uri',
+              description: "URL of the user's website",
+            },
+          },
+        },
+      },
+    },
+  },
   OrgCodestashPing: {
     lexicon: 1,
     id: 'org.codestash.ping',
@@ -30,194 +298,6 @@ export const schemaDict = {
                 description: 'Response message from the server.',
               },
             },
-          },
-        },
-      },
-    },
-  },
-  OrgCodestashRepositoryDefs: {
-    lexicon: 1,
-    id: 'org.codestash.repository.defs',
-    defs: {
-      repository: {
-        type: 'object',
-        required: [
-          'name',
-          'owner',
-          'description',
-          'createdAt',
-          'updatedAt',
-          'url',
-        ],
-        properties: {
-          name: {
-            type: 'string',
-          },
-          owner: {
-            type: 'string',
-          },
-          description: {
-            type: 'string',
-          },
-          createdAt: {
-            type: 'string',
-            format: 'datetime',
-          },
-          updatedAt: {
-            type: 'string',
-            format: 'datetime',
-          },
-          defaultBranch: {
-            type: 'string',
-          },
-          homepage: {
-            type: 'string',
-            format: 'uri',
-          },
-          languages: {
-            type: 'array',
-            items: {
-              type: 'string',
-            },
-          },
-          license: {
-            type: 'string',
-          },
-          stars: {
-            type: 'integer',
-            minimum: 0,
-          },
-          forks: {
-            type: 'integer',
-            minimum: 0,
-          },
-          watchers: {
-            type: 'integer',
-            minimum: 0,
-          },
-          url: {
-            type: 'string',
-            format: 'uri',
-          },
-        },
-      },
-      commit: {
-        type: 'object',
-        required: ['sha', 'message', 'author', 'timestamp'],
-        properties: {
-          sha: {
-            type: 'string',
-          },
-          message: {
-            type: 'string',
-          },
-          author: {
-            type: 'string',
-          },
-          timestamp: {
-            type: 'string',
-            format: 'datetime',
-          },
-        },
-      },
-      branch: {
-        type: 'object',
-        required: ['name', 'commitSha'],
-        properties: {
-          name: {
-            type: 'string',
-          },
-          commitSha: {
-            type: 'string',
-          },
-        },
-      },
-      issue: {
-        type: 'object',
-        required: ['title', 'author', 'createdAt'],
-        properties: {
-          title: {
-            type: 'string',
-          },
-          author: {
-            type: 'string',
-          },
-          createdAt: {
-            type: 'string',
-            format: 'datetime',
-          },
-          updatedAt: {
-            type: 'string',
-            format: 'datetime',
-          },
-          status: {
-            type: 'string',
-          },
-          labels: {
-            type: 'array',
-            items: {
-              type: 'string',
-            },
-          },
-        },
-      },
-      pullRequest: {
-        type: 'object',
-        required: ['title', 'author', 'createdAt', 'updatedAt', 'status'],
-        properties: {
-          title: {
-            type: 'string',
-          },
-          author: {
-            type: 'string',
-          },
-          createdAt: {
-            type: 'string',
-            format: 'datetime',
-          },
-          updatedAt: {
-            type: 'string',
-            format: 'datetime',
-          },
-          status: {
-            type: 'string',
-          },
-          mergeable: {
-            type: 'boolean',
-          },
-          labels: {
-            type: 'array',
-            items: {
-              type: 'string',
-            },
-          },
-        },
-      },
-    },
-  },
-  OrgCodestashRepositoryGetRepository: {
-    lexicon: 1,
-    id: 'org.codestash.repository.getRepository',
-    defs: {
-      main: {
-        type: 'query',
-        description: 'Get information about a repository.',
-        parameters: {
-          type: 'params',
-          required: ['repository'],
-          properties: {
-            repository: {
-              type: 'string',
-              format: 'uri',
-              description: 'URL of the repository to fetch.',
-            },
-          },
-        },
-        output: {
-          encoding: 'application/json',
-          schema: {
-            type: 'ref',
-            ref: 'lex:org.codestash.repository.defs#repository',
           },
         },
       },
@@ -3826,9 +3906,10 @@ export const schemaDict = {
 export const schemas: LexiconDoc[] = Object.values(schemaDict) as LexiconDoc[]
 export const lexicons: Lexicons = new Lexicons(schemas)
 export const ids = {
+  OrgCodestashActorDefs: 'org.codestash.actor.defs',
+  OrgCodestashActorGetProfile: 'org.codestash.actor.getProfile',
+  OrgCodestashActorProfile: 'org.codestash.actor.profile',
   OrgCodestashPing: 'org.codestash.ping',
-  OrgCodestashRepositoryDefs: 'org.codestash.repository.defs',
-  OrgCodestashRepositoryGetRepository: 'org.codestash.repository.getRepository',
   ComAtprotoAdminDefs: 'com.atproto.admin.defs',
   ComAtprotoAdminDeleteAccount: 'com.atproto.admin.deleteAccount',
   ComAtprotoAdminDisableAccountInvites:

@@ -104,4 +104,10 @@ export class CodestashAppView {
         this.ctx.cfg.assignPort(port)
         return server
     }
+
+    async destroy(): Promise<void> {
+        await this.terminator?.terminate()
+    }
 }
+
+export default CodestashAppView

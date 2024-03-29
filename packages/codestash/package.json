@@ -6,9 +6,10 @@
   "bin": "dist/bin.js",
   "types": "dist/index.d.ts",
   "scripts": {
-    "codegen": "node ../lex-cli/dist/index.js gen-server ./src/client ../../lexicons/org/codestash/*/* ../../lexicons/com/atproto/*/*",
+    "codegen": "node ../lex-cli/dist/index.js gen-server ./src/lexicon ../../lexicons/org/codestash/*/* ../../lexicons/com/atproto/*/*",
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "tsc --build tsconfig.build.json",
+    "start": "node --enable-source-maps dist/bin.js",
     "buf:gen": "buf generate ./proto"
   },
   "repository": {
@@ -36,12 +37,15 @@
     "@atproto/crypto": "^0.4.0",
     "@atproto/identity": "^0.4.0",
     "@atproto/repo": "^0.4.0",
+    "@atproto/syntax": "^0.3.0",
     "@atproto/xrpc": "^0.5.0",
     "@atproto/xrpc-server": "^0.5.0",
     "@bufbuild/protobuf": "^1.8.0",
+    "@codestash-lex/api": "workspace:^",
     "@connectrpc/connect": "^1.4.0",
     "@connectrpc/connect-express": "^1.4.0",
     "@connectrpc/connect-node": "^1.4.0",
+    "axios": "^0.27.2",
     "cors": "^2.8.5",
     "express": "^4.19.2",
     "http-terminator": "^3.2.0",

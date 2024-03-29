@@ -3,7 +3,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-import { Empty, GetDidsByHandlesRequest, GetDidsByHandlesResponse, GetIdentityByDidRequest, GetIdentityByDidResponse, GetIdentityByHandleRequest, GetIdentityByHandleResponse, GetLatestRevRequest, GetLatestRevResponse, GetRepositoriesRequest, GetRepositoriesResponse, GetRepositoryRecordsRequest, GetRepositoryRecordsResponse, URLResponse } from "./codestash_pb";
+import { Empty, GetActorsRequest, GetActorsResponse, GetCountsForUsersRequest, GetCountsForUsersResponse, GetDidsByHandlesRequest, GetDidsByHandlesResponse, GetIdentityByDidRequest, GetIdentityByDidResponse, GetIdentityByHandleRequest, GetIdentityByHandleResponse, GetLatestRevRequest, GetLatestRevResponse, GetProfileRecordsRequest, GetProfileRecordsResponse, GetRelationshipsRequest, GetRelationshipsResponse, GetRepositoriesRequest, GetRepositoriesResponse, GetRepositoryRecordsRequest, GetRepositoryRecordsResponse, URLResponse } from "./codestash_pb";
 import { MethodKind } from "@bufbuild/protobuf";
 
 /**
@@ -57,12 +57,43 @@ export const Service = {
     /**
      * Profile
      *
+     * @generated from rpc codestash.Service.GetActors
+     */
+    getActors: {
+      name: "GetActors",
+      I: GetActorsRequest,
+      O: GetActorsResponse,
+      kind: MethodKind.Unary,
+    },
+    /**
      * @generated from rpc codestash.Service.GetDidsByHandles
      */
     getDidsByHandles: {
       name: "GetDidsByHandles",
       I: GetDidsByHandlesRequest,
       O: GetDidsByHandlesResponse,
+      kind: MethodKind.Unary,
+    },
+    /**
+     * Records
+     *
+     * @generated from rpc codestash.Service.GetProfileRecords
+     */
+    getProfileRecords: {
+      name: "GetProfileRecords",
+      I: GetProfileRecordsRequest,
+      O: GetProfileRecordsResponse,
+      kind: MethodKind.Unary,
+    },
+    /**
+     * Relationships
+     *
+     * @generated from rpc codestash.Service.GetRelationships
+     */
+    getRelationships: {
+      name: "GetRelationships",
+      I: GetRelationshipsRequest,
+      O: GetRelationshipsResponse,
       kind: MethodKind.Unary,
     },
     /**
@@ -74,6 +105,17 @@ export const Service = {
       name: "GetLatestRev",
       I: GetLatestRevRequest,
       O: GetLatestRevResponse,
+      kind: MethodKind.Unary,
+    },
+    /**
+     * Interaction Counts
+     *
+     * @generated from rpc codestash.Service.GetCountsForUsers
+     */
+    getCountsForUsers: {
+      name: "GetCountsForUsers",
+      I: GetCountsForUsersRequest,
+      O: GetCountsForUsersResponse,
       kind: MethodKind.Unary,
     },
     /**

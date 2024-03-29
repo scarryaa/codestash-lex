@@ -1,0 +1,57 @@
+{
+    "lexicon": 1,
+    "id": "org.codestash.actor.profile",
+    "defs": {
+      "main": {
+        "type": "record",
+        "description": "A declaration of a user profile.",
+        "key": "literal:self",
+        "record": {
+          "type": "object",
+          "properties": {
+            "did": {
+              "type": "string",
+              "format": "did"
+            },
+            "handle": {
+              "type": "string",
+              "format": "handle",
+              "description": "The handle of the user"
+            },
+            "displayName": {
+              "type": "string",
+              "description": "The display name of the user"
+            },
+            "bio": {
+              "type": "string",
+              "description": "Free-form profile description text.",
+              "maxLength": 2560
+            },
+            "avatar": {
+              "type": "blob",
+              "description": "Small image to be displayed next to posts from account. AKA, 'profile picture'",
+              "accept": ["image/png", "image/jpeg"],
+              "maxSize": 1000000
+            },
+            "banner": {
+              "type": "blob",
+              "description": "Larger horizontal image to display behind profile view.",
+              "accept": ["image/png", "image/jpeg"],
+              "maxSize": 1000000
+            },
+            "location": {
+                "type": "string",
+                "description": "The user's location",
+                "maxLength": 100
+              },
+            "website": {
+              "type": "string",
+              "format": "uri",
+              "description": "URL of the user's website"
+            }
+          }
+        }
+      }
+    }
+  }
+  

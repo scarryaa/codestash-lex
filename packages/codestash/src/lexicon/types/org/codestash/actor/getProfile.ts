@@ -7,15 +7,15 @@ import { lexicons } from '../../../../lexicons'
 import { isObj, hasProp } from '../../../../util'
 import { CID } from 'multiformats/cid'
 import { HandlerAuth, HandlerPipeThrough } from '@atproto/xrpc-server'
-import * as OrgCodestashRepositoryDefs from './defs'
+import * as OrgCodestashActorDefs from './defs'
 
 export interface QueryParams {
-  /** URL of the repository to fetch. */
-  repository: string
+  /** Handle or DID of account to fetch profile of. */
+  actor: string
 }
 
 export type InputSchema = undefined
-export type OutputSchema = OrgCodestashRepositoryDefs.Repository
+export type OutputSchema = OrgCodestashActorDefs.UserProfileDetailed
 export type HandlerInput = undefined
 
 export interface HandlerSuccess {

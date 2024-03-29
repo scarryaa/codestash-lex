@@ -63,6 +63,9 @@ importers:
       '@atproto/repo':
         specifier: ^0.4.0
         version: 0.4.0
+      '@atproto/syntax':
+        specifier: ^0.3.0
+        version: 0.3.0
       '@atproto/xrpc':
         specifier: ^0.5.0
         version: 0.5.0
@@ -72,6 +75,9 @@ importers:
       '@bufbuild/protobuf':
         specifier: ^1.8.0
         version: 1.8.0
+      '@codestash-lex/api':
+        specifier: workspace:^
+        version: link:../api
       '@connectrpc/connect':
         specifier: ^1.4.0
         version: 1.4.0(@bufbuild/protobuf@1.8.0)
@@ -81,6 +87,9 @@ importers:
       '@connectrpc/connect-node':
         specifier: ^1.4.0
         version: 1.4.0(@bufbuild/protobuf@1.8.0)(@connectrpc/connect@1.4.0)
+      axios:
+        specifier: ^0.27.2
+        version: 0.27.2
       cors:
         specifier: ^2.8.5
         version: 2.8.5

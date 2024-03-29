@@ -9,8 +9,8 @@ import {
   StreamAuthVerifier,
 } from '@atproto/xrpc-server'
 import { schemas } from './lexicons'
+import * as OrgCodestashActorGetProfile from './types/org/codestash/actor/getProfile'
 import * as OrgCodestashPing from './types/org/codestash/ping'
-import * as OrgCodestashRepositoryGetRepository from './types/org/codestash/repository/getRepository'
 import * as ComAtprotoAdminDeleteAccount from './types/com/atproto/admin/deleteAccount'
 import * as ComAtprotoAdminDisableAccountInvites from './types/com/atproto/admin/disableAccountInvites'
 import * as ComAtprotoAdminDisableInviteCodes from './types/com/atproto/admin/disableInviteCodes'
@@ -122,11 +122,11 @@ export class OrgNS {
 
 export class OrgCodestashNS {
   _server: Server
-  repository: OrgCodestashRepositoryNS
+  actor: OrgCodestashActorNS
 
   constructor(server: Server) {
     this._server = server
-    this.repository = new OrgCodestashRepositoryNS(server)
+    this.actor = new OrgCodestashActorNS(server)
   }
 
   ping<AV extends AuthVerifier>(
@@ -141,21 +141,21 @@ export class OrgCodestashNS {
   }
 }
 
-export class OrgCodestashRepositoryNS {
+export class OrgCodestashActorNS {
   _server: Server
 
   constructor(server: Server) {
     this._server = server
   }
 
-  getRepository<AV extends AuthVerifier>(
+  getProfile<AV extends AuthVerifier>(
     cfg: ConfigOf<
       AV,
-      OrgCodestashRepositoryGetRepository.Handler<ExtractAuth<AV>>,
-      OrgCodestashRepositoryGetRepository.HandlerReqCtx<ExtractAuth<AV>>
+      OrgCodestashActorGetProfile.Handler<ExtractAuth<AV>>,
+      OrgCodestashActorGetProfile.HandlerReqCtx<ExtractAuth<AV>>
     >,
   ) {
-    const nsid = 'org.codestash.repository.getRepository' // @ts-ignore
+    const nsid = 'org.codestash.actor.getProfile' // @ts-ignore
     return this._server.xrpc.method(nsid, cfg)
   }
 }

@@ -51,26 +51,96 @@ service Service {
     rpc GetIdentityByHandle(GetIdentityByHandleRequest) returns (GetIdentityByHandleResponse);
 
     // Profile
+    rpc GetActors(GetActorsRequest) returns (GetActorsResponse);
     rpc GetDidsByHandles(GetDidsByHandlesRequest) returns (GetDidsByHandlesResponse);
     
+    // Records
+    rpc GetProfileRecords(GetProfileRecordsRequest) returns (GetProfileRecordsResponse);
+
+    // Relationships
+    rpc GetRelationships(GetRelationshipsRequest) returns (GetRelationshipsResponse);
+
     // Sync
     rpc GetLatestRev(GetLatestRevRequest) returns (GetLatestRevResponse);
 
+    // Interaction Counts
+    rpc GetCountsForUsers(GetCountsForUsersRequest) returns (GetCountsForUsersResponse);
+
     // URL
     rpc GetURL(Empty) returns (URLResponse);
+}
+
+
+message GetProfileRecordsRequest {
+  repeated string uris = 1;
+}
+
+message GetProfileRecordsResponse {
+  repeated Record records = 1;
+}
+
+// 
+// Interactions
+//
+message GetCountsForUsersRequest {
+  repeated string dids = 1;
+}
+
+message GetCountsForUsersResponse {
+  repeated int32 following = 3;
+  repeated int32 followers = 4;
+}
+
+//
+// Relationships
+//
+message GetRelationshipsRequest {
+  string actor_did = 1;
+  repeated string target_dids = 2;
+}
+
+message Relationships {
+  string following = 7;
+  string followed_by = 8;
+}
+
+message GetRelationshipsResponse {
+  repeated Relationships relationships = 1;
+}
+
+//
+// Profile
+//
+message GetActorsRequest {
+  repeated string dids = 1;
+}
+
+message ActorInfo {
+  bool exists = 1;
+  string handle = 2;
+  Record profile = 3;
+  bool taken_down = 4;
+  string takedown_ref = 5;
+  google.protobuf.Timestamp tombstoned_at = 6;
+  bool labeler = 7;
+}
+
+message GetActorsResponse {
+  repeated ActorInfo actors = 1;
 }
 
 //
 // Sync
 //
 
-// - Latest repo rev of user w/ URL
+// - Latest repo rev of user w/ DID
+//     - Read-after-write header in`getProfile`, `getProfiles`, `getActorLikes`, `getAuthorFeed`, `getListFeed`, `getPostThread`, `getTimeline`.  Could it be view dependent?
 message GetLatestRevRequest {
-    string repository_url = 1;
+  string actor_did = 1;
 }
 
 message GetLatestRevResponse {
-    string rev = 1;
+  string rev = 1;
 }
 
 message GetIdentityByDidRequest {

@@ -40,3 +40,5 @@ export class AppContext {
         return this.opts.views;
     }
 }
+
+export default AppContext

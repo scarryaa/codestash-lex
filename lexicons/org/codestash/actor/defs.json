@@ -1,0 +1,64 @@
+{
+  "lexicon": 1,
+  "id": "org.codestash.actor.defs",
+  "defs": {
+    "userProfileBasic": {
+      "type": "object",
+      "required": ["did", "handle"],
+      "properties": {
+        "did": { "type": "string", "format": "did" },
+        "handle": { "type": "string", "description": "The handle of the user" },
+        "avatar": { "type": "string", "format": "uri", "description": "URL of the user's avatar" },
+        "bio": { "type": "string", "description": "Brief description of the user" },
+        "followerCount": { "type": "integer", "description": "Number of followers the user has" },
+        "followingCount": { "type": "integer", "description": "Number of users the user is following" },
+        "repositoryCount": { "type": "integer", "description": "Number of repositories the user has" },
+        "location": { "type": "string", "description": "Location of the user" },
+        "website": { "type": "string", "format": "uri", "description": "URL of the user's website" }
+      }
+    },
+    "userProfileDetailed": {
+      "type": "object",
+      "required": ["did", "handle"],
+      "properties": {
+        "did": { "type": "string", "format": "did" },
+        "handle": { "type": "string", "description": "The handle of the user" },
+        "avatar": { "type": "string", "format": "uri", "description": "URL of the user's avatar" },
+        "bio": { "type": "string", "description": "Brief description of the user" },
+        "followerCount": { "type": "integer", "description": "Number of followers the user has" },
+        "followingCount": { "type": "integer", "description": "Number of users the user is following" },
+        "repositoryCount": { "type": "integer", "description": "Number of repositories the user has" },
+        "location": { "type": "string", "description": "Location of the user" },
+        "website": { "type": "string", "format": "uri", "description": "URL of the user's website" },
+        "email": { "type": "string", "description": "Email address of the user" },
+        "company": { "type": "string", "description": "Company the user is associated with" },
+        "joinedAt": { "type": "string", "format": "datetime", "description": "Timestamp of when the user joined" },
+        "lastActive": { "type": "string", "format": "datetime", "description": "Timestamp of when the user was last active" }
+      }
+    },
+    "userProfileAdvanced": {
+      "type": "object",
+      "required": ["did", "handle"],
+      "properties": {
+        "did": { "type": "string", "format": "did" },
+        "handle": { "type": "string", "description": "The handle of the user" },
+        "avatar": { "type": "string", "format": "uri", "description": "URL of the user's avatar" },
+        "bio": { "type": "string", "description": "Brief description of the user" },
+        "followerCount": { "type": "integer", "description": "Number of followers the user has" },
+        "followingCount": { "type": "integer", "description": "Number of users the user is following" },
+        "repositoryCount": { "type": "integer", "description": "Number of repositories the user has" },
+        "location": { "type": "string", "description": "Location of the user" },
+        "website": { "type": "string", "format": "uri", "description": "URL of the user's website" },
+        "email": { "type": "string", "description": "Email address of the user" },
+        "company": { "type": "string", "description": "Company the user is associated with" },
+        "joinedAt": { "type": "string", "format": "datetime", "description": "Timestamp of when the user joined" },
+        "lastActive": { "type": "string", "format": "datetime", "description": "Timestamp of when the user was last active" },
+        "languages": {
+          "type": "array",
+          "description": "Programming languages the user is familiar with",
+          "items": { "type": "string" }
+        }
+      }
+    }
+  }
+}

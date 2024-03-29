@@ -263,15 +263,452 @@ export class GetRepositoriesResponse extends Message<GetRepositoriesResponse> {
 }
 
 /**
- * - Latest repo rev of user w/ URL
+ * @generated from message codestash.GetProfileRecordsRequest
+ */
+export class GetProfileRecordsRequest extends Message<GetProfileRecordsRequest> {
+  /**
+   * @generated from field: repeated string uris = 1;
+   */
+  uris: string[] = [];
+
+  constructor(data?: PartialMessage<GetProfileRecordsRequest>) {
+    super();
+    proto3.util.initPartial(data, this);
+  }
+
+  static readonly runtime: typeof proto3 = proto3;
+  static readonly typeName = "codestash.GetProfileRecordsRequest";
+  static readonly fields: FieldList = proto3.util.newFieldList(() => [
+    { no: 1, name: "uris", kind: "scalar", T: 9 /* ScalarType.STRING */, repeated: true },
+  ]);
+
+  static fromBinary(bytes: Uint8Array, options?: Partial<BinaryReadOptions>): GetProfileRecordsRequest {
+    return new GetProfileRecordsRequest().fromBinary(bytes, options);
+  }
+
+  static fromJson(jsonValue: JsonValue, options?: Partial<JsonReadOptions>): GetProfileRecordsRequest {
+    return new GetProfileRecordsRequest().fromJson(jsonValue, options);
+  }
+
+  static fromJsonString(jsonString: string, options?: Partial<JsonReadOptions>): GetProfileRecordsRequest {
+    return new GetProfileRecordsRequest().fromJsonString(jsonString, options);
+  }
+
+  static equals(a: GetProfileRecordsRequest | PlainMessage<GetProfileRecordsRequest> | undefined, b: GetProfileRecordsRequest | PlainMessage<GetProfileRecordsRequest> | undefined): boolean {
+    return proto3.util.equals(GetProfileRecordsRequest, a, b);
+  }
+}
+
+/**
+ * @generated from message codestash.GetProfileRecordsResponse
+ */
+export class GetProfileRecordsResponse extends Message<GetProfileRecordsResponse> {
+  /**
+   * @generated from field: repeated codestash.Record records = 1;
+   */
+  records: Record[] = [];
+
+  constructor(data?: PartialMessage<GetProfileRecordsResponse>) {
+    super();
+    proto3.util.initPartial(data, this);
+  }
+
+  static readonly runtime: typeof proto3 = proto3;
+  static readonly typeName = "codestash.GetProfileRecordsResponse";
+  static readonly fields: FieldList = proto3.util.newFieldList(() => [
+    { no: 1, name: "records", kind: "message", T: Record, repeated: true },
+  ]);
+
+  static fromBinary(bytes: Uint8Array, options?: Partial<BinaryReadOptions>): GetProfileRecordsResponse {
+    return new GetProfileRecordsResponse().fromBinary(bytes, options);
+  }
+
+  static fromJson(jsonValue: JsonValue, options?: Partial<JsonReadOptions>): GetProfileRecordsResponse {
+    return new GetProfileRecordsResponse().fromJson(jsonValue, options);
+  }
+
+  static fromJsonString(jsonString: string, options?: Partial<JsonReadOptions>): GetProfileRecordsResponse {
+    return new GetProfileRecordsResponse().fromJsonString(jsonString, options);
+  }
+
+  static equals(a: GetProfileRecordsResponse | PlainMessage<GetProfileRecordsResponse> | undefined, b: GetProfileRecordsResponse | PlainMessage<GetProfileRecordsResponse> | undefined): boolean {
+    return proto3.util.equals(GetProfileRecordsResponse, a, b);
+  }
+}
+
+/**
+ * 
+ * Interactions
+ * 
+ *
+ * @generated from message codestash.GetCountsForUsersRequest
+ */
+export class GetCountsForUsersRequest extends Message<GetCountsForUsersRequest> {
+  /**
+   * @generated from field: repeated string dids = 1;
+   */
+  dids: string[] = [];
+
+  constructor(data?: PartialMessage<GetCountsForUsersRequest>) {
+    super();
+    proto3.util.initPartial(data, this);
+  }
+
+  static readonly runtime: typeof proto3 = proto3;
+  static readonly typeName = "codestash.GetCountsForUsersRequest";
+  static readonly fields: FieldList = proto3.util.newFieldList(() => [
+    { no: 1, name: "dids", kind: "scalar", T: 9 /* ScalarType.STRING */, repeated: true },
+  ]);
+
+  static fromBinary(bytes: Uint8Array, options?: Partial<BinaryReadOptions>): GetCountsForUsersRequest {
+    return new GetCountsForUsersRequest().fromBinary(bytes, options);
+  }
+
+  static fromJson(jsonValue: JsonValue, options?: Partial<JsonReadOptions>): GetCountsForUsersRequest {
+    return new GetCountsForUsersRequest().fromJson(jsonValue, options);
+  }
+
+  static fromJsonString(jsonString: string, options?: Partial<JsonReadOptions>): GetCountsForUsersRequest {
+    return new GetCountsForUsersRequest().fromJsonString(jsonString, options);
+  }
+
+  static equals(a: GetCountsForUsersRequest | PlainMessage<GetCountsForUsersRequest> | undefined, b: GetCountsForUsersRequest | PlainMessage<GetCountsForUsersRequest> | undefined): boolean {
+    return proto3.util.equals(GetCountsForUsersRequest, a, b);
+  }
+}
+
+/**
+ * @generated from message codestash.GetCountsForUsersResponse
+ */
+export class GetCountsForUsersResponse extends Message<GetCountsForUsersResponse> {
+  /**
+   * @generated from field: repeated int32 following = 3;
+   */
+  following: number[] = [];
+
+  /**
+   * @generated from field: repeated int32 followers = 4;
+   */
+  followers: number[] = [];
+
+  constructor(data?: PartialMessage<GetCountsForUsersResponse>) {
+    super();
+    proto3.util.initPartial(data, this);
+  }
+
+  static readonly runtime: typeof proto3 = proto3;
+  static readonly typeName = "codestash.GetCountsForUsersResponse";
+  static readonly fields: FieldList = proto3.util.newFieldList(() => [
+    { no: 3, name: "following", kind: "scalar", T: 5 /* ScalarType.INT32 */, repeated: true },
+    { no: 4, name: "followers", kind: "scalar", T: 5 /* ScalarType.INT32 */, repeated: true },
+  ]);
+
+  static fromBinary(bytes: Uint8Array, options?: Partial<BinaryReadOptions>): GetCountsForUsersResponse {
+    return new GetCountsForUsersResponse().fromBinary(bytes, options);
+  }
+
+  static fromJson(jsonValue: JsonValue, options?: Partial<JsonReadOptions>): GetCountsForUsersResponse {
+    return new GetCountsForUsersResponse().fromJson(jsonValue, options);
+  }
+
+  static fromJsonString(jsonString: string, options?: Partial<JsonReadOptions>): GetCountsForUsersResponse {
+    return new GetCountsForUsersResponse().fromJsonString(jsonString, options);
+  }
+
+  static equals(a: GetCountsForUsersResponse | PlainMessage<GetCountsForUsersResponse> | undefined, b: GetCountsForUsersResponse | PlainMessage<GetCountsForUsersResponse> | undefined): boolean {
+    return proto3.util.equals(GetCountsForUsersResponse, a, b);
+  }
+}
+
+/**
+ * 
+ * Relationships
+ * 
+ *
+ * @generated from message codestash.GetRelationshipsRequest
+ */
+export class GetRelationshipsRequest extends Message<GetRelationshipsRequest> {
+  /**
+   * @generated from field: string actor_did = 1;
+   */
+  actorDid = "";
+
+  /**
+   * @generated from field: repeated string target_dids = 2;
+   */
+  targetDids: string[] = [];
+
+  constructor(data?: PartialMessage<GetRelationshipsRequest>) {
+    super();
+    proto3.util.initPartial(data, this);
+  }
+
+  static readonly runtime: typeof proto3 = proto3;
+  static readonly typeName = "codestash.GetRelationshipsRequest";
+  static readonly fields: FieldList = proto3.util.newFieldList(() => [
+    { no: 1, name: "actor_did", kind: "scalar", T: 9 /* ScalarType.STRING */ },
+    { no: 2, name: "target_dids", kind: "scalar", T: 9 /* ScalarType.STRING */, repeated: true },
+  ]);
+
+  static fromBinary(bytes: Uint8Array, options?: Partial<BinaryReadOptions>): GetRelationshipsRequest {
+    return new GetRelationshipsRequest().fromBinary(bytes, options);
+  }
+
+  static fromJson(jsonValue: JsonValue, options?: Partial<JsonReadOptions>): GetRelationshipsRequest {
+    return new GetRelationshipsRequest().fromJson(jsonValue, options);
+  }
+
+  static fromJsonString(jsonString: string, options?: Partial<JsonReadOptions>): GetRelationshipsRequest {
+    return new GetRelationshipsRequest().fromJsonString(jsonString, options);
+  }
+
+  static equals(a: GetRelationshipsRequest | PlainMessage<GetRelationshipsRequest> | undefined, b: GetRelationshipsRequest | PlainMessage<GetRelationshipsRequest> | undefined): boolean {
+    return proto3.util.equals(GetRelationshipsRequest, a, b);
+  }
+}
+
+/**
+ * @generated from message codestash.Relationships
+ */
+export class Relationships extends Message<Relationships> {
+  /**
+   * @generated from field: string following = 7;
+   */
+  following = "";
+
+  /**
+   * @generated from field: string followed_by = 8;
+   */
+  followedBy = "";
+
+  constructor(data?: PartialMessage<Relationships>) {
+    super();
+    proto3.util.initPartial(data, this);
+  }
+
+  static readonly runtime: typeof proto3 = proto3;
+  static readonly typeName = "codestash.Relationships";
+  static readonly fields: FieldList = proto3.util.newFieldList(() => [
+    { no: 7, name: "following", kind: "scalar", T: 9 /* ScalarType.STRING */ },
+    { no: 8, name: "followed_by", kind: "scalar", T: 9 /* ScalarType.STRING */ },
+  ]);
+
+  static fromBinary(bytes: Uint8Array, options?: Partial<BinaryReadOptions>): Relationships {
+    return new Relationships().fromBinary(bytes, options);
+  }
+
+  static fromJson(jsonValue: JsonValue, options?: Partial<JsonReadOptions>): Relationships {
+    return new Relationships().fromJson(jsonValue, options);
+  }
+
+  static fromJsonString(jsonString: string, options?: Partial<JsonReadOptions>): Relationships {
+    return new Relationships().fromJsonString(jsonString, options);
+  }
+
+  static equals(a: Relationships | PlainMessage<Relationships> | undefined, b: Relationships | PlainMessage<Relationships> | undefined): boolean {
+    return proto3.util.equals(Relationships, a, b);
+  }
+}
+
+/**
+ * @generated from message codestash.GetRelationshipsResponse
+ */
+export class GetRelationshipsResponse extends Message<GetRelationshipsResponse> {
+  /**
+   * @generated from field: repeated codestash.Relationships relationships = 1;
+   */
+  relationships: Relationships[] = [];
+
+  constructor(data?: PartialMessage<GetRelationshipsResponse>) {
+    super();
+    proto3.util.initPartial(data, this);
+  }
+
+  static readonly runtime: typeof proto3 = proto3;
+  static readonly typeName = "codestash.GetRelationshipsResponse";
+  static readonly fields: FieldList = proto3.util.newFieldList(() => [
+    { no: 1, name: "relationships", kind: "message", T: Relationships, repeated: true },
+  ]);
+
+  static fromBinary(bytes: Uint8Array, options?: Partial<BinaryReadOptions>): GetRelationshipsResponse {
+    return new GetRelationshipsResponse().fromBinary(bytes, options);
+  }
+
+  static fromJson(jsonValue: JsonValue, options?: Partial<JsonReadOptions>): GetRelationshipsResponse {
+    return new GetRelationshipsResponse().fromJson(jsonValue, options);
+  }
+
+  static fromJsonString(jsonString: string, options?: Partial<JsonReadOptions>): GetRelationshipsResponse {
+    return new GetRelationshipsResponse().fromJsonString(jsonString, options);
+  }
+
+  static equals(a: GetRelationshipsResponse | PlainMessage<GetRelationshipsResponse> | undefined, b: GetRelationshipsResponse | PlainMessage<GetRelationshipsResponse> | undefined): boolean {
+    return proto3.util.equals(GetRelationshipsResponse, a, b);
+  }
+}
+
+/**
+ * 
+ * Profile
+ * 
+ *
+ * @generated from message codestash.GetActorsRequest
+ */
+export class GetActorsRequest extends Message<GetActorsRequest> {
+  /**
+   * @generated from field: repeated string dids = 1;
+   */
+  dids: string[] = [];
+
+  constructor(data?: PartialMessage<GetActorsRequest>) {
+    super();
+    proto3.util.initPartial(data, this);
+  }
+
+  static readonly runtime: typeof proto3 = proto3;
+  static readonly typeName = "codestash.GetActorsRequest";
+  static readonly fields: FieldList = proto3.util.newFieldList(() => [
+    { no: 1, name: "dids", kind: "scalar", T: 9 /* ScalarType.STRING */, repeated: true },
+  ]);
+
+  static fromBinary(bytes: Uint8Array, options?: Partial<BinaryReadOptions>): GetActorsRequest {
+    return new GetActorsRequest().fromBinary(bytes, options);
+  }
+
+  static fromJson(jsonValue: JsonValue, options?: Partial<JsonReadOptions>): GetActorsRequest {
+    return new GetActorsRequest().fromJson(jsonValue, options);
+  }
+
+  static fromJsonString(jsonString: string, options?: Partial<JsonReadOptions>): GetActorsRequest {
+    return new GetActorsRequest().fromJsonString(jsonString, options);
+  }
+
+  static equals(a: GetActorsRequest | PlainMessage<GetActorsRequest> | undefined, b: GetActorsRequest | PlainMessage<GetActorsRequest> | undefined): boolean {
+    return proto3.util.equals(GetActorsRequest, a, b);
+  }
+}
+
+/**
+ * @generated from message codestash.ActorInfo
+ */
+export class ActorInfo extends Message<ActorInfo> {
+  /**
+   * @generated from field: bool exists = 1;
+   */
+  exists = false;
+
+  /**
+   * @generated from field: string handle = 2;
+   */
+  handle = "";
+
+  /**
+   * @generated from field: codestash.Record profile = 3;
+   */
+  profile?: Record;
+
+  /**
+   * @generated from field: bool taken_down = 4;
+   */
+  takenDown = false;
+
+  /**
+   * @generated from field: string takedown_ref = 5;
+   */
+  takedownRef = "";
+
+  /**
+   * @generated from field: google.protobuf.Timestamp tombstoned_at = 6;
+   */
+  tombstonedAt?: Timestamp;
+
+  /**
+   * @generated from field: bool labeler = 7;
+   */
+  labeler = false;
+
+  constructor(data?: PartialMessage<ActorInfo>) {
+    super();
+    proto3.util.initPartial(data, this);
+  }
+
+  static readonly runtime: typeof proto3 = proto3;
+  static readonly typeName = "codestash.ActorInfo";
+  static readonly fields: FieldList = proto3.util.newFieldList(() => [
+    { no: 1, name: "exists", kind: "scalar", T: 8 /* ScalarType.BOOL */ },
+    { no: 2, name: "handle", kind: "scalar", T: 9 /* ScalarType.STRING */ },
+    { no: 3, name: "profile", kind: "message", T: Record },
+    { no: 4, name: "taken_down", kind: "scalar", T: 8 /* ScalarType.BOOL */ },
+    { no: 5, name: "takedown_ref", kind: "scalar", T: 9 /* ScalarType.STRING */ },
+    { no: 6, name: "tombstoned_at", kind: "message", T: Timestamp },
+    { no: 7, name: "labeler", kind: "scalar", T: 8 /* ScalarType.BOOL */ },
+  ]);
+
+  static fromBinary(bytes: Uint8Array, options?: Partial<BinaryReadOptions>): ActorInfo {
+    return new ActorInfo().fromBinary(bytes, options);
+  }
+
+  static fromJson(jsonValue: JsonValue, options?: Partial<JsonReadOptions>): ActorInfo {
+    return new ActorInfo().fromJson(jsonValue, options);
+  }
+
+  static fromJsonString(jsonString: string, options?: Partial<JsonReadOptions>): ActorInfo {
+    return new ActorInfo().fromJsonString(jsonString, options);
+  }
+
+  static equals(a: ActorInfo | PlainMessage<ActorInfo> | undefined, b: ActorInfo | PlainMessage<ActorInfo> | undefined): boolean {
+    return proto3.util.equals(ActorInfo, a, b);
+  }
+}
+
+/**
+ * @generated from message codestash.GetActorsResponse
+ */
+export class GetActorsResponse extends Message<GetActorsResponse> {
+  /**
+   * @generated from field: repeated codestash.ActorInfo actors = 1;
+   */
+  actors: ActorInfo[] = [];
+
+  constructor(data?: PartialMessage<GetActorsResponse>) {
+    super();
+    proto3.util.initPartial(data, this);
+  }
+
+  static readonly runtime: typeof proto3 = proto3;
+  static readonly typeName = "codestash.GetActorsResponse";
+  static readonly fields: FieldList = proto3.util.newFieldList(() => [
+    { no: 1, name: "actors", kind: "message", T: ActorInfo, repeated: true },
+  ]);
+
+  static fromBinary(bytes: Uint8Array, options?: Partial<BinaryReadOptions>): GetActorsResponse {
+    return new GetActorsResponse().fromBinary(bytes, options);
+  }
+
+  static fromJson(jsonValue: JsonValue, options?: Partial<JsonReadOptions>): GetActorsResponse {
+    return new GetActorsResponse().fromJson(jsonValue, options);
+  }
+
+  static fromJsonString(jsonString: string, options?: Partial<JsonReadOptions>): GetActorsResponse {
+    return new GetActorsResponse().fromJsonString(jsonString, options);
+  }
+
+  static equals(a: GetActorsResponse | PlainMessage<GetActorsResponse> | undefined, b: GetActorsResponse | PlainMessage<GetActorsResponse> | undefined): boolean {
+    return proto3.util.equals(GetActorsResponse, a, b);
+  }
+}
+
+/**
+ * - Latest repo rev of user w/ DID
+ *     - Read-after-write header in`getProfile`, `getProfiles`, `getActorLikes`, `getAuthorFeed`, `getListFeed`, `getPostThread`, `getTimeline`.  Could it be view dependent?
  *
  * @generated from message codestash.GetLatestRevRequest
  */
 export class GetLatestRevRequest extends Message<GetLatestRevRequest> {
   /**
-   * @generated from field: string repository_url = 1;
+   * @generated from field: string actor_did = 1;
    */
-  repositoryUrl = "";
+  actorDid = "";
 
   constructor(data?: PartialMessage<GetLatestRevRequest>) {
     super();
@@ -281,7 +718,7 @@ export class GetLatestRevRequest extends Message<GetLatestRevRequest> {
   static readonly runtime: typeof proto3 = proto3;
   static readonly typeName = "codestash.GetLatestRevRequest";
   static readonly fields: FieldList = proto3.util.newFieldList(() => [
-    { no: 1, name: "repository_url", kind: "scalar", T: 9 /* ScalarType.STRING */ },
+    { no: 1, name: "actor_did", kind: "scalar", T: 9 /* ScalarType.STRING */ },
   ]);
 
   static fromBinary(bytes: Uint8Array, options?: Partial<BinaryReadOptions>): GetLatestRevRequest {

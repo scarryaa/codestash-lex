@@ -7,9 +7,10 @@ import {
 } from '@atproto/xrpc'
 import { schemas } from './lexicons'
 import { CID } from 'multiformats/cid'
+import * as OrgCodestashActorDefs from './types/org/codestash/actor/defs'
+import * as OrgCodestashActorGetProfile from './types/org/codestash/actor/getProfile'
+import * as OrgCodestashActorProfile from './types/org/codestash/actor/profile'
 import * as OrgCodestashPing from './types/org/codestash/ping'
-import * as OrgCodestashRepositoryDefs from './types/org/codestash/repository/defs'
-import * as OrgCodestashRepositoryGetRepository from './types/org/codestash/repository/getRepository'
 import * as ComAtprotoAdminDefs from './types/com/atproto/admin/defs'
 import * as ComAtprotoAdminDeleteAccount from './types/com/atproto/admin/deleteAccount'
 import * as ComAtprotoAdminDisableAccountInvites from './types/com/atproto/admin/disableAccountInvites'
@@ -88,9 +89,10 @@ import * as ComAtprotoTempCheckSignupQueue from './types/com/atproto/temp/checkS
 import * as ComAtprotoTempFetchLabels from './types/com/atproto/temp/fetchLabels'
 import * as ComAtprotoTempRequestPhoneVerification from './types/com/atproto/temp/requestPhoneVerification'
 
+export * as OrgCodestashActorDefs from './types/org/codestash/actor/defs'
+export * as OrgCodestashActorGetProfile from './types/org/codestash/actor/getProfile'
+export * as OrgCodestashActorProfile from './types/org/codestash/actor/profile'
 export * as OrgCodestashPing from './types/org/codestash/ping'
-export * as OrgCodestashRepositoryDefs from './types/org/codestash/repository/defs'
-export * as OrgCodestashRepositoryGetRepository from './types/org/codestash/repository/getRepository'
 export * as ComAtprotoAdminDefs from './types/com/atproto/admin/defs'
 export * as ComAtprotoAdminDeleteAccount from './types/com/atproto/admin/deleteAccount'
 export * as ComAtprotoAdminDisableAccountInvites from './types/com/atproto/admin/disableAccountInvites'
@@ -221,11 +223,11 @@ export class OrgNS {
 
 export class OrgCodestashNS {
   _service: AtpServiceClient
-  repository: OrgCodestashRepositoryNS
+  actor: OrgCodestashActorNS
 
   constructor(service: AtpServiceClient) {
     this._service = service
-    this.repository = new OrgCodestashRepositoryNS(service)
+    this.actor = new OrgCodestashActorNS(service)
   }
 
   ping(
@@ -240,22 +242,94 @@ export class OrgCodestashNS {
   }
 }
 
-export class OrgCodestashRepositoryNS {
+export class OrgCodestashActorNS {
+  _service: AtpServiceClient
+  profile: ProfileRecord
+
+  constructor(service: AtpServiceClient) {
+    this._service = service
+    this.profile = new ProfileRecord(service)
+  }
+
+  getProfile(
+    params?: OrgCodestashActorGetProfile.QueryParams,
+    opts?: OrgCodestashActorGetProfile.CallOptions,
+  ): Promise<OrgCodestashActorGetProfile.Response> {
+    return this._service.xrpc
+      .call('org.codestash.actor.getProfile', params, undefined, opts)
+      .catch((e) => {
+        throw OrgCodestashActorGetProfile.toKnownErr(e)
+      })
+  }
+}
+
+export class ProfileRecord {
   _service: AtpServiceClient
 
   constructor(service: AtpServiceClient) {
     this._service = service
   }
 
-  getRepository(
-    params?: OrgCodestashRepositoryGetRepository.QueryParams,
-    opts?: OrgCodestashRepositoryGetRepository.CallOptions,
-  ): Promise<OrgCodestashRepositoryGetRepository.Response> {
-    return this._service.xrpc
-      .call('org.codestash.repository.getRepository', params, undefined, opts)
-      .catch((e) => {
-        throw OrgCodestashRepositoryGetRepository.toKnownErr(e)
-      })
+  async list(
+    params: Omit<ComAtprotoRepoListRecords.QueryParams, 'collection'>,
+  ): Promise<{
+    cursor?: string
+    records: { uri: string; value: OrgCodestashActorProfile.Record }[]
+  }> {
+    const res = await this._service.xrpc.call('com.atproto.repo.listRecords', {
+      collection: 'org.codestash.actor.profile',
+      ...params,
+    })
+    return res.data
+  }
+
+  async get(
+    params: Omit<ComAtprotoRepoGetRecord.QueryParams, 'collection'>,
+  ): Promise<{
+    uri: string
+    cid: string
+    value: OrgCodestashActorProfile.Record
+  }> {
+    const res = await this._service.xrpc.call('com.atproto.repo.getRecord', {
+      collection: 'org.codestash.actor.profile',
+      ...params,
+    })
+    return res.data
+  }
+
+  async create(
+    params: Omit<
+      ComAtprotoRepoCreateRecord.InputSchema,
+      'collection' | 'record'
+    >,
+    record: OrgCodestashActorProfile.Record,
+    headers?: Record<string, string>,
+  ): Promise<{ uri: string; cid: string }> {
+    record.$type = 'org.codestash.actor.profile'
+    const res = await this._service.xrpc.call(
+      'com.atproto.repo.createRecord',
+      undefined,
+      {
+        collection: 'org.codestash.actor.profile',
+        rkey: 'self',
+        ...params,
+        record,
+      },
+      { encoding: 'application/json', headers },
+    )
+    return res.data
+  }
+
+  async delete(
+    params: Omit<ComAtprotoRepoDeleteRecord.InputSchema, 'collection'>,
+    headers?: Record<string, string>,
+  ): Promise<void> {
+    await this._service.xrpc.call(
+      'com.atproto.repo.deleteRecord',
+      undefined,
+      { collection: 'org.codestash.actor.profile', ...params },
+      { headers },
+    )
   }
 }
 

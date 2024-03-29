@@ -6,15 +6,15 @@ import { ValidationResult, BlobRef } from '@atproto/lexicon'
 import { isObj, hasProp } from '../../../../util'
 import { lexicons } from '../../../../lexicons'
 import { CID } from 'multiformats/cid'
-import * as OrgCodestashRepositoryDefs from './defs'
+import * as OrgCodestashActorDefs from './defs'
 
 export interface QueryParams {
-  /** URL of the repository to fetch. */
-  repository: string
+  /** Handle or DID of account to fetch profile of. */
+  actor: string
 }
 
 export type InputSchema = undefined
-export type OutputSchema = OrgCodestashRepositoryDefs.Repository
+export type OutputSchema = OrgCodestashActorDefs.UserProfileDetailed
 
 export interface CallOptions {
   headers?: Headers

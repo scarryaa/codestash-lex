@@ -8,7 +8,7 @@ import { isObj, hasProp } from '../../../../util'
 import { CID } from 'multiformats/cid'
 import { HandlerAuth, HandlerPipeThrough } from '@atproto/xrpc-server'
 import * as ComAtprotoAdminDefs from './defs'
-import * as ComAtprotoRepoStrongRef from '..\repostrongRef'
+import * as ComAtprotoRepoStrongRef from '../repo/strongRef'
 
 export interface QueryParams {
   did?: string
@@ -20,10 +20,10 @@ export type InputSchema = undefined
 
 export interface OutputSchema {
   subject:
-    | ComAtprotoAdminDefs.RepoRef
-    | ComAtprotoRepoStrongRef.Main
-    | ComAtprotoAdminDefs.RepoBlobRef
-    | { $type: string; [k: string]: unknown }
+  | ComAtprotoAdminDefs.RepoRef
+  | ComAtprotoRepoStrongRef.Main
+  | ComAtprotoAdminDefs.RepoBlobRef
+  | { $type: string;[k: string]: unknown }
   takedown?: ComAtprotoAdminDefs.StatusAttr
   [k: string]: unknown
 }
