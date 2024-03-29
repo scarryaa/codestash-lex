@@ -6,23 +6,106 @@ option go_package = "./;codestash";
 import "google/protobuf/timestamp.proto";
 
 message Record {
-  bytes record = 1;
-  string cid = 2;
-  google.protobuf.Timestamp indexed_at = 3;
-  bool taken_down = 4;
-  google.protobuf.Timestamp created_at = 5;
-  google.protobuf.Timestamp sorted_at = 6;
-  string takedown_ref = 7;
+    bytes record = 1;
+    string cid = 2;
+    google.protobuf.Timestamp indexed_at = 3;
+    bool taken_down = 4;
+    google.protobuf.Timestamp created_at = 5;
+    google.protobuf.Timestamp sorted_at = 6;
+    string takedown_ref = 7;
 }
 
-message GetRepoRecordsRequest {
-  repeated string uris = 1;
+message Repository {
+    string name = 1;
+    string owner = 2;
+    string description = 3;
+    google.protobuf.Timestamp created_at = 4;
+    google.protobuf.Timestamp updated_at = 5;
+    string default_branch = 6;
+    string homepage = 7;
+    repeated string languages = 8;
+    string license = 9;
+    int32 stars = 10;
+    int32 forks = 11;
+    int32 watchers = 12;
+    string url = 13;
 }
 
-message GetRepoRecordsResponse {
-  repeated Record records = 1;
+message GetRepositoriesRequest {
+    repeated string uris = 1;
+}
+
+message GetRepositoriesResponse {
+    repeated Repository repositories = 1;
 }
 
 service Service {
-  rpc GetRepoRecords(GetRepoRecordsRequest) returns (GetRepoRecordsResponse);
+    // Repository
+    rpc GetRepositories(GetRepositoriesRequest) returns (GetRepositoriesResponse);
+
+    // Identity
+    rpc GetIdentityByDid(GetIdentityByDidRequest) returns (GetIdentityByDidResponse);
+    rpc GetIdentityByHandle(GetIdentityByHandleRequest) returns (GetIdentityByHandleResponse);
+
+    // Profile
+    rpc GetDidsByHandles(GetDidsByHandlesRequest) returns (GetDidsByHandlesResponse);
+    
+    // Sync
+    rpc GetLatestRev(GetLatestRevRequest) returns (GetLatestRevResponse);
+
+    // URL
+    rpc GetURL(Empty) returns (URLResponse);
+}
+
+//
+// Sync
+//
+
+// - Latest repo rev of user w/ URL
+message GetLatestRevRequest {
+    string repository_url = 1;
+}
+
+message GetLatestRevResponse {
+    string rev = 1;
+}
+
+message GetIdentityByDidRequest {
+    string did = 1;
+}
+
+message GetIdentityByDidResponse {
+    string did = 1;
+    string handle = 2;
+    bytes keys = 3;
+    bytes services = 4;
+    google.protobuf.Timestamp updated = 5;
+}
+
+message GetIdentityByHandleRequest {
+    string handle = 1;
+}
+message GetIdentityByHandleResponse {
+    string handle = 1;
+    string did = 2;
+    bytes keys = 3;
+    bytes services = 4;
+    google.protobuf.Timestamp updated = 5;
+}
+
+// - return did for handle A
+//     - `resolveHandle`
+//     - answering queries where the query param is a handle
+message GetDidsByHandlesRequest {
+    repeated string handles = 1;
+}
+
+message GetDidsByHandlesResponse {
+    repeated string dids = 1;
+}
+
+message Empty {}
+
+message URLResponse {
+    string url = 1;
 }

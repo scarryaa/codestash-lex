@@ -9,6 +9,11 @@ import { Keypair } from '@atproto/crypto'
 import events from 'events'
 import { AddressInfo } from 'net'
 import API, { health } from './api'
+import { AuthVerifier } from './auth-verifier';
+import { createDataPlaneClient } from './data-plane/client';
+import { Hydrator } from './hydration/hydrator';
+import { Views } from './views';
+import { ImageUriBuilder } from './image/uri';
 
 export type { ServerConfigValues } from './config'
 export { ServerConfig } from './config'
@@ -32,8 +37,32 @@ export class CodestashAppView {
         const app = express();
         app.use(cors());
 
+        const imgUriBuilder = new ImageUriBuilder(
+            config.cdnUrl || `${config.publicUrl}/img`,
+        )
+
+        const dataplane = createDataPlaneClient(config.dataplaneUrls, {
+            httpVersion: config.dataplaneHttpVersion,
+            rejectUnauthorized: !config.dataplaneIgnoreBadTls,
+        })
+
+        const hydrator = new Hydrator(dataplane)
+        const views = new Views(imgUriBuilder)
+
+        const authVerifier = new AuthVerifier(dataplane, {
+            ownDid: config.serverDid,
+            modServiceDid: config.modServiceDid,
+            adminPasses: config.adminPasswords,
+        })
+
+
         const ctx = new AppContext({
-            cfg: config
+            cfg: config,
+            dataplane,
+            hydrator,
+            views,
+            signingKey,
+            authVerifier
         })
 
         let server = createServer({

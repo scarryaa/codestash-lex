@@ -3,7 +3,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-import { GetRepoRecordsRequest, GetRepoRecordsResponse } from "./codestash_pb";
+import { Empty, GetDidsByHandlesRequest, GetDidsByHandlesResponse, GetIdentityByDidRequest, GetIdentityByDidResponse, GetIdentityByHandleRequest, GetIdentityByHandleResponse, GetLatestRevRequest, GetLatestRevResponse, GetRepositoriesRequest, GetRepositoriesResponse, URLResponse } from "./codestash_pb";
 import { MethodKind } from "@bufbuild/protobuf";
 
 /**
@@ -13,12 +13,67 @@ export const Service = {
   typeName: "codestash.Service",
   methods: {
     /**
-     * @generated from rpc codestash.Service.GetRepoRecords
+     * Repository
+     *
+     * @generated from rpc codestash.Service.GetRepositories
      */
-    getRepoRecords: {
-      name: "GetRepoRecords",
-      I: GetRepoRecordsRequest,
-      O: GetRepoRecordsResponse,
+    getRepositories: {
+      name: "GetRepositories",
+      I: GetRepositoriesRequest,
+      O: GetRepositoriesResponse,
+      kind: MethodKind.Unary,
+    },
+    /**
+     * Identity
+     *
+     * @generated from rpc codestash.Service.GetIdentityByDid
+     */
+    getIdentityByDid: {
+      name: "GetIdentityByDid",
+      I: GetIdentityByDidRequest,
+      O: GetIdentityByDidResponse,
+      kind: MethodKind.Unary,
+    },
+    /**
+     * @generated from rpc codestash.Service.GetIdentityByHandle
+     */
+    getIdentityByHandle: {
+      name: "GetIdentityByHandle",
+      I: GetIdentityByHandleRequest,
+      O: GetIdentityByHandleResponse,
+      kind: MethodKind.Unary,
+    },
+    /**
+     * Profile
+     *
+     * @generated from rpc codestash.Service.GetDidsByHandles
+     */
+    getDidsByHandles: {
+      name: "GetDidsByHandles",
+      I: GetDidsByHandlesRequest,
+      O: GetDidsByHandlesResponse,
+      kind: MethodKind.Unary,
+    },
+    /**
+     * Sync
+     *
+     * @generated from rpc codestash.Service.GetLatestRev
+     */
+    getLatestRev: {
+      name: "GetLatestRev",
+      I: GetLatestRevRequest,
+      O: GetLatestRevResponse,
+      kind: MethodKind.Unary,
+    },
+    /**
+     * URL
+     *
+     * @generated from rpc codestash.Service.GetURL
+     */
+    getURL: {
+      name: "GetURL",
+      I: Empty,
+      O: URLResponse,
       kind: MethodKind.Unary,
     },
   }

@@ -13,6 +13,7 @@ export interface Repository {
   createdAt: string
   updatedAt: string
   defaultBranch?: string
+  url: string;
   homepage?: string
   languages?: string[]
   license?: string

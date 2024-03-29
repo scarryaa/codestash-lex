@@ -10,8 +10,8 @@ import { HandlerAuth, HandlerPipeThrough } from '@atproto/xrpc-server'
 import * as OrgCodestashRepoDefs from './defs'
 
 export interface QueryParams {
-  /** Handle or DID of repository to fetch. */
-  repo: string
+  /** URL of the repository to fetch. */
+  repository: string;
 }
 
 export type InputSchema = undefined

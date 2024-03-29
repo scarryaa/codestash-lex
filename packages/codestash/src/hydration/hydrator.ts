@@ -1,31 +1,27 @@
 import { DataPlaneClient } from '../data-plane/client';
-import { Repository } from './repo';
+import { Repositories } from './repository';
+import { RepositoryHydrator } from './repository';
+import { HydrationMap, parseString } from './util';
 
 export class HydrateCtx {
-    repository: Repository;
-    viewer: string | null;
-    includeTakedowns?: boolean;
+    viewer = this.vals.viewer;
+    includeTakedowns = this.vals.includeTakedowns;
 
-    constructor(repository: Repository, viewer: string | null, includeTakedowns?: boolean) {
-        this.repository = repository;
-        this.viewer = viewer;
-        this.includeTakedowns = includeTakedowns;
-    }
+    constructor(private vals: HydrateCtxVals) { }
 
-    copy(viewer?: string | null, includeTakedowns?: boolean): HydrateCtx {
-        return new HydrateCtx(this.repository, viewer ?? this.viewer, includeTakedowns ?? this.includeTakedowns);
+    copy<V extends Partial<HydrateCtxVals>>(vals?: V): HydrateCtx & V {
+        return new HydrateCtx({ ...this.vals, ...vals }) as HydrateCtx & V
     }
 }
 
-export type GitHydrateCtxVals = {
-    repository: Repository;
+export type HydrateCtxVals = {
     viewer: string | null;
     includeTakedowns?: boolean;
 }
-
 
 export type HydrationState = {
     ctx?: HydrateCtx; // Contextual information for Git operations
+    repositories: Repositories; // Repositories
     // contributors?: Contributor[]; // Contributors or actors in the repository
     // commits?: Commit[]; // Commits made to the repository
     // branches?: Branch[]; // Branches in the repository
@@ -47,24 +43,54 @@ export type HydrationState = {
 }
 
 export class Hydrator {
-    constructor(public dataplane: DataPlaneClient) { }
+    repository: RepositoryHydrator;
 
-    // org.codestash.repo.defs#repository
-    async hydrateRepository(uri: string, includeTakedowns = false): Promise<Repository | undefined> {
+    constructor(public dataplane: DataPlaneClient) {
+        this.repository = new RepositoryHydrator(dataplane);
+    }
+
+    async getRepoRevSafe(url: string | null): Promise<string | null> {
+        if (!url) return null
         try {
-            const repo = await this.getRepository(uri, includeTakedowns);
-            return repo;
-        } catch (error) {
-            console.error('Error hydrating repo:', error);
-            return undefined;
+            const res = await this.dataplane.getLatestRev({ repositoryUrl: url })
+            return parseString(res.rev) ?? null
+        } catch {
+            return null
         }
     }
 
-    private async getRepository(uri: string, includeTakedowns: boolean): Promise<Repository | undefined> {
-        // Implement logic to fetch the repo from the data plane client
-        // This method should handle fetching the repo data and returning it
-        // If includeTakedowns is true, include takedown information in the repo object
-        // Otherwise, exclude takedown information
-        // Return undefined if the repo does not exist or if an error occurs
+    async hydrateRepositories(
+        uris: string[],
+        ctx: HydrateCtx,
+    ): Promise<HydrationState> {
+        const viewer = ctx.viewer;
+        if (!viewer) {
+            return {
+                repositories: new HydrationMap(),
+            };
+        }
+
+        const [repositories] = await Promise.all([
+            this.repository.getRepositories(uris)
+        ])
+
+        const filteredRepositories: Repositories = new HydrationMap();
+        repositories.forEach((repository) => {
+            if (repository?.owner === viewer) {
+                filteredRepositories.set(repository.url, repository);
+            }
+        });
+
+        return {
+            ctx,
+            repositories: filteredRepositories,
+        };
+    }
+
+    async createContext(vals: HydrateCtxVals) {
+        return new HydrateCtx({
+            viewer: vals.viewer,
+            includeTakedowns: vals.includeTakedowns,
+        })
     }
 }

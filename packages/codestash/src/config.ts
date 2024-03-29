@@ -9,8 +9,8 @@ export interface ServerConfigValues {
     serverDid: string
     // external services
     dataplaneUrls: string[]
-    // dataplaneHttpVersion?: '1.1' | '2'
-    dataplaneIgnoreBadTls?: boolean
+    dataplaneHttpVersion: ('1.1' | '2');
+    dataplaneIgnoreBadTls?: boolean;
     // bsyncUrl: string
     bsyncApiKey?: string
     bsyncHttpVersion?: '1.1' | '2'
@@ -27,7 +27,7 @@ export interface ServerConfigValues {
     didPlcUrl: string
     handleResolveNameservers?: string[]
     // moderation and administration
-    // modServiceDid: string
+    modServiceDid: string
     adminPasswords: string[]
     labelsFromIssuerDids?: string[]
     // misc/dev
@@ -67,7 +67,7 @@ export class ServerConfig {
         dataplaneUrls ??= process.env.BSKY_DATAPLANE_URLS
             ? process.env.BSKY_DATAPLANE_URLS.split(',')
             : []
-        const dataplaneHttpVersion = process.env.BSKY_DATAPLANE_HTTP_VERSION || '2'
+        const dataplaneHttpVersion = process.env.BSKY_DATAPLANE_HTTP_VERSION || '2' as ("1.1" | "2")
         const dataplaneIgnoreBadTls =
             process.env.BSKY_DATAPLANE_IGNORE_BAD_TLS === 'true'
         const labelsFromIssuerDids = process.env.BSKY_LABELS_FROM_ISSUER_DIDS
@@ -109,7 +109,8 @@ export class ServerConfig {
             publicUrl,
             serverDid,
             dataplaneUrls,
-            // dataplaneHttpVersion,
+            // @ts-ignore ignore string is not assignable to 1.1 or 2
+            dataplaneHttpVersion,
             dataplaneIgnoreBadTls,
             searchUrl,
             didPlcUrl,
@@ -151,6 +152,30 @@ export class ServerConfig {
 
     get debugMode() {
         return !!this.cfg.debugMode;
+    }
+
+    get dataplaneHttpVersion(): '1.1' | '2' | undefined {
+        return this.cfg.dataplaneHttpVersion;
+    }
+
+    get dataplaneIgnoreBadTls() {
+        return this.cfg.dataplaneIgnoreBadTls
+    }
+
+    get adminPasswords() {
+        return this.cfg.adminPasswords
+    }
+
+    get modServiceDid() {
+        return this.cfg.modServiceDid
+    }
+
+    get publicUrl() {
+        return this.cfg.publicUrl
+    }
+
+    get cdnUrl() {
+        return this.cfg.cdnUrl
     }
 }
 

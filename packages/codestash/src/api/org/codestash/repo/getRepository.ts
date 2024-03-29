@@ -2,32 +2,31 @@ import { InvalidRequestError } from "@atproto/xrpc-server";
 import { AppContext } from "../../../../context";
 import { Server } from "../../../../lexicon";
 import { createPipeline, noRules } from "../../../../pipeline";
+import { QueryParams } from '../../../../lexicon/types/org/codestash/repo/getRepo'
 import { HydrateCtx, HydrationState, Hydrator } from "../../../../hydration/hydrator";
 import { Views } from "../../../../views";
+import { DataPlaneClient } from "../../../../data-plane";
+import { resHeaders } from "../../../utils";
 
-export default function (server: Server, ctx: Context) {
-    const getRepo = createPipeline(skeleton, hydration, noRules, presentation)
+export default function (server: Server, ctx: AppContext) {
+    const getRepository = createPipeline(skeleton, hydration, noRules, presentation)
     server.org.codestash.repo.getRepo({
         auth: ctx.authVerifier.optionalStandardOrRole,
         handler: async ({ auth, params, req }) => {
             const { viewer, includeTakedowns } = ctx.authVerifier.parseCreds(auth);
-            const labelers = ctx.reqLabelers(req);
             const hydrateCtx = await ctx.hydrator.createContext({
-                labelers,
                 viewer,
-                includeTakedowns
+                includeTakedowns,
             });
 
-            const result = await getRepo({ ...params, hydrateCtx }, ctx);
-            // TODO fix
-            const repoRev = await ctx.hydrator.xx.getRepoRevSafe(viewer);
+            const result = await getRepository({ ...params, hydrateCtx }, ctx);
+            const repoRev = await ctx.hydrator.getRepoRevSafe(params.repository);
 
             return {
                 encoding: 'application/json',
                 body: result,
                 headers: resHeaders({
                     repoRev,
-                    labelers: hydrateCtx.labelers,
                 }),
             }
         },
@@ -39,20 +38,25 @@ const skeleton = async (input: {
     params: Params
 }): Promise<SkeletonState> => {
     const { ctx, params } = input;
-    const [did] = await ctx.hydrator.repo.getDids([params.repository]);
-    if (!did) {
-
-        throw new InvalidRequestError("Repository not found")
+    // Fetching repository ID based on repository URI
+    const url = await ctx.dataplane.getURL({});
+    if (!url) {
+        throw new InvalidRequestError("Repository not found");
     }
-    return { did };
+    return { url: url.url };
 }
 
-const hydration = async (input: {
+const hydration = async (inputs: {
     ctx: Context
     params: Params
     skeleton: SkeletonState
 }) => {
-    // Logic to hydrate repository data
+    const { ctx, params, skeleton } = inputs;
+    // Hydrating repository details based on repository ID
+    return await ctx.hydrator.hydrateRepositories(
+        [skeleton.url],
+        params.hydrateCtx.copy({ includeTakedowns: true }),
+    );
 }
 
 const presentation = (input: {
@@ -62,27 +66,31 @@ const presentation = (input: {
     hydration: HydrationState
 }) => {
     const { ctx, params, skeleton, hydration } = input;
-    const repository = ctx.views.repositoryDetailed(skeleton.did, hydration);
+    // Fetching and validating repository details for presentation
+    const repository = ctx.views.repository(skeleton.url, hydration);
     if (!repository) {
         throw new InvalidRequestError("Repository not found");
     } else if (
         !params.hydrateCtx.includeTakedowns &&
-        ctx.views.repositoryIsTakenDown(skeleton.did, hydration)) {
+        ctx.views.repositoryIsTakenDown(skeleton.url, hydration)
+    ) {
         throw new InvalidRequestError(
             "Repository has been taken down",
             "RepositoryTakedown"
-        )
+        );
     }
     return repository;
 }
 
+// Typings
 type Context = {
+    dataplane: DataPlaneClient,
     hydrator: Hydrator,
     views: Views
 }
 
-type Params = {
-    hydrateCtx: HydrateCtx
+type Params = QueryParams & {
+    hydrateCtx: HydrateCtx;
 }
 
-type SkeletonState = { did: string };
+type SkeletonState = { url: string };
