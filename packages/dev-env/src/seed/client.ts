@@ -172,7 +172,7 @@ export class SeedClient<
     const res = await this.agent.api.com.atproto.repo.putRecord(
       {
         repo: by,
-        collection: 'app.bsky.actor.profile',
+        collection: 'org.codestash.actor.profile',
         rkey: 'self',
         record,
       },

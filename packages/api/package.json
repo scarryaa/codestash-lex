@@ -16,6 +16,9 @@
   "author": "scarryaa",
   "license": "MIT",
   "dependencies": {
-    "@atproto/xrpc": "^0.5.0"
+    "@atproto/lexicon": "workspace:^",
+    "@atproto/xrpc": "^0.5.0",
+    "cid": "github:multiformats/cid",
+    "multiformats": "^9.9.0"
   }
 }

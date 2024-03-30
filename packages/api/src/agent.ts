@@ -15,7 +15,7 @@ export class AtpAgent {
     protected _refreshSessionPromise: Promise<void> | undefined;
 
     get com() {
-        return this.api.org;
+        return this.api.com;
     }
 
     static fetch: AtpAgentFetchHandler | undefined = defaultFetchHandler;

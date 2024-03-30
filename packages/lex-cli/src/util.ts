@@ -23,6 +23,7 @@ export function readAllLexicons(paths: string[]): LexiconDoc[] {
 export function readLexicon(path: string): LexiconDoc {
   let str: string
   let obj: unknown
+  console.log(obj);
   try {
     str = fs.readFileSync(path, 'utf8')
   } catch (e) {

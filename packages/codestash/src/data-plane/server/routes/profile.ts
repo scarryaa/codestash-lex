@@ -12,7 +12,7 @@ export default (db: Database): Partial<ServiceImpl<typeof Service>> => ({
       return { actors: [] }
     }
     const profileUris = dids.map(
-      (did) => `at://${did}/app.bsky.actor.profile/self`,
+      (did) => `at://${did}/org.codestash.actor.profile/self`,
     )
     const { ref } = db.db.dynamic
     const [handlesRes, profiles] = await Promise.all([

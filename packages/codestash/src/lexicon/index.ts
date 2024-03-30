@@ -105,6 +105,7 @@ export class Server {
 
   constructor(options?: XrpcOptions) {
     this.xrpc = createXrpcServer(schemas, options)
+    console.log(schemas);
     this.org = new OrgNS(this)
     this.com = new ComNS(this)
   }
@@ -155,7 +156,7 @@ export class OrgCodestashActorNS {
       OrgCodestashActorGetProfile.HandlerReqCtx<ExtractAuth<AV>>
     >,
   ) {
-    const nsid = 'org.codestash.actor.getProfile' // @ts-ignore this is fine
+    const nsid = 'org.codestash.actor.getProfile' // @ts-ignore
     return this._server.xrpc.method(nsid, cfg)
   }
 }

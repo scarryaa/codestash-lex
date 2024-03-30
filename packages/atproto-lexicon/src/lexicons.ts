@@ -81,6 +81,7 @@ export class Lexicons {
    * Get a definition.
    */
   getDef(uri: string): LexUserType | undefined {
+    console.log(uri);
     uri = toLexUri(uri)
     return this.defs.get(uri)
   }
