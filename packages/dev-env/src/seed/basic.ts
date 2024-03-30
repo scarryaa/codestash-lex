@@ -1,14 +1,14 @@
-import usersSeed from './users'
+import usersSeed from './users';
 // import { TestCodestash } from '../codestash'
-import { TestNetwork } from '../network'
-import { TestNetworkNoAppView } from '../network-no-appview'
-import { SeedClient } from './client'
+import { TestNetwork } from '../network';
+import { TestNetworkNoAppView } from '../network-no-appview';
+import { SeedClient } from './client';
 
 export default async (
   sc: SeedClient<TestNetwork | TestNetworkNoAppView>,
   users = true,
 ) => {
-  if (users) await usersSeed(sc)
+  if (users) await usersSeed(sc);
 
   // const alice = sc.dids.alice
   // const bob = sc.dids.bob
@@ -154,21 +154,21 @@ export default async (
   //   })
   // }
 
-  return sc
-}
+  return sc;
+};
 
 export const posts = {
   alice: ['hey there', 'again', 'yoohoo label_me'],
   bob: ['bob back at it again!', 'bobby boy here', 'yoohoo'],
   carol: ['hi im carol'],
   dan: ['dan here!', '@alice.bluesky.xyz is the best'],
-}
+};
 
 export const replies = {
   alice: ['thanks bob'],
   bob: ['hear that label_me label_me_2'],
   carol: ['of course'],
-}
+};
 
 // const createLabel = async (
 //   bsky: TestCodestash,

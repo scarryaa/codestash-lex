@@ -1,7 +1,7 @@
-import { Kysely, sql } from 'kysely'
+import { Kysely, sql } from 'kysely';
 
 export async function up(db: Kysely<any>): Promise<void> {
-  const { ref } = db.dynamic
+  const { ref } = db.dynamic;
 
   // materialized views are difficult to change,
   // so we parameterize them at runtime with contents of this table.
@@ -9,7 +9,7 @@ export async function up(db: Kysely<any>): Promise<void> {
     .createTable('view_param')
     .addColumn('name', 'varchar', (col) => col.primaryKey())
     .addColumn('value', 'varchar')
-    .execute()
+    .execute();
 
   await db
     .insertInto('view_param')
@@ -17,7 +17,7 @@ export async function up(db: Kysely<any>): Promise<void> {
       { name: 'whats_hot_like_threshold', value: '2' },
       { name: 'whats_hot_interval', value: '1day' },
     ])
-    .execute()
+    .execute();
 
   // define view query for whats-hot feed
   // tldr: scored by like count depreciated over time.
@@ -29,9 +29,9 @@ export async function up(db: Kysely<any>): Promise<void> {
   // T = time since submission (in hours)
   // G = Gravity, defaults to 1.8 in news.arc
 
-  const likeCount = ref('post_agg.likeCount')
-  const indexedAt = ref('post.indexedAt')
-  const computeScore = sql<number>`round(1000000 * (${likeCount} / ((EXTRACT(epoch FROM AGE(now(), ${indexedAt}::timestamp)) / 3600 + 2) ^ 1.8)))`
+  const likeCount = ref('post_agg.likeCount');
+  const indexedAt = ref('post.indexedAt');
+  const computeScore = sql<number>`round(1000000 * (${likeCount} / ((EXTRACT(epoch FROM AGE(now(), ${indexedAt}::timestamp)) / 3600 + 2) ^ 1.8)))`;
 
   const viewQb = db
     .selectFrom('post')
@@ -57,13 +57,13 @@ export async function up(db: Kysely<any>): Promise<void> {
         .where('name', '=', 'whats_hot_like_threshold')
         .select(sql`value::integer`.as('val')),
     )
-    .select(['post.uri as uri', 'post.cid as cid', computeScore.as('score')])
+    .select(['post.uri as uri', 'post.cid as cid', computeScore.as('score')]);
 
   await db.schema
     .createView('algo_whats_hot_view')
     .materialized()
     .as(viewQb)
-    .execute()
+    .execute();
 
   // unique index required for pg to refresh view w/ "concurrently" param.
   await db.schema
@@ -71,15 +71,15 @@ export async function up(db: Kysely<any>): Promise<void> {
     .on('algo_whats_hot_view')
     .column('uri')
     .unique()
-    .execute()
+    .execute();
   await db.schema
     .createIndex('algo_whats_hot_view_cursor_idx')
     .on('algo_whats_hot_view')
     .columns(['score', 'cid'])
-    .execute()
+    .execute();
 }
 
 export async function down(db: Kysely<unknown>): Promise<void> {
-  await db.schema.dropView('algo_whats_hot_view').materialized().execute()
-  await db.schema.dropTable('view_param').execute()
+  await db.schema.dropView('algo_whats_hot_view').materialized().execute();
+  await db.schema.dropTable('view_param').execute();
 }

@@ -1,4 +1,4 @@
-import { Kysely } from 'kysely'
+import { Kysely } from 'kysely';
 
 export async function up(db: Kysely<unknown>): Promise<void> {
   // Notifications
@@ -12,14 +12,14 @@ export async function up(db: Kysely<unknown>): Promise<void> {
     .addColumn('reason', 'varchar', (col) => col.notNull())
     .addColumn('reasonSubject', 'varchar')
     .addColumn('sortAt', 'varchar', (col) => col.notNull())
-    .execute()
+    .execute();
   await db.schema
     .createIndex('notification_did_sortat_idx')
     .on('notification')
     .columns(['did', 'sortAt'])
-    .execute()
+    .execute();
 }
 
 export async function down(db: Kysely<unknown>): Promise<void> {
-  await db.schema.dropTable('notification').execute()
+  await db.schema.dropTable('notification').execute();
 }

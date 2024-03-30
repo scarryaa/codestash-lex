@@ -1,13 +1,13 @@
-import { SeedClient } from './client'
-import basicSeed from './basic'
+import { SeedClient } from './client';
+import basicSeed from './basic';
 
 export default async (sc: SeedClient) => {
-  await basicSeed(sc)
+  await basicSeed(sc);
   await sc.createAccount('eve', {
     email: 'eve@test.com',
     handle: 'eve.test',
     password: 'eve-pass',
-  })
+  });
   // await sc.like(sc.dids.eve, sc.posts[sc.dids.alice][1].ref)
   // await sc.like(sc.dids.carol, sc.replies[sc.dids.bob][0].ref)
 
@@ -32,12 +32,12 @@ export default async (sc: SeedClient) => {
     email: 'fred@test.com',
     handle: 'fred.test',
     password: 'fred-pass',
-  })
+  });
   await sc.createAccount('gina', {
     email: 'gina@test.com',
     handle: 'gina.test',
     password: 'gina-pass',
-  })
+  });
 
-  return sc
-}
+  return sc;
+};

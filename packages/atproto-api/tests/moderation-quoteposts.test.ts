@@ -5,26 +5,26 @@ import {
   ModerationOpts,
   InterpretedLabelValueDefinition,
   interpretLabelValueDefinition,
-} from '../src'
-import './util/moderation-behavior'
+} from '../src';
+import './util/moderation-behavior';
 
 interface ScenarioResult {
-  profileList?: string[]
-  profileView?: string[]
-  avatar?: string[]
-  banner?: string[]
-  displayName?: string[]
-  contentList?: string[]
-  contentView?: string[]
-  contentMedia?: string[]
+  profileList?: string[];
+  profileView?: string[];
+  avatar?: string[];
+  banner?: string[];
+  displayName?: string[];
+  contentList?: string[];
+  contentView?: string[];
+  contentMedia?: string[];
 }
 
 interface Scenario {
-  blurs: 'content' | 'media' | 'none'
-  severity: 'alert' | 'inform' | 'none'
-  account: ScenarioResult
-  profile: ScenarioResult
-  post: ScenarioResult
+  blurs: 'content' | 'media' | 'none';
+  severity: 'alert' | 'inform' | 'none';
+  account: ScenarioResult;
+  profile: ScenarioResult;
+  post: ScenarioResult;
 }
 
 const TESTS: Scenario[] = [
@@ -138,7 +138,7 @@ const TESTS: Scenario[] = [
       contentList: ['filter'],
     },
   },
-]
+];
 
 describe('Moderation: custom labels', () => {
   const scenarios = TESTS.flatMap((test) => [
@@ -160,12 +160,12 @@ describe('Moderation: custom labels', () => {
       target: 'account',
       expected: test.account,
     },
-  ])
+  ]);
   it.each(scenarios)(
     'blurs=$blurs, severity=$severity, target=$target',
     ({ blurs, severity, target, expected }) => {
-      let postLabels
-      let profileLabels
+      let postLabels;
+      let profileLabels;
       if (target === 'post') {
         postLabels = [
           mock.label({
@@ -173,7 +173,7 @@ describe('Moderation: custom labels', () => {
             uri: 'at://did:web:carla.test/app.bsky.feed.post/fake',
             src: 'did:web:labeler.test',
           }),
-        ]
+        ];
       } else if (target === 'profile') {
         profileLabels = [
           mock.label({
@@ -181,7 +181,7 @@ describe('Moderation: custom labels', () => {
             uri: 'at://did:web:carla.test/app.bsky.actor.profile/self',
             src: 'did:web:labeler.test',
           }),
-        ]
+        ];
       } else {
         profileLabels = [
           mock.label({
@@ -189,7 +189,7 @@ describe('Moderation: custom labels', () => {
             uri: 'did:web:carla.test',
             src: 'did:web:labeler.test',
           }),
-        ]
+        ];
       }
 
       const post = mock.postView({
@@ -212,32 +212,32 @@ describe('Moderation: custom labels', () => {
           handle: 'bob.test',
           displayName: 'Bob',
         }),
-      })
-      const res = moderatePost(post, modOpts(blurs, severity))
+      });
+      const res = moderatePost(post, modOpts(blurs, severity));
 
       expect(res.ui('profileList')).toBeModerationResult(
         expected.profileList || [],
-      )
+      );
       expect(res.ui('profileView')).toBeModerationResult(
         expected.profileView || [],
-      )
-      expect(res.ui('avatar')).toBeModerationResult(expected.avatar || [])
-      expect(res.ui('banner')).toBeModerationResult(expected.banner || [])
+      );
+      expect(res.ui('avatar')).toBeModerationResult(expected.avatar || []);
+      expect(res.ui('banner')).toBeModerationResult(expected.banner || []);
       expect(res.ui('displayName')).toBeModerationResult(
         expected.displayName || [],
-      )
+      );
       expect(res.ui('contentList')).toBeModerationResult(
         expected.contentList || [],
-      )
+      );
       expect(res.ui('contentView')).toBeModerationResult(
         expected.contentView || [],
-      )
+      );
       expect(res.ui('contentMedia')).toBeModerationResult(
         expected.contentMedia || [],
-      )
+      );
     },
-  )
-})
+  );
+});
 
 function modOpts(blurs: string, severity: string): ModerationOpts {
   return {
@@ -257,7 +257,7 @@ function modOpts(blurs: string, severity: string): ModerationOpts {
     labelDefs: {
       'did:web:labeler.test': [makeCustomLabel(blurs, severity)],
     },
-  }
+  };
 }
 
 function makeCustomLabel(
@@ -273,5 +273,5 @@ function makeCustomLabel(
       locales: [],
     },
     'did:web:labeler.test',
-  )
+  );
 }

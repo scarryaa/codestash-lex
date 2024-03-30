@@ -1,4 +1,4 @@
-import { Kysely } from 'kysely'
+import { Kysely } from 'kysely';
 
 export async function up(db: Kysely<unknown>): Promise<void> {
   await db.schema
@@ -21,7 +21,7 @@ export async function up(db: Kysely<unknown>): Promise<void> {
     .addColumn('createLabelVals', 'varchar')
     .addColumn('negateLabelVals', 'varchar')
     .addColumn('legacyRefId', 'integer')
-    .execute()
+    .execute();
   await db.schema
     .createTable('moderation_subject_status')
     .addColumn('id', 'serial', (col) => col.primaryKey())
@@ -51,24 +51,24 @@ export async function up(db: Kysely<unknown>): Promise<void> {
     .addColumn('createdAt', 'varchar', (col) => col.notNull())
     .addColumn('updatedAt', 'varchar', (col) => col.notNull())
     .addUniqueConstraint('moderation_status_unique_idx', ['did', 'recordPath'])
-    .execute()
+    .execute();
 
   await db.schema
     .createIndex('moderation_subject_status_blob_cids_idx')
     .on('moderation_subject_status')
     .using('gin')
     .column('blobCids')
-    .execute()
+    .execute();
 
   // Move foreign keys from moderation_action to moderation_event
   await db.schema
     .alterTable('record')
     .dropConstraint('record_takedown_id_fkey')
-    .execute()
+    .execute();
   await db.schema
     .alterTable('actor')
     .dropConstraint('actor_takedown_id_fkey')
-    .execute()
+    .execute();
   await db.schema
     .alterTable('actor')
     .addForeignKeyConstraint(
@@ -77,7 +77,7 @@ export async function up(db: Kysely<unknown>): Promise<void> {
       'moderation_event',
       ['id'],
     )
-    .execute()
+    .execute();
   await db.schema
     .alterTable('record')
     .addForeignKeyConstraint(
@@ -86,22 +86,22 @@ export async function up(db: Kysely<unknown>): Promise<void> {
       'moderation_event',
       ['id'],
     )
-    .execute()
+    .execute();
 }
 
 export async function down(db: Kysely<unknown>): Promise<void> {
-  await db.schema.dropTable('moderation_event').execute()
-  await db.schema.dropTable('moderation_subject_status').execute()
+  await db.schema.dropTable('moderation_event').execute();
+  await db.schema.dropTable('moderation_subject_status').execute();
 
   // Revert foreign key constraints
   await db.schema
     .alterTable('record')
     .dropConstraint('record_takedown_id_fkey')
-    .execute()
+    .execute();
   await db.schema
     .alterTable('actor')
     .dropConstraint('actor_takedown_id_fkey')
-    .execute()
+    .execute();
   await db.schema
     .alterTable('actor')
     .addForeignKeyConstraint(
@@ -110,7 +110,7 @@ export async function down(db: Kysely<unknown>): Promise<void> {
       'moderation_action',
       ['id'],
     )
-    .execute()
+    .execute();
   await db.schema
     .alterTable('record')
     .addForeignKeyConstraint(
@@ -119,5 +119,5 @@ export async function down(db: Kysely<unknown>): Promise<void> {
       'moderation_action',
       ['id'],
     )
-    .execute()
+    .execute();
 }

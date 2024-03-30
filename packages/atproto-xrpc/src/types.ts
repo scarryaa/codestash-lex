@@ -1,18 +1,18 @@
-import { z } from 'zod'
-import { ValidationError } from '@atproto/lexicon'
+import { z } from 'zod';
+import { ValidationError } from '@atproto/lexicon';
 
-export type QueryParams = Record<string, any>
-export type Headers = Record<string, string>
+export type QueryParams = Record<string, any>;
+export type Headers = Record<string, string>;
 
 export interface CallOptions {
-  encoding?: string
-  headers?: Headers
+  encoding?: string;
+  headers?: Headers;
 }
 
 export interface FetchHandlerResponse {
-  status: number
-  headers: Headers
-  body: ArrayBuffer | undefined
+  status: number;
+  headers: Headers;
+  body: ArrayBuffer | undefined;
 }
 
 export type FetchHandler = (
@@ -20,13 +20,13 @@ export type FetchHandler = (
   httpMethod: string,
   httpHeaders: Headers,
   httpReqBody: any,
-) => Promise<FetchHandlerResponse>
+) => Promise<FetchHandlerResponse>;
 
 export const errorResponseBody = z.object({
   error: z.string().optional(),
   message: z.string().optional(),
-})
-export type ErrorResponseBody = z.infer<typeof errorResponseBody>
+});
+export type ErrorResponseBody = z.infer<typeof errorResponseBody>;
 
 export enum ResponseType {
   Unknown = 1,
@@ -59,7 +59,7 @@ export const ResponseTypeNames = {
   [ResponseType.UpstreamFailure]: 'UpstreamFailure',
   [ResponseType.NotEnoughResources]: 'NotEnoughResources',
   [ResponseType.UpstreamTimeout]: 'UpstreamTimeout',
-}
+};
 
 export const ResponseTypeStrings = {
   [ResponseType.InvalidResponse]: 'Invalid Response',
@@ -75,17 +75,20 @@ export const ResponseTypeStrings = {
   [ResponseType.UpstreamFailure]: 'Upstream Failure',
   [ResponseType.NotEnoughResources]: 'Not Enough Resources',
   [ResponseType.UpstreamTimeout]: 'Upstream Timeout',
-}
+};
 
 export class XRPCResponse {
-  success = true
+  success = true;
 
-  constructor(public data: any, public headers: Headers) {}
+  constructor(
+    public data: any,
+    public headers: Headers,
+  ) {}
 }
 
 export class XRPCError extends Error {
-  success = false
-  headers?: Headers
+  success = false;
+  headers?: Headers;
 
   constructor(
     public status: ResponseType,
@@ -93,11 +96,11 @@ export class XRPCError extends Error {
     message?: string,
     headers?: Headers,
   ) {
-    super(message || error || ResponseTypeStrings[status])
+    super(message || error || ResponseTypeStrings[status]);
     if (!this.error) {
-      this.error = ResponseTypeNames[status]
+      this.error = ResponseTypeNames[status];
     }
-    this.headers = headers
+    this.headers = headers;
   }
 }
 
@@ -111,6 +114,6 @@ export class XRPCInvalidResponseError extends XRPCError {
       ResponseType.InvalidResponse,
       ResponseTypeStrings[ResponseType.InvalidResponse],
       `The server gave an invalid response and may be out of date.`,
-    )
+    );
   }
 }

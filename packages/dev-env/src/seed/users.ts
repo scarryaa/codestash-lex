@@ -1,26 +1,26 @@
-import { SeedClient } from './client'
+import { SeedClient } from './client';
 
 export default async (sc: SeedClient) => {
-  await sc.createAccount('alice', users.alice)
-  await sc.createAccount('bob', users.bob)
-  await sc.createAccount('carol', users.carol)
-  await sc.createAccount('dan', users.dan)
+  await sc.createAccount('alice', users.alice);
+  await sc.createAccount('bob', users.bob);
+  await sc.createAccount('carol', users.carol);
+  await sc.createAccount('dan', users.dan);
 
   await sc.createProfile(
     sc.dids.alice,
     users.alice.displayName,
     users.alice.description,
     users.alice.selfLabels,
-  )
+  );
   await sc.createProfile(
     sc.dids.bob,
     users.bob.displayName,
     users.bob.description,
     users.bob.selfLabels,
-  )
+  );
 
-  return sc
-}
+  return sc;
+};
 
 const users = {
   alice: {
@@ -55,4 +55,4 @@ const users = {
     description: undefined,
     selfLabels: undefined,
   },
-}
+};

@@ -1,15 +1,15 @@
-import { AtpAgent, RichText, RichTextSegment } from '../src'
-import { isTag } from '../src/client/types/app/bsky/richtext/facet'
+import { AtpAgent, RichText, RichTextSegment } from '../src';
+import { isTag } from '../src/client/types/app/bsky/richtext/facet';
 
 describe('detectFacets', () => {
-  const agent = new AtpAgent({ service: 'http://localhost' })
+  const agent = new AtpAgent({ service: 'http://localhost' });
   agent.resolveHandle = ({ handle }: { handle: string }) => {
     return Promise.resolve({
       success: true,
       headers: {},
       data: { did: 'did:fake:' + handle },
-    })
-  }
+    });
+  };
 
   const inputs = [
     'no mention',
@@ -56,7 +56,7 @@ describe('detectFacets', () => {
     'punctuation https://foo.com, https://bar.com/whatever; https://baz.com.',
     'parenthentical (https://foo.com)',
     'except for https://foo.com/thing_(cool)',
-  ]
+  ];
   const outputs: string[][][] = [
     [['no mention']],
     [['@handle.com', 'did:fake:handle.com'], [' middle end']],
@@ -208,15 +208,15 @@ describe('detectFacets', () => {
       ['except for '],
       ['https://foo.com/thing_(cool)', 'https://foo.com/thing_(cool)'],
     ],
-  ]
+  ];
   it('correctly handles a set of text inputs', async () => {
     for (let i = 0; i < inputs.length; i++) {
-      const input = inputs[i]
-      const rt = new RichText({ text: input })
-      await rt.detectFacets(agent)
-      expect(Array.from(rt.segments(), segmentToOutput)).toEqual(outputs[i])
+      const input = inputs[i];
+      const rt = new RichText({ text: input });
+      await rt.detectFacets(agent);
+      expect(Array.from(rt.segments(), segmentToOutput)).toEqual(outputs[i]);
     }
-  })
+  });
 
   describe('correctly detects tags inline', () => {
     const inputs: [
@@ -344,30 +344,30 @@ describe('detectFacets', () => {
         [{ byteStart: 36, byteEnd: 49 }],
       ],
       ['no match 1?: #1?', [], []],
-    ]
+    ];
 
     it.each(inputs)('%s', async (input, tags, indices) => {
-      const rt = new RichText({ text: input })
-      await rt.detectFacets(agent)
+      const rt = new RichText({ text: input });
+      await rt.detectFacets(agent);
 
-      const detectedTags: string[] = []
-      const detectedIndices: { byteStart: number; byteEnd: number }[] = []
+      const detectedTags: string[] = [];
+      const detectedIndices: { byteStart: number; byteEnd: number }[] = [];
 
       for (const { facet } of rt.segments()) {
-        if (!facet) continue
+        if (!facet) continue;
         for (const feature of facet.features) {
           if (isTag(feature)) {
-            detectedTags.push(feature.tag)
+            detectedTags.push(feature.tag);
           }
         }
-        detectedIndices.push(facet.index)
+        detectedIndices.push(facet.index);
       }
 
-      expect(detectedTags).toEqual(tags)
-      expect(detectedIndices).toEqual(indices)
-    })
-  })
-})
+      expect(detectedTags).toEqual(tags);
+      expect(detectedIndices).toEqual(indices);
+    });
+  });
+});
 
 function segmentToOutput(segment: RichTextSegment): string[] {
   if (segment.facet) {
@@ -375,14 +375,14 @@ function segmentToOutput(segment: RichTextSegment): string[] {
       segment.text,
       segment.facet?.features.map((f) => {
         if (f.did) {
-          return String(f.did)
+          return String(f.did);
         }
         if (f.uri) {
-          return String(f.uri)
+          return String(f.uri);
         }
-        return undefined
+        return undefined;
       })?.[0] || '',
-    ]
+    ];
   }
-  return [segment.text]
+  return [segment.text];
 }

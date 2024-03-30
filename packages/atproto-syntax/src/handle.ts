@@ -1,4 +1,4 @@
-export const INVALID_HANDLE = 'handle.invalid'
+export const INVALID_HANDLE = 'handle.invalid';
 
 // Currently these are registration-time restrictions, not protocol-level
 // restrictions. We have a couple accounts in the wild that we need to clean up
@@ -16,7 +16,7 @@ export const DISALLOWED_TLDS = [
   '.onion',
   // NOTE: .test is allowed in testing and devopment. In practical terms
   // "should" "never" actually resolve and get registered in production
-]
+];
 
 // Handle constraints, in English:
 //  - must be a possible domain name
@@ -42,36 +42,36 @@ export const ensureValidHandle = (handle: string): void => {
   if (!/^[a-zA-Z0-9.-]*$/.test(handle)) {
     throw new InvalidHandleError(
       'Disallowed characters in handle (ASCII letters, digits, dashes, periods only)',
-    )
+    );
   }
 
   if (handle.length > 253) {
-    throw new InvalidHandleError('Handle is too long (253 chars max)')
+    throw new InvalidHandleError('Handle is too long (253 chars max)');
   }
-  const labels = handle.split('.')
+  const labels = handle.split('.');
   if (labels.length < 2) {
-    throw new InvalidHandleError('Handle domain needs at least two parts')
+    throw new InvalidHandleError('Handle domain needs at least two parts');
   }
   for (let i = 0; i < labels.length; i++) {
-    const l = labels[i]
+    const l = labels[i];
     if (l.length < 1) {
-      throw new InvalidHandleError('Handle parts can not be empty')
+      throw new InvalidHandleError('Handle parts can not be empty');
     }
     if (l.length > 63) {
-      throw new InvalidHandleError('Handle part too long (max 63 chars)')
+      throw new InvalidHandleError('Handle part too long (max 63 chars)');
     }
     if (l.endsWith('-') || l.startsWith('-')) {
       throw new InvalidHandleError(
         'Handle parts can not start or end with hyphens',
-      )
+      );
     }
     if (i + 1 == labels.length && !/^[a-zA-Z]/.test(l)) {
       throw new InvalidHandleError(
         'Handle final component (TLD) must start with ASCII letter',
-      )
+      );
     }
   }
-}
+};
 
 // simple regex translation of above constraints
 export const ensureValidHandleRegex = (handle: string): void => {
@@ -80,39 +80,39 @@ export const ensureValidHandleRegex = (handle: string): void => {
       handle,
     )
   ) {
-    throw new InvalidHandleError("Handle didn't validate via regex")
+    throw new InvalidHandleError("Handle didn't validate via regex");
   }
   if (handle.length > 253) {
-    throw new InvalidHandleError('Handle is too long (253 chars max)')
+    throw new InvalidHandleError('Handle is too long (253 chars max)');
   }
-}
+};
 
 export const normalizeHandle = (handle: string): string => {
-  return handle.toLowerCase()
-}
+  return handle.toLowerCase();
+};
 
 export const normalizeAndEnsureValidHandle = (handle: string): string => {
-  const normalized = normalizeHandle(handle)
-  ensureValidHandle(normalized)
-  return normalized
-}
+  const normalized = normalizeHandle(handle);
+  ensureValidHandle(normalized);
+  return normalized;
+};
 
 export const isValidHandle = (handle: string): boolean => {
   try {
-    ensureValidHandle(handle)
+    ensureValidHandle(handle);
   } catch (err) {
     if (err instanceof InvalidHandleError) {
-      return false
+      return false;
     }
-    throw err
+    throw err;
   }
 
-  return true
-}
+  return true;
+};
 
 export const isValidTld = (handle: string): boolean => {
-  return !DISALLOWED_TLDS.some((domain) => handle.endsWith(domain))
-}
+  return !DISALLOWED_TLDS.some((domain) => handle.endsWith(domain));
+};
 
 export class InvalidHandleError extends Error {}
 export class ReservedHandleError extends Error {}

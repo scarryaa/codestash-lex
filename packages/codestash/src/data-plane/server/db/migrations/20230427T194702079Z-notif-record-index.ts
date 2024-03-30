@@ -1,4 +1,4 @@
-import { Kysely } from 'kysely'
+import { Kysely } from 'kysely';
 
 export async function up(db: Kysely<unknown>): Promise<void> {
   // Supports record deletion
@@ -6,9 +6,9 @@ export async function up(db: Kysely<unknown>): Promise<void> {
     .createIndex('notification_record_idx')
     .on('notification')
     .column('recordUri')
-    .execute()
+    .execute();
 }
 
 export async function down(db: Kysely<unknown>): Promise<void> {
-  await db.schema.dropIndex('notification_record_idx').execute()
+  await db.schema.dropIndex('notification_record_idx').execute();
 }

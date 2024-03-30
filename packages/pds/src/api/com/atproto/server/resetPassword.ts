@@ -1,7 +1,7 @@
-import AppContext from '../../../../context'
-import { Server } from '../../../../lexicon'
-import { MINUTE } from '@atproto/common'
-import { authPassthru } from '../../../proxy'
+import AppContext from '../../../../context';
+import { Server } from '../../../../lexicon';
+import { MINUTE } from '@atproto/common';
+import { authPassthru } from '../../../proxy';
 
 export default function (server: Server, ctx: AppContext) {
   server.com.atproto.server.resetPassword({
@@ -16,13 +16,13 @@ export default function (server: Server, ctx: AppContext) {
         await ctx.entrywayAgent.com.atproto.server.resetPassword(
           input.body,
           authPassthru(req, true),
-        )
-        return
+        );
+        return;
       }
 
-      const { token, password } = input.body
+      const { token, password } = input.body;
 
-      await ctx.accountManager.resetPassword({ token, password })
+      await ctx.accountManager.resetPassword({ token, password });
     },
-  })
+  });
 }

@@ -1,5 +1,5 @@
-import { handleAllSettledErrors } from '@atproto/common'
-import { ImageInvalidator } from './types'
+import { handleAllSettledErrors } from '@atproto/common';
+import { ImageInvalidator } from './types';
 
 export class MultiImageInvalidator implements ImageInvalidator {
   constructor(public invalidators: ImageInvalidator[]) {}
@@ -8,7 +8,7 @@ export class MultiImageInvalidator implements ImageInvalidator {
       this.invalidators.map((invalidator) =>
         invalidator.invalidate(subject, paths),
       ),
-    )
-    handleAllSettledErrors(results)
+    );
+    handleAllSettledErrors(results);
   }
 }

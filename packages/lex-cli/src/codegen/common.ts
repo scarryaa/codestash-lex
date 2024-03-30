@@ -1,7 +1,7 @@
-import { Project, SourceFile, VariableDeclarationKind } from 'ts-morph'
-import { LexiconDoc } from '@atproto/lexicon'
-import prettier from 'prettier'
-import { GeneratedFile } from '../types'
+import { Project, SourceFile, VariableDeclarationKind } from 'ts-morph';
+import { LexiconDoc } from '@atproto/lexicon';
+import prettier from 'prettier';
+import { GeneratedFile } from '../types';
 
 const PRETTIER_OPTS = {
   parser: 'babel-ts',
@@ -9,7 +9,7 @@ const PRETTIER_OPTS = {
   semi: false,
   singleQuote: true,
   trailingComma: 'all' as const,
-}
+};
 
 export const utilTs = (project) =>
   gen(project, '/util.ts', async (file) => {
@@ -24,8 +24,8 @@ export const utilTs = (project) =>
   ): data is Record<K, unknown> {
     return prop in data
   }
-  `)
-  })
+  `);
+  });
 
 export const lexiconsTs = (project, lexicons: LexiconDoc[]) =>
   gen(project, '/lexicons.ts', async (file) => {
@@ -33,15 +33,15 @@ export const lexiconsTs = (project, lexicons: LexiconDoc[]) =>
       return nsid
         .split('.')
         .map((word) => word[0].toUpperCase() + word.slice(1))
-        .join('')
-    }
+        .join('');
+    };
 
     //= import {LexiconDoc} from '@atproto/lexicon'
     file
       .addImportDeclaration({
         moduleSpecifier: '@atproto/lexicon',
       })
-      .addNamedImports([{ name: 'LexiconDoc' }, { name: 'Lexicons' }])
+      .addNamedImports([{ name: 'LexiconDoc' }, { name: 'Lexicons' }]);
 
     //= export const schemaDict: Record<string, LexiconDoc> = {...}
     file.addVariableStatement({
@@ -63,7 +63,7 @@ export const lexiconsTs = (project, lexicons: LexiconDoc[]) =>
           ),
         },
       ],
-    })
+    });
 
     //= export const schemas: LexiconDoc[] = Object.values(schemaDict) as LexiconDoc[]
     file.addVariableStatement({
@@ -76,7 +76,7 @@ export const lexiconsTs = (project, lexicons: LexiconDoc[]) =>
           initializer: 'Object.values(schemaDict) as LexiconDoc[]',
         },
       ],
-    })
+    });
 
     //= export const lexicons: Lexicons = new Lexicons(schemas)
     file.addVariableStatement({
@@ -89,7 +89,7 @@ export const lexiconsTs = (project, lexicons: LexiconDoc[]) =>
           initializer: 'new Lexicons(schemas)',
         },
       ],
-    })
+    });
 
     //= export const ids = {...}
     file.addVariableStatement({
@@ -103,32 +103,32 @@ export const lexiconsTs = (project, lexicons: LexiconDoc[]) =>
               return {
                 ...acc,
                 [nsidToEnum(cur.id)]: cur.id,
-              }
+              };
             }, {}),
           ),
         },
       ],
-    })
-  })
+    });
+  });
 
 export async function gen(
   project: Project,
   path: string,
   gen: (file: SourceFile) => Promise<void>,
 ): Promise<GeneratedFile> {
-  const file = project.createSourceFile(path)
-  await gen(file)
-  file.saveSync()
-  const src = project.getFileSystem().readFileSync(path)
+  const file = project.createSourceFile(path);
+  await gen(file);
+  file.saveSync();
+  const src = project.getFileSystem().readFileSync(path);
   return {
     path: path,
     content: `${banner()}${await prettier.format(src, PRETTIER_OPTS)}`,
-  }
+  };
 }
 
 function banner() {
   return `/**
  * GENERATED CODE - DO NOT MODIFY
  */
-`
+`;
 }

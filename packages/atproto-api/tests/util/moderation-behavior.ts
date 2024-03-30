@@ -3,61 +3,61 @@ import {
   ModerationOpts,
   ComAtprotoLabelDefs,
   LabelPreference,
-} from '../../src'
-import { mock as m } from '../../src/mocker'
+} from '../../src';
+import { mock as m } from '../../src/mocker';
 
 export type ModerationTestSuiteResultFlag =
   | 'filter'
   | 'blur'
   | 'alert'
   | 'inform'
-  | 'noOverride'
+  | 'noOverride';
 
 export interface ModerationTestSuiteScenario {
-  cfg: string
-  subject: 'post' | 'profile' | 'userlist' | 'feedgen'
-  author: string
-  quoteAuthor?: string
+  cfg: string;
+  subject: 'post' | 'profile' | 'userlist' | 'feedgen';
+  author: string;
+  quoteAuthor?: string;
   labels: {
-    post?: string[]
-    profile?: string[]
-    account?: string[]
-    quotedPost?: string[]
-    quotedAccount?: string[]
-  }
+    post?: string[];
+    profile?: string[];
+    account?: string[];
+    quotedPost?: string[];
+    quotedAccount?: string[];
+  };
   behaviors: {
-    profileList?: ModerationTestSuiteResultFlag[]
-    profileView?: ModerationTestSuiteResultFlag[]
-    avatar?: ModerationTestSuiteResultFlag[]
-    banner?: ModerationTestSuiteResultFlag[]
-    displayName?: ModerationTestSuiteResultFlag[]
-    contentList?: ModerationTestSuiteResultFlag[]
-    contentView?: ModerationTestSuiteResultFlag[]
-    contentMedia?: ModerationTestSuiteResultFlag[]
-  }
+    profileList?: ModerationTestSuiteResultFlag[];
+    profileView?: ModerationTestSuiteResultFlag[];
+    avatar?: ModerationTestSuiteResultFlag[];
+    banner?: ModerationTestSuiteResultFlag[];
+    displayName?: ModerationTestSuiteResultFlag[];
+    contentList?: ModerationTestSuiteResultFlag[];
+    contentView?: ModerationTestSuiteResultFlag[];
+    contentMedia?: ModerationTestSuiteResultFlag[];
+  };
 }
 
 export type SuiteUsers = Record<
   string,
   {
-    blocking: boolean
-    blockingByList: boolean
-    blockedBy: boolean
-    muted: boolean
-    mutedByList: boolean
+    blocking: boolean;
+    blockingByList: boolean;
+    blockedBy: boolean;
+    muted: boolean;
+    mutedByList: boolean;
   }
->
+>;
 
 export type SuiteConfigurations = Record<
   string,
   {
-    authed?: boolean
-    adultContentEnabled?: boolean
-    settings?: Record<string, LabelPreference>
+    authed?: boolean;
+    adultContentEnabled?: boolean;
+    settings?: Record<string, LabelPreference>;
   }
->
+>;
 
-export type SuiteScenarios = Record<string, ModerationTestSuiteScenario>
+export type SuiteScenarios = Record<string, ModerationTestSuiteScenario>;
 
 expect.extend({
   toBeModerationResult(
@@ -73,7 +73,7 @@ expect.extend({
         `${msg}.${
           stringifiedResult ? ` Full result: ${stringifiedResult}` : ''
         }`,
-    })
+    });
     // let cause = actual.causes?.type as string
     // if (actual.cause?.type === 'label') {
     //   cause = `label:${actual.cause.labelDef.id}`
@@ -91,68 +91,68 @@ expect.extend({
       //   return fail(`${context} expected to be a no-op, got ${cause}`)
       // }
       if (actual.inform) {
-        return fail(`${context} expected to be a no-op, got inform=true`)
+        return fail(`${context} expected to be a no-op, got inform=true`);
       }
       if (actual.alert) {
-        return fail(`${context} expected to be a no-op, got alert=true`)
+        return fail(`${context} expected to be a no-op, got alert=true`);
       }
       if (actual.blur) {
-        return fail(`${context} expected to be a no-op, got blur=true`)
+        return fail(`${context} expected to be a no-op, got blur=true`);
       }
       if (actual.filter) {
-        return fail(`${context} expected to be a no-op, got filter=true`)
+        return fail(`${context} expected to be a no-op, got filter=true`);
       }
       if (actual.noOverride) {
-        return fail(`${context} expected to be a no-op, got noOverride=true`)
+        return fail(`${context} expected to be a no-op, got noOverride=true`);
       }
     } else {
       // if (!ignoreCause && cause !== expected.cause) {
       //   return fail(`${context} expected to be ${expected.cause}, got ${cause}`)
       // }
-      const expectedInform = expected.includes('inform')
+      const expectedInform = expected.includes('inform');
       if (!!actual.inform !== expectedInform) {
         return fail(
           `${context} expected to be inform=${expectedInform}, got ${
             actual.inform || false
           }`,
-        )
+        );
       }
-      const expectedAlert = expected.includes('alert')
+      const expectedAlert = expected.includes('alert');
       if (!!actual.alert !== expectedAlert) {
         return fail(
           `${context} expected to be alert=${expectedAlert}, got ${
             actual.alert || false
           }`,
-        )
+        );
       }
-      const expectedBlur = expected.includes('blur')
+      const expectedBlur = expected.includes('blur');
       if (!!actual.blur !== expectedBlur) {
         return fail(
           `${context} expected to be blur=${expectedBlur}, got ${
             actual.blur || false
           }`,
-        )
+        );
       }
-      const expectedFilter = expected.includes('filter')
+      const expectedFilter = expected.includes('filter');
       if (!!actual.filter !== expectedFilter) {
         return fail(
           `${context} expected to be filter=${expectedFilter}, got ${
             actual.filter || false
           }`,
-        )
+        );
       }
-      const expectedNoOverride = expected.includes('noOverride')
+      const expectedNoOverride = expected.includes('noOverride');
       if (!!actual.noOverride !== expectedNoOverride) {
         return fail(
           `${context} expected to be noOverride=${expectedNoOverride}, got ${
             actual.noOverride || false
           }`,
-        )
+        );
       }
     }
-    return { pass: true, message: () => '' }
+    return { pass: true, message: () => '' };
   },
-})
+});
 
 export class ModerationBehaviorSuiteRunner {
   constructor(
@@ -163,9 +163,9 @@ export class ModerationBehaviorSuiteRunner {
 
   postScenario(scenario: ModerationTestSuiteScenario) {
     if (scenario.subject !== 'post') {
-      throw new Error('Scenario subject must be "post"')
+      throw new Error('Scenario subject must be "post"');
     }
-    const author = this.profileViewBasic(scenario.author, scenario.labels)
+    const author = this.profileViewBasic(scenario.author, scenario.labels);
     return m.postView({
       record: m.post({
         text: 'Post text',
@@ -190,26 +190,26 @@ export class ModerationBehaviorSuiteRunner {
             }),
           })
         : undefined,
-    })
+    });
   }
 
   profileScenario(scenario: ModerationTestSuiteScenario) {
     if (scenario.subject !== 'profile') {
-      throw new Error('Scenario subject must be "profile"')
+      throw new Error('Scenario subject must be "profile"');
     }
-    return this.profileViewBasic(scenario.author, scenario.labels)
+    return this.profileViewBasic(scenario.author, scenario.labels);
   }
 
   profileViewBasic(
     name: string,
     scenarioLabels: ModerationTestSuiteScenario['labels'],
   ) {
-    const def = this.users[name]
+    const def = this.users[name];
 
-    const labels: ComAtprotoLabelDefs.Label[] = []
+    const labels: ComAtprotoLabelDefs.Label[] = [];
     if (scenarioLabels.account) {
       for (const l of scenarioLabels.account) {
-        labels.push(m.label({ val: l, uri: `did:web:${name}` }))
+        labels.push(m.label({ val: l, uri: `did:web:${name}` }));
       }
     }
     if (scenarioLabels.profile) {
@@ -219,7 +219,7 @@ export class ModerationBehaviorSuiteRunner {
             val: l,
             uri: `at://did:web:${name}/app.bsky.actor.profile/self`,
           }),
-        )
+        );
       }
     }
 
@@ -240,7 +240,7 @@ export class ModerationBehaviorSuiteRunner {
           ? m.listViewBasic({ name: 'Fake List' })
           : undefined,
       }),
-    })
+    });
   }
 
   moderationOpts(scenario: ModerationTestSuiteScenario): ModerationOpts {
@@ -263,6 +263,6 @@ export class ModerationBehaviorSuiteRunner {
         mutedWords: [],
         hiddenPosts: [],
       },
-    }
+    };
   }
 }

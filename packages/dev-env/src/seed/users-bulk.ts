@@ -1,28 +1,28 @@
-import { chunkArray } from '@atproto/common-web'
-import { SeedClient } from './client'
+import { chunkArray } from '@atproto/common-web';
+import { SeedClient } from './client';
 
 export default async (sc: SeedClient, max = Infinity) => {
   // @TODO when these are run in parallel, seem to get an intermittent
   // "TypeError: fetch failed" while running the tests.
-  const userSubset = users.slice(0, Math.min(max, users.length))
-  const chunks = chunkArray(userSubset, 50)
+  const userSubset = users.slice(0, Math.min(max, users.length));
+  const chunks = chunkArray(userSubset, 50);
   for (const chunk of chunks) {
     await Promise.all(
       chunk.map(async (user) => {
-        const { handle, displayName } = user
+        const { handle, displayName } = user;
         await sc.createAccount(handle, {
           handle: handle,
           password: 'password',
           email: `${handle}@bsky.app`,
-        })
+        });
         if (displayName !== null) {
-          await sc.createProfile(sc.dids[handle], displayName, '')
+          await sc.createProfile(sc.dids[handle], displayName, '');
         }
       }),
-    )
+    );
   }
-  return sc
-}
+  return sc;
+};
 
 const users = [
   { handle: 'silas77.test', displayName: 'Tanya Denesik' },
@@ -225,4 +225,4 @@ const users = [
   { handle: 'gideon-ohara51.test', displayName: null },
   { handle: 'carolina-mcdermott77.test', displayName: 'Latoya Windler' },
   { handle: 'danyka90.test', displayName: 'Hope Kub' },
-]
+];

@@ -1,36 +1,39 @@
-import { Kysely, Migrator as KyselyMigrator, Migration } from 'kysely'
+import { Kysely, Migrator as KyselyMigrator, Migration } from 'kysely';
 
 export class Migrator<T> extends KyselyMigrator {
-  constructor(public db: Kysely<T>, migrations: Record<string, Migration>) {
+  constructor(
+    public db: Kysely<T>,
+    migrations: Record<string, Migration>,
+  ) {
     super({
       db,
       provider: {
         async getMigrations() {
-          return migrations
+          return migrations;
         },
       },
-    })
+    });
   }
 
   async migrateToOrThrow(migration: string) {
-    const { error, results } = await this.migrateTo(migration)
+    const { error, results } = await this.migrateTo(migration);
     if (error) {
-      throw error
+      throw error;
     }
     if (!results) {
-      throw new Error('An unknown failure occurred while migrating')
+      throw new Error('An unknown failure occurred while migrating');
     }
-    return results
+    return results;
   }
 
   async migrateToLatestOrThrow() {
-    const { error, results } = await this.migrateToLatest()
+    const { error, results } = await this.migrateToLatest();
     if (error) {
-      throw error
+      throw error;
     }
     if (!results) {
-      throw new Error('An unknown failure occurred while migrating')
+      throw new Error('An unknown failure occurred while migrating');
     }
-    return results
+    return results;
   }
 }

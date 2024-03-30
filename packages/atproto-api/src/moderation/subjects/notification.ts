@@ -1,19 +1,19 @@
-import { ModerationDecision } from '../decision'
-import { ModerationSubjectNotification, ModerationOpts } from '../types'
-import { decideAccount } from './account'
-import { decideProfile } from './profile'
+import { ModerationDecision } from '../decision';
+import { ModerationSubjectNotification, ModerationOpts } from '../types';
+import { decideAccount } from './account';
+import { decideProfile } from './profile';
 
 export function decideNotification(
   subject: ModerationSubjectNotification,
   opts: ModerationOpts,
 ): ModerationDecision {
-  const acc = new ModerationDecision()
+  const acc = new ModerationDecision();
 
-  acc.setDid(subject.author.did)
-  acc.setIsMe(subject.author.did === opts.userDid)
+  acc.setDid(subject.author.did);
+  acc.setIsMe(subject.author.did === opts.userDid);
   if (subject.labels?.length) {
     for (const label of subject.labels) {
-      acc.addLabel('content', label, opts)
+      acc.addLabel('content', label, opts);
     }
   }
 
@@ -21,5 +21,5 @@ export function decideNotification(
     acc,
     decideAccount(subject.author, opts),
     decideProfile(subject.author, opts),
-  )
+  );
 }

@@ -27,8 +27,7 @@
     "@typescript-eslint/explicit-module-boundary-types": "off",
     "@typescript-eslint/no-empty-function": "off",
     "@typescript-eslint/no-explicit-any": "off",
-    "semi": "off",
-    "typescript-eslint/semi": "error"
+    "semi": "off"
   },
   "overrides": [
     {
@@ -42,8 +41,7 @@
     {
       "files": "*.js",
       "rules": {
-        "@typescript-eslint/no-var-requires": "off"
-      }
+        "prettier/prettier": ["error", { "endOfLine": "auto" }]   }
     }
   ]
 }

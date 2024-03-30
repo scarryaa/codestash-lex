@@ -5,4 +5,4 @@ module.exports = {
   transformIgnorePatterns: [`<rootDir>/node_modules/(?!get-port)`],
   testTimeout: 60000,
   setupFiles: ['<rootDir>/../../jest.setup.ts'],
-}
+};

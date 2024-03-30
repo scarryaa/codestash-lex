@@ -91,151 +91,154 @@ F: 0 1 2 3 4 5 6 7 8 910   // string indices
    ^-------^               // target slice {start: 0, end: 5}
  */
 
-import { AtpAgent } from '../agent'
-import { AppBskyFeedPost, AppBskyRichtextFacet } from '../client'
-import { UnicodeString } from './unicode'
-import { sanitizeRichText } from './sanitization'
-import { detectFacets } from './detection'
+import { AtpAgent } from '../agent';
+import { AppBskyFeedPost, AppBskyRichtextFacet } from '../client';
+import { UnicodeString } from './unicode';
+import { sanitizeRichText } from './sanitization';
+import { detectFacets } from './detection';
 
-export type Facet = AppBskyRichtextFacet.Main
-export type FacetLink = AppBskyRichtextFacet.Link
-export type FacetMention = AppBskyRichtextFacet.Mention
-export type FacetTag = AppBskyRichtextFacet.Tag
-export type Entity = AppBskyFeedPost.Entity
+export type Facet = AppBskyRichtextFacet.Main;
+export type FacetLink = AppBskyRichtextFacet.Link;
+export type FacetMention = AppBskyRichtextFacet.Mention;
+export type FacetTag = AppBskyRichtextFacet.Tag;
+export type Entity = AppBskyFeedPost.Entity;
 
 export interface RichTextProps {
-  text: string
-  facets?: Facet[]
+  text: string;
+  facets?: Facet[];
   /**
    * @deprecated Use facets instead
    */
-  entities?: Entity[]
+  entities?: Entity[];
 }
 
 export interface RichTextOpts {
-  cleanNewlines?: boolean
+  cleanNewlines?: boolean;
 }
 
 export class RichTextSegment {
-  constructor(public text: string, public facet?: Facet) {}
+  constructor(
+    public text: string,
+    public facet?: Facet,
+  ) {}
 
   get link(): FacetLink | undefined {
-    const link = this.facet?.features.find(AppBskyRichtextFacet.isLink)
+    const link = this.facet?.features.find(AppBskyRichtextFacet.isLink);
     if (AppBskyRichtextFacet.isLink(link)) {
-      return link
+      return link;
     }
-    return undefined
+    return undefined;
   }
 
   isLink() {
-    return !!this.link
+    return !!this.link;
   }
 
   get mention(): FacetMention | undefined {
-    const mention = this.facet?.features.find(AppBskyRichtextFacet.isMention)
+    const mention = this.facet?.features.find(AppBskyRichtextFacet.isMention);
     if (AppBskyRichtextFacet.isMention(mention)) {
-      return mention
+      return mention;
     }
-    return undefined
+    return undefined;
   }
 
   isMention() {
-    return !!this.mention
+    return !!this.mention;
   }
 
   get tag(): FacetTag | undefined {
-    const tag = this.facet?.features.find(AppBskyRichtextFacet.isTag)
+    const tag = this.facet?.features.find(AppBskyRichtextFacet.isTag);
     if (AppBskyRichtextFacet.isTag(tag)) {
-      return tag
+      return tag;
     }
-    return undefined
+    return undefined;
   }
 
   isTag() {
-    return !!this.tag
+    return !!this.tag;
   }
 }
 
 export class RichText {
-  unicodeText: UnicodeString
-  facets?: Facet[]
+  unicodeText: UnicodeString;
+  facets?: Facet[];
 
   constructor(props: RichTextProps, opts?: RichTextOpts) {
-    this.unicodeText = new UnicodeString(props.text)
-    this.facets = props.facets
+    this.unicodeText = new UnicodeString(props.text);
+    this.facets = props.facets;
     if (!this.facets?.length && props.entities?.length) {
-      this.facets = entitiesToFacets(this.unicodeText, props.entities)
+      this.facets = entitiesToFacets(this.unicodeText, props.entities);
     }
     if (this.facets) {
-      this.facets.sort(facetSort)
+      this.facets.sort(facetSort);
     }
     if (opts?.cleanNewlines) {
-      sanitizeRichText(this, { cleanNewlines: true }).copyInto(this)
+      sanitizeRichText(this, { cleanNewlines: true }).copyInto(this);
     }
   }
 
   get text() {
-    return this.unicodeText.toString()
+    return this.unicodeText.toString();
   }
 
   get length() {
-    return this.unicodeText.length
+    return this.unicodeText.length;
   }
 
   get graphemeLength() {
-    return this.unicodeText.graphemeLength
+    return this.unicodeText.graphemeLength;
   }
 
   clone() {
     return new RichText({
       text: this.unicodeText.utf16,
       facets: cloneDeep(this.facets),
-    })
+    });
   }
 
   copyInto(target: RichText) {
-    target.unicodeText = this.unicodeText
-    target.facets = cloneDeep(this.facets)
+    target.unicodeText = this.unicodeText;
+    target.facets = cloneDeep(this.facets);
   }
 
   *segments(): Generator<RichTextSegment, void, void> {
-    const facets = this.facets || []
+    const facets = this.facets || [];
     if (!facets.length) {
-      yield new RichTextSegment(this.unicodeText.utf16)
-      return
+      yield new RichTextSegment(this.unicodeText.utf16);
+      return;
     }
 
-    let textCursor = 0
-    let facetCursor = 0
+    let textCursor = 0;
+    let facetCursor = 0;
     do {
-      const currFacet = facets[facetCursor]
+      const currFacet = facets[facetCursor];
       if (textCursor < currFacet.index.byteStart) {
         yield new RichTextSegment(
           this.unicodeText.slice(textCursor, currFacet.index.byteStart),
-        )
+        );
       } else if (textCursor > currFacet.index.byteStart) {
-        facetCursor++
-        continue
+        facetCursor++;
+        continue;
       }
       if (currFacet.index.byteStart < currFacet.index.byteEnd) {
         const subtext = this.unicodeText.slice(
           currFacet.index.byteStart,
           currFacet.index.byteEnd,
-        )
+        );
         if (!subtext.trim()) {
           // dont empty string entities
-          yield new RichTextSegment(subtext)
+          yield new RichTextSegment(subtext);
         } else {
-          yield new RichTextSegment(subtext, currFacet)
+          yield new RichTextSegment(subtext, currFacet);
         }
       }
-      textCursor = currFacet.index.byteEnd
-      facetCursor++
-    } while (facetCursor < facets.length)
+      textCursor = currFacet.index.byteEnd;
+      facetCursor++;
+    } while (facetCursor < facets.length);
     if (textCursor < this.unicodeText.length) {
       yield new RichTextSegment(
         this.unicodeText.slice(textCursor, this.unicodeText.length),
-      )
+      );
     }
   }
 
@@ -244,20 +247,20 @@ export class RichText {
       this.unicodeText.slice(0, insertIndex) +
         insertText +
         this.unicodeText.slice(insertIndex),
-    )
+    );
 
     if (!this.facets?.length) {
-      return this
+      return this;
     }
 
-    const numCharsAdded = insertText.length
+    const numCharsAdded = insertText.length;
     for (const ent of this.facets) {
       // see comment at top of file for labels of each scenario
       // scenario A (before)
       if (insertIndex <= ent.index.byteStart) {
         // move both by num added
-        ent.index.byteStart += numCharsAdded
-        ent.index.byteEnd += numCharsAdded
+        ent.index.byteStart += numCharsAdded;
+        ent.index.byteEnd += numCharsAdded;
       }
       // scenario B (inner)
       else if (
@@ -265,25 +268,25 @@ export class RichText {
         insertIndex < ent.index.byteEnd
       ) {
         // move end by num added
-        ent.index.byteEnd += numCharsAdded
+        ent.index.byteEnd += numCharsAdded;
       }
       // scenario C (after)
       // noop
     }
-    return this
+    return this;
   }
 
   delete(removeStartIndex: number, removeEndIndex: number) {
     this.unicodeText = new UnicodeString(
       this.unicodeText.slice(0, removeStartIndex) +
         this.unicodeText.slice(removeEndIndex),
-    )
+    );
 
     if (!this.facets?.length) {
-      return this
+      return this;
     }
 
-    const numCharsRemoved = removeEndIndex - removeStartIndex
+    const numCharsRemoved = removeEndIndex - removeStartIndex;
     for (const ent of this.facets) {
       // see comment at top of file for labels of each scenario
       // scenario A (entirely outer)
@@ -292,8 +295,8 @@ export class RichText {
         removeEndIndex >= ent.index.byteEnd
       ) {
         // delete slice (will get removed in final pass)
-        ent.index.byteStart = 0
-        ent.index.byteEnd = 0
+        ent.index.byteStart = 0;
+        ent.index.byteEnd = 0;
       }
       // scenario B (entirely after)
       else if (removeStartIndex > ent.index.byteEnd) {
@@ -306,7 +309,7 @@ export class RichText {
         removeEndIndex > ent.index.byteEnd
       ) {
         // move end to remove start
-        ent.index.byteEnd = removeStartIndex
+        ent.index.byteEnd = removeStartIndex;
       }
       // scenario D (entirely inner)
       else if (
@@ -314,7 +317,7 @@ export class RichText {
         removeEndIndex <= ent.index.byteEnd
       ) {
         // move end by num removed
-        ent.index.byteEnd -= numCharsRemoved
+        ent.index.byteEnd -= numCharsRemoved;
       }
       // scenario E (partially before)
       else if (
@@ -323,22 +326,22 @@ export class RichText {
         removeEndIndex <= ent.index.byteEnd
       ) {
         // move start to remove-start index, move end by num removed
-        ent.index.byteStart = removeStartIndex
-        ent.index.byteEnd -= numCharsRemoved
+        ent.index.byteStart = removeStartIndex;
+        ent.index.byteEnd -= numCharsRemoved;
       }
       // scenario F (entirely before)
       else if (removeEndIndex < ent.index.byteStart) {
         // move both by num removed
-        ent.index.byteStart -= numCharsRemoved
-        ent.index.byteEnd -= numCharsRemoved
+        ent.index.byteStart -= numCharsRemoved;
+        ent.index.byteEnd -= numCharsRemoved;
       }
     }
 
     // filter out any facets that were made irrelevant
     this.facets = this.facets.filter(
       (ent) => ent.index.byteStart < ent.index.byteEnd,
-    )
-    return this
+    );
+    return this;
   }
 
   /**
@@ -346,7 +349,7 @@ export class RichText {
    * Note: Overwrites the existing facets with auto-detected facets
    */
   async detectFacets(agent: AtpAgent) {
-    this.facets = detectFacets(this.unicodeText)
+    this.facets = detectFacets(this.unicodeText);
     if (this.facets) {
       for (const facet of this.facets) {
         for (const feature of facet.features) {
@@ -354,12 +357,12 @@ export class RichText {
             const did = await agent
               .resolveHandle({ handle: feature.did })
               .catch((_) => undefined)
-              .then((res) => res?.data.did)
-            feature.did = did || ''
+              .then((res) => res?.data.did);
+            feature.did = did || '';
           }
         }
       }
-      this.facets.sort(facetSort)
+      this.facets.sort(facetSort);
     }
   }
 
@@ -369,17 +372,17 @@ export class RichText {
    * Note: Overwrites the existing facets with auto-detected facets
    */
   detectFacetsWithoutResolution() {
-    this.facets = detectFacets(this.unicodeText)
+    this.facets = detectFacets(this.unicodeText);
     if (this.facets) {
-      this.facets.sort(facetSort)
+      this.facets.sort(facetSort);
     }
   }
 }
 
-const facetSort = (a, b) => a.index.byteStart - b.index.byteStart
+const facetSort = (a, b) => a.index.byteStart - b.index.byteStart;
 
 function entitiesToFacets(text: UnicodeString, entities: Entity[]): Facet[] {
-  const facets: Facet[] = []
+  const facets: Facet[] = [];
   for (const ent of entities) {
     if (ent.type === 'link') {
       facets.push({
@@ -389,7 +392,7 @@ function entitiesToFacets(text: UnicodeString, entities: Entity[]): Facet[] {
           byteEnd: text.utf16IndexToUtf8Index(ent.index.end),
         },
         features: [{ $type: 'app.bsky.richtext.facet#link', uri: ent.value }],
-      })
+      });
     } else if (ent.type === 'mention') {
       facets.push({
         $type: 'app.bsky.richtext.facet',
@@ -400,15 +403,15 @@ function entitiesToFacets(text: UnicodeString, entities: Entity[]): Facet[] {
         features: [
           { $type: 'app.bsky.richtext.facet#mention', did: ent.value },
         ],
-      })
+      });
     }
   }
-  return facets
+  return facets;
 }
 
 function cloneDeep<T>(v: T): T {
   if (typeof v === 'undefined') {
-    return v
+    return v;
   }
-  return JSON.parse(JSON.stringify(v))
+  return JSON.parse(JSON.stringify(v));
 }

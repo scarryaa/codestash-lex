@@ -3,15 +3,15 @@ export type EmailTokenPurpose =
   | 'update_email'
   | 'reset_password'
   | 'delete_account'
-  | 'plc_operation'
+  | 'plc_operation';
 
 export interface EmailToken {
-  purpose: EmailTokenPurpose
-  did: string
-  token: string
-  requestedAt: string
+  purpose: EmailTokenPurpose;
+  did: string;
+  token: string;
+  requestedAt: string;
 }
 
-export const tableName = 'email_token'
+export const tableName = 'email_token';
 
-export type PartialDB = { [tableName]: EmailToken }
+export type PartialDB = { [tableName]: EmailToken };

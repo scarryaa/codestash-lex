@@ -1,4 +1,4 @@
-import { ActorDb } from '../db'
+import { ActorDb } from '../db';
 
 export class PreferenceReader {
   constructor(public db: ActorDb) {}
@@ -8,15 +8,15 @@ export class PreferenceReader {
       .selectFrom('account_pref')
       .orderBy('id')
       .selectAll()
-      .execute()
+      .execute();
     return prefsRes
       .filter((pref) => !namespace || prefMatchNamespace(namespace, pref.name))
-      .map((pref) => JSON.parse(pref.valueJson))
+      .map((pref) => JSON.parse(pref.valueJson));
   }
 }
 
-export type AccountPreference = Record<string, unknown> & { $type: string }
+export type AccountPreference = Record<string, unknown> & { $type: string };
 
 export const prefMatchNamespace = (namespace: string, fullname: string) => {
-  return fullname === namespace || fullname.startsWith(`${namespace}.`)
-}
+  return fullname === namespace || fullname.startsWith(`${namespace}.`);
+};

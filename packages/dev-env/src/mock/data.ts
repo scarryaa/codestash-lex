@@ -29,7 +29,7 @@ Yes, yes, I remember, I had lasagna.`,
   `Jim never vomits at home.`,
   `The life of everyone on board depends upon just one thing: finding someone back there who can not only fly this plane, but who didn't have fish for dinner.`,
   `Shanna, they bought their tickets, they knew what they were getting into. I say, let 'em crash.`,
-]
+];
 
 export const replyTexts = [
   'Wow, so true!',
@@ -43,4 +43,4 @@ export const replyTexts = [
   'a/s/l?',
   'finally! decentralization!',
   'ugh when will hashtags get supported in this app',
-]
+];

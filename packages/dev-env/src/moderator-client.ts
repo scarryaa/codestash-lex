@@ -1,19 +1,15 @@
-import AtpAgent, {
-  // ToolsOzoneModerationEmitEvent as EmitModerationEvent,
-  // ToolsOzoneModerationQueryStatuses as QueryModerationStatuses,
-  // ToolsOzoneModerationQueryEvents as QueryModerationEvents,
-} from '@codestash-lex/api'
-import { TestOzone } from './ozone'
+import AtpAgent from '@codestash-lex/api'; // ToolsOzoneModerationQueryEvents as QueryModerationEvents, // ToolsOzoneModerationQueryStatuses as QueryModerationStatuses, // ToolsOzoneModerationEmitEvent as EmitModerationEvent,
+import { TestOzone } from './ozone';
 
 // type TakeActionInput = EmitModerationEvent.InputSchema
 // type QueryStatusesParams = QueryModerationStatuses.QueryParams
 // type QueryEventsParams = QueryModerationEvents.QueryParams
-type ModLevel = 'admin' | 'moderator' | 'triage'
+type ModLevel = 'admin' | 'moderator' | 'triage';
 
 export class ModeratorClient {
-  agent: AtpAgent
+  agent: AtpAgent;
   constructor(public ozone: TestOzone) {
-    this.agent = ozone.getClient()
+    this.agent = ozone.getClient();
   }
 
   async getEvent(id: number, role?: ModLevel) {

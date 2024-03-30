@@ -3,22 +3,22 @@ import {
   LexXrpcProcedure,
   LexXrpcQuery,
   stringifyLex,
-} from '@atproto/lexicon'
+} from '@atproto/lexicon';
 import {
   CallOptions,
   Headers,
   QueryParams,
   ResponseType,
   XRPCError,
-} from './types'
+} from './types';
 
 export function getMethodSchemaHTTPMethod(
   schema: LexXrpcProcedure | LexXrpcQuery,
 ) {
   if (schema.type === 'procedure') {
-    return 'post'
+    return 'post';
   }
-  return 'get'
+  return 'get';
 }
 
 export function constructMethodCallUri(
@@ -27,33 +27,33 @@ export function constructMethodCallUri(
   serviceUri: URL,
   params?: QueryParams,
 ): string {
-  const uri = new URL(serviceUri)
-  uri.pathname = `/xrpc/${nsid}`
+  const uri = new URL(serviceUri);
+  uri.pathname = `/xrpc/${nsid}`;
 
   // given parameters
   if (params) {
     for (const [key, value] of Object.entries(params)) {
-      const paramSchema = schema.parameters?.properties?.[key]
+      const paramSchema = schema.parameters?.properties?.[key];
       if (!paramSchema) {
-        throw new Error(`Invalid query parameter: ${key}`)
+        throw new Error(`Invalid query parameter: ${key}`);
       }
       if (value !== undefined) {
         if (paramSchema.type === 'array') {
-          const vals: typeof value[] = []
+          const vals: (typeof value)[] = [];
           vals.concat(value).forEach((val) => {
             uri.searchParams.append(
               key,
               encodeQueryParam(paramSchema.items.type, val),
-            )
-          })
+            );
+          });
         } else {
-          uri.searchParams.set(key, encodeQueryParam(paramSchema.type, value))
+          uri.searchParams.set(key, encodeQueryParam(paramSchema.type, value));
         }
       }
     }
   }
 
-  return uri.toString()
+  return uri.toString();
 }
 
 export function encodeQueryParam(
@@ -68,30 +68,30 @@ export function encodeQueryParam(
   value: any,
 ): string {
   if (type === 'string' || type === 'unknown') {
-    return String(value)
+    return String(value);
   }
   if (type === 'float') {
-    return String(Number(value))
+    return String(Number(value));
   } else if (type === 'integer') {
-    return String(Number(value) | 0)
+    return String(Number(value) | 0);
   } else if (type === 'boolean') {
-    return value ? 'true' : 'false'
+    return value ? 'true' : 'false';
   } else if (type === 'datetime') {
     if (value instanceof Date) {
-      return value.toISOString()
+      return value.toISOString();
     }
-    return String(value)
+    return String(value);
   }
-  throw new Error(`Unsupported query param type: ${type}`)
+  throw new Error(`Unsupported query param type: ${type}`);
 }
 
 export function normalizeHeaders(headers: Headers): Headers {
-  const normalized: Headers = {}
+  const normalized: Headers = {};
   for (const [header, value] of Object.entries(headers)) {
-    normalized[header.toLowerCase()] = value
+    normalized[header.toLowerCase()] = value;
   }
 
-  return normalized
+  return normalized;
 }
 
 export function constructMethodCallHeaders(
@@ -99,18 +99,18 @@ export function constructMethodCallHeaders(
   data?: any,
   opts?: CallOptions,
 ): Headers {
-  const headers: Headers = opts?.headers || {}
+  const headers: Headers = opts?.headers || {};
   if (schema.type === 'procedure') {
     if (opts?.encoding) {
-      headers['Content-Type'] = opts.encoding
+      headers['Content-Type'] = opts.encoding;
     }
     if (data && typeof data === 'object') {
       if (!headers['Content-Type']) {
-        headers['Content-Type'] = 'application/json'
+        headers['Content-Type'] = 'application/json';
       }
     }
   }
-  return headers
+  return headers;
 }
 
 export function encodeMethodCallBody(
@@ -118,36 +118,36 @@ export function encodeMethodCallBody(
   data?: any,
 ): ArrayBuffer | undefined {
   if (!headers['content-type'] || typeof data === 'undefined') {
-    return undefined
+    return undefined;
   }
   if (data instanceof ArrayBuffer) {
-    return data
+    return data;
   }
   if (headers['content-type'].startsWith('text/')) {
-    return new TextEncoder().encode(data.toString())
+    return new TextEncoder().encode(data.toString());
   }
   if (headers['content-type'].startsWith('application/json')) {
-    return new TextEncoder().encode(stringifyLex(data))
+    return new TextEncoder().encode(stringifyLex(data));
   }
-  return data
+  return data;
 }
 
 export function httpResponseCodeToEnum(status: number): ResponseType {
-  let resCode: ResponseType
+  let resCode: ResponseType;
   if (status in ResponseType) {
-    resCode = status
+    resCode = status;
   } else if (status >= 100 && status < 200) {
-    resCode = ResponseType.XRPCNotSupported
+    resCode = ResponseType.XRPCNotSupported;
   } else if (status >= 200 && status < 300) {
-    resCode = ResponseType.Success
+    resCode = ResponseType.Success;
   } else if (status >= 300 && status < 400) {
-    resCode = ResponseType.XRPCNotSupported
+    resCode = ResponseType.XRPCNotSupported;
   } else if (status >= 400 && status < 500) {
-    resCode = ResponseType.InvalidRequest
+    resCode = ResponseType.InvalidRequest;
   } else {
-    resCode = ResponseType.InternalServerError
+    resCode = ResponseType.InternalServerError;
   }
-  return resCode
+  return resCode;
 }
 
 export function httpResponseBodyParse(
@@ -157,28 +157,28 @@ export function httpResponseBodyParse(
   if (mimeType) {
     if (mimeType.includes('application/json') && data?.byteLength) {
       try {
-        const str = new TextDecoder().decode(data)
-        return jsonStringToLex(str)
+        const str = new TextDecoder().decode(data);
+        return jsonStringToLex(str);
       } catch (e) {
         throw new XRPCError(
           ResponseType.InvalidResponse,
           `Failed to parse response body: ${String(e)}`,
-        )
+        );
       }
     }
     if (mimeType.startsWith('text/') && data?.byteLength) {
       try {
-        return new TextDecoder().decode(data)
+        return new TextDecoder().decode(data);
       } catch (e) {
         throw new XRPCError(
           ResponseType.InvalidResponse,
           `Failed to parse response body: ${String(e)}`,
-        )
+        );
       }
     }
   }
   if (data instanceof ArrayBuffer) {
-    return new Uint8Array(data)
+    return new Uint8Array(data);
   }
-  return data
+  return data;
 }

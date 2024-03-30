@@ -1,4 +1,4 @@
-import { Kysely, sql } from 'kysely'
+import { Kysely, sql } from 'kysely';
 
 export async function up(db: Kysely<unknown>): Promise<void> {
   await db.schema
@@ -19,13 +19,13 @@ export async function up(db: Kysely<unknown>): Promise<void> {
         .stored()
         .notNull(),
     )
-    .execute()
+    .execute();
 
   await db.schema
     .createIndex('list_creator_idx')
     .on('list')
     .column('creator')
-    .execute()
+    .execute();
 
   await db.schema
     .createTable('list_item')
@@ -46,19 +46,19 @@ export async function up(db: Kysely<unknown>): Promise<void> {
       'listUri',
       'subjectDid',
     ])
-    .execute()
+    .execute();
 
   await db.schema
     .createIndex('list_item_creator_idx')
     .on('list_item')
     .column('creator')
-    .execute()
+    .execute();
 
   await db.schema
     .createIndex('list_item_subject_idx')
     .on('list_item')
     .column('subjectDid')
-    .execute()
+    .execute();
 
   await db.schema
     .createTable('list_mute')
@@ -66,13 +66,13 @@ export async function up(db: Kysely<unknown>): Promise<void> {
     .addColumn('mutedByDid', 'varchar', (col) => col.notNull())
     .addColumn('createdAt', 'varchar', (col) => col.notNull())
     .addPrimaryKeyConstraint('list_mute_pkey', ['mutedByDid', 'listUri'])
-    .execute()
+    .execute();
 }
 
 export async function down(db: Kysely<unknown>): Promise<void> {
-  await db.schema.dropIndex('list_creator_idx').execute()
-  await db.schema.dropIndex('list_item_subject_idx').execute()
-  await db.schema.dropTable('list').execute()
-  await db.schema.dropTable('list_item').execute()
-  await db.schema.dropTable('list_mute').execute()
+  await db.schema.dropIndex('list_creator_idx').execute();
+  await db.schema.dropIndex('list_item_subject_idx').execute();
+  await db.schema.dropTable('list').execute();
+  await db.schema.dropTable('list_item').execute();
+  await db.schema.dropTable('list_mute').execute();
 }

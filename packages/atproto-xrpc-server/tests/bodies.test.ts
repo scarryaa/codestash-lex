@@ -1,14 +1,14 @@
-import * as http from 'http'
-import { Readable } from 'stream'
-import { gzipSync } from 'zlib'
-import getPort from 'get-port'
-import { LexiconDoc } from '@atproto/lexicon'
-import xrpc, { ServiceClient } from '@atproto/xrpc'
-import { bytesToStream, cidForCbor } from '@atproto/common'
-import { randomBytes } from '@atproto/crypto'
-import { createServer, closeServer } from './_util'
-import * as xrpcServer from '../src'
-import logger from '../src/logger'
+import * as http from 'http';
+import { Readable } from 'stream';
+import { gzipSync } from 'zlib';
+import getPort from 'get-port';
+import { LexiconDoc } from '@atproto/lexicon';
+import xrpc, { ServiceClient } from '@atproto/xrpc';
+import { bytesToStream, cidForCbor } from '@atproto/common';
+import { randomBytes } from '@atproto/crypto';
+import { createServer, closeServer } from './_util';
+import * as xrpcServer from '../src';
+import logger from '../src/logger';
 
 const LEXICONS: LexiconDoc[] = [
   {
@@ -84,57 +84,57 @@ const LEXICONS: LexiconDoc[] = [
       },
     },
   },
-]
+];
 
-const BLOB_LIMIT = 5000
+const BLOB_LIMIT = 5000;
 
 describe('Bodies', () => {
-  let s: http.Server
+  let s: http.Server;
   const server = xrpcServer.createServer(LEXICONS, {
     payload: {
       blobLimit: BLOB_LIMIT,
     },
-  })
+  });
   server.method(
     'io.example.validationTest',
     (ctx: { params: xrpcServer.Params; input?: xrpcServer.HandlerInput }) => ({
       encoding: 'json',
       body: ctx.input?.body,
     }),
-  )
+  );
   server.method('io.example.validationTestTwo', () => ({
     encoding: 'json',
     body: { wrong: 'data' },
-  }))
+  }));
   server.method(
     'io.example.blobTest',
     async (ctx: { input?: xrpcServer.HandlerInput }) => {
       if (!(ctx.input?.body instanceof Readable))
-        throw new Error('Input not readable')
-      const buffers: Buffer[] = []
+        throw new Error('Input not readable');
+      const buffers: Buffer[] = [];
       for await (const data of ctx.input.body) {
-        buffers.push(data)
+        buffers.push(data);
       }
-      const cid = await cidForCbor(Buffer.concat(buffers))
+      const cid = await cidForCbor(Buffer.concat(buffers));
       return {
         encoding: 'json',
         body: { cid: cid.toString() },
-      }
+      };
     },
-  )
-  xrpc.addLexicons(LEXICONS)
+  );
+  xrpc.addLexicons(LEXICONS);
 
-  let client: ServiceClient
-  let url: string
+  let client: ServiceClient;
+  let url: string;
   beforeAll(async () => {
-    const port = await getPort()
-    s = await createServer(port, server)
-    url = `http://localhost:${port}`
-    client = xrpc.service(url)
-  })
+    const port = await getPort();
+    s = await createServer(port, server);
+    url = `http://localhost:${port}`;
+    client = xrpc.service(url);
+  });
   afterAll(async () => {
-    await closeServer(s)
-  })
+    await closeServer(s);
+  });
 
   it('validates input and output bodies', async () => {
     const res1 = await client.call(
@@ -144,20 +144,20 @@ describe('Bodies', () => {
         foo: 'hello',
         bar: 123,
       },
-    )
-    expect(res1.success).toBeTruthy()
-    expect(res1.data.foo).toBe('hello')
-    expect(res1.data.bar).toBe(123)
+    );
+    expect(res1.success).toBeTruthy();
+    expect(res1.data.foo).toBe('hello');
+    expect(res1.data.bar).toBe(123);
 
     await expect(client.call('io.example.validationTest', {})).rejects.toThrow(
       `A request body is expected but none was provided`,
-    )
+    );
     await expect(
       client.call('io.example.validationTest', {}, {}),
-    ).rejects.toThrow(`Input must have the property "foo"`)
+    ).rejects.toThrow(`Input must have the property "foo"`);
     await expect(
       client.call('io.example.validationTest', {}, { foo: 123 }),
-    ).rejects.toThrow(`Input/foo must be a string`)
+    ).rejects.toThrow(`Input/foo must be a string`);
     await expect(
       client.call(
         'io.example.validationTest',
@@ -165,26 +165,26 @@ describe('Bodies', () => {
         { foo: 'hello', bar: 123 },
         { encoding: 'image/jpeg' },
       ),
-    ).rejects.toThrow(`Wrong request encoding (Content-Type): image/jpeg`)
+    ).rejects.toThrow(`Wrong request encoding (Content-Type): image/jpeg`);
 
     // 500 responses don't include details, so we nab details from the logger.
-    let error: string | undefined
-    const origError = logger.error
+    let error: string | undefined;
+    const origError = logger.error;
     logger.error = (obj, ...args) => {
-      error = obj.message
-      logger.error = origError
-      return logger.error(obj, ...args)
-    }
+      error = obj.message;
+      logger.error = origError;
+      return logger.error(obj, ...args);
+    };
 
     await expect(client.call('io.example.validationTestTwo')).rejects.toThrow(
       'Internal Server Error',
-    )
-    expect(error).toEqual(`Output must have the property "foo"`)
-  })
+    );
+    expect(error).toEqual(`Output must have the property "foo"`);
+  });
 
   it('supports blobs and compression', async () => {
-    const bytes = randomBytes(1024)
-    const expectedCid = await cidForCbor(bytes)
+    const bytes = randomBytes(1024);
+    const expectedCid = await cidForCbor(bytes);
 
     const { data: uncompressed } = await client.call(
       'io.example.blobTest',
@@ -193,8 +193,8 @@ describe('Bodies', () => {
       {
         encoding: 'application/octet-stream',
       },
-    )
-    expect(uncompressed.cid).toEqual(expectedCid.toString())
+    );
+    expect(uncompressed.cid).toEqual(expectedCid.toString());
 
     const { data: compressed } = await client.call(
       'io.example.blobTest',
@@ -206,29 +206,29 @@ describe('Bodies', () => {
           'content-encoding': 'gzip',
         },
       },
-    )
-    expect(compressed.cid).toEqual(expectedCid.toString())
-  })
+    );
+    expect(compressed.cid).toEqual(expectedCid.toString());
+  });
 
   it('supports max blob size (based on content-length)', async () => {
-    const bytes = randomBytes(BLOB_LIMIT + 1)
+    const bytes = randomBytes(BLOB_LIMIT + 1);
 
     // Exactly the number of allowed bytes
     await client.call('io.example.blobTest', {}, bytes.slice(0, BLOB_LIMIT), {
       encoding: 'application/octet-stream',
-    })
+    });
 
     // Over the number of allowed bytes
     const promise = client.call('io.example.blobTest', {}, bytes, {
       encoding: 'application/octet-stream',
-    })
+    });
 
-    await expect(promise).rejects.toThrow('request entity too large')
-  })
+    await expect(promise).rejects.toThrow('request entity too large');
+  });
 
   it('supports max blob size (missing content-length)', async () => {
     // We stream bytes in these tests so that content-length isn't included.
-    const bytes = randomBytes(BLOB_LIMIT + 1)
+    const bytes = randomBytes(BLOB_LIMIT + 1);
 
     // Exactly the number of allowed bytes
     await client.call(
@@ -238,7 +238,7 @@ describe('Bodies', () => {
       {
         encoding: 'application/octet-stream',
       },
-    )
+    );
 
     // Over the number of allowed bytes.
     const promise = client.call(
@@ -248,17 +248,17 @@ describe('Bodies', () => {
       {
         encoding: 'application/octet-stream',
       },
-    )
+    );
 
-    await expect(promise).rejects.toThrow('request entity too large')
-  })
+    await expect(promise).rejects.toThrow('request entity too large');
+  });
 
   it('requires any parsable Content-Type for blob uploads', async () => {
     // not a real mimetype, but correct syntax
     await client.call('io.example.blobTest', {}, randomBytes(BLOB_LIMIT), {
       encoding: 'some/thing',
-    })
-  })
+    });
+  });
 
   // @TODO: figure out why this is failing dependent on the prev test being run
   // https://github.com/bluesky-social/atproto/pull/550/files#r1106400413
@@ -270,13 +270,13 @@ describe('Bodies', () => {
       body: randomBytes(BLOB_LIMIT),
       // @ts-ignore see note in @atproto/xrpc/client.ts
       duplex: 'half',
-    })
-    const resBody = await res.json()
-    const status = res.status
-    expect(status).toBe(400)
+    });
+    const resBody = await res.json();
+    const status = res.status;
+    expect(status).toBe(400);
     expect(resBody).toMatchObject({
       error: 'InvalidRequest',
       message: 'Request encoding (Content-Type) required but not provided',
-    })
-  })
-})
+    });
+  });
+});

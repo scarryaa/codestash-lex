@@ -1,7 +1,7 @@
-import { InvalidRequestError } from '@atproto/xrpc-server'
-import { Server } from '../../../../lexicon'
-import AppContext from '../../../../context'
-import { genInvCode } from './util'
+import { InvalidRequestError } from '@atproto/xrpc-server';
+import { Server } from '../../../../lexicon';
+import AppContext from '../../../../context';
+import { genInvCode } from './util';
 
 export default function (server: Server, ctx: AppContext) {
   server.com.atproto.server.createInviteCode({
@@ -10,21 +10,21 @@ export default function (server: Server, ctx: AppContext) {
       if (ctx.cfg.entryway) {
         throw new InvalidRequestError(
           'Account invites are managed by the entryway service',
-        )
+        );
       }
-      const { useCount, forAccount = 'admin' } = input.body
+      const { useCount, forAccount = 'admin' } = input.body;
 
-      const code = genInvCode(ctx.cfg)
+      const code = genInvCode(ctx.cfg);
 
       await ctx.accountManager.createInviteCodes(
         [{ account: forAccount, codes: [code] }],
         useCount,
-      )
+      );
 
       return {
         encoding: 'application/json',
         body: { code },
-      }
+      };
     },
-  })
+  });
 }

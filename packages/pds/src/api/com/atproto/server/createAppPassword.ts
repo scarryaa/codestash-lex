@@ -1,6 +1,6 @@
-import AppContext from '../../../../context'
-import { Server } from '../../../../lexicon'
-import { authPassthru, resultPassthru } from '../../../proxy'
+import AppContext from '../../../../context';
+import { Server } from '../../../../lexicon';
+import { authPassthru, resultPassthru } from '../../../proxy';
 
 export default function (server: Server, ctx: AppContext) {
   server.com.atproto.server.createAppPassword({
@@ -12,18 +12,18 @@ export default function (server: Server, ctx: AppContext) {
             input.body,
             authPassthru(req, true),
           ),
-        )
+        );
       }
 
-      const { name } = input.body
+      const { name } = input.body;
       const appPassword = await ctx.accountManager.createAppPassword(
         auth.credentials.did,
         name,
-      )
+      );
       return {
         encoding: 'application/json',
         body: appPassword,
-      }
+      };
     },
-  })
+  });
 }

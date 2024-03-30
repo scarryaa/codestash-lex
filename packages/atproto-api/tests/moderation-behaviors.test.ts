@@ -1,11 +1,11 @@
-import { moderateProfile, moderatePost } from '../src'
+import { moderateProfile, moderatePost } from '../src';
 import {
   ModerationBehaviorSuiteRunner,
   SuiteUsers,
   SuiteConfigurations,
   SuiteScenarios,
   ModerationTestSuiteScenario,
-} from './util/moderation-behavior'
+} from './util/moderation-behavior';
 
 const USERS: SuiteUsers = {
   self: {
@@ -64,7 +64,7 @@ const USERS: SuiteUsers = {
     muted: false,
     mutedByList: false,
   },
-}
+};
 const CONFIGURATIONS: SuiteConfigurations = {
   none: {},
   'adult-disabled': {
@@ -106,7 +106,7 @@ const CONFIGURATIONS: SuiteConfigurations = {
   'logged-out': {
     authed: false,
   },
-}
+};
 const SCENARIOS: SuiteScenarios = {
   "Imperative label ('!hide') on account": {
     cfg: 'none',
@@ -842,18 +842,18 @@ const SCENARIOS: SuiteScenarios = {
       contentMedia: ['blur'],
     },
   },
-}
+};
 
 const suite = new ModerationBehaviorSuiteRunner(
   USERS,
   CONFIGURATIONS,
   SCENARIOS,
-)
+);
 
 describe('Post moderation behaviors', () => {
   const scenarios = Array.from(Object.entries(suite.scenarios)).filter(
     ([name]) => !name.startsWith('//'),
-  )
+  );
   it.each(scenarios)(
     '%s',
     (_name: string, scenario: ModerationTestSuiteScenario) => {
@@ -866,49 +866,49 @@ describe('Post moderation behaviors', () => {
           : moderatePost(
               suite.postScenario(scenario),
               suite.moderationOpts(scenario),
-            )
+            );
       if (scenario.subject === 'profile') {
         expect(res.ui('profileList')).toBeModerationResult(
           scenario.behaviors.profileList,
           'profileList',
           JSON.stringify(res, null, 2),
-        )
+        );
         expect(res.ui('profileView')).toBeModerationResult(
           scenario.behaviors.profileView,
           'profileView',
           JSON.stringify(res, null, 2),
-        )
+        );
       }
       expect(res.ui('avatar')).toBeModerationResult(
         scenario.behaviors.avatar,
         'avatar',
         JSON.stringify(res, null, 2),
-      )
+      );
       expect(res.ui('banner')).toBeModerationResult(
         scenario.behaviors.banner,
         'banner',
         JSON.stringify(res, null, 2),
-      )
+      );
       expect(res.ui('displayName')).toBeModerationResult(
         scenario.behaviors.displayName,
         'displayName',
         JSON.stringify(res, null, 2),
-      )
+      );
       expect(res.ui('contentList')).toBeModerationResult(
         scenario.behaviors.contentList,
         'contentList',
         JSON.stringify(res, null, 2),
-      )
+      );
       expect(res.ui('contentView')).toBeModerationResult(
         scenario.behaviors.contentView,
         'contentView',
         JSON.stringify(res, null, 2),
-      )
+      );
       expect(res.ui('contentMedia')).toBeModerationResult(
         scenario.behaviors.contentMedia,
         'contentMedia',
         JSON.stringify(res, null, 2),
-      )
+      );
     },
-  )
-})
+  );
+});

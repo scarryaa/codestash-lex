@@ -1,4 +1,4 @@
-import { Kysely } from 'kysely'
+import { Kysely } from 'kysely';
 
 export async function up(db: Kysely<unknown>): Promise<void> {
   await db.schema
@@ -7,37 +7,37 @@ export async function up(db: Kysely<unknown>): Promise<void> {
     .addColumn('cid', 'varchar', (col) => col.notNull())
     .addColumn('takedownRef', 'varchar', (col) => col.notNull())
     .addPrimaryKeyConstraint('blob_takedown_pkey', ['did', 'cid'])
-    .execute()
+    .execute();
 
   await db.schema
     .alterTable('actor')
     .dropConstraint('actor_takedown_id_fkey')
-    .execute()
-  await db.schema.alterTable('actor').dropColumn('takedownId').execute()
+    .execute();
+  await db.schema.alterTable('actor').dropColumn('takedownId').execute();
   await db.schema
     .alterTable('actor')
     .addColumn('takedownRef', 'varchar')
-    .execute()
+    .execute();
 
   await db.schema
     .alterTable('record')
     .dropConstraint('record_takedown_id_fkey')
-    .execute()
-  await db.schema.alterTable('record').dropColumn('takedownId').execute()
+    .execute();
+  await db.schema.alterTable('record').dropColumn('takedownId').execute();
   await db.schema
     .alterTable('record')
     .addColumn('takedownRef', 'varchar')
-    .execute()
+    .execute();
 }
 
 export async function down(db: Kysely<unknown>): Promise<void> {
-  await db.schema.dropTable('blob_takedown').execute()
+  await db.schema.dropTable('blob_takedown').execute();
 
-  await db.schema.alterTable('actor').dropColumn('takedownRef').execute()
+  await db.schema.alterTable('actor').dropColumn('takedownRef').execute();
   await db.schema
     .alterTable('actor')
     .addColumn('takedownId', 'integer')
-    .execute()
+    .execute();
 
   await db.schema
     .alterTable('actor')
@@ -47,13 +47,13 @@ export async function down(db: Kysely<unknown>): Promise<void> {
       'moderation_event',
       ['id'],
     )
-    .execute()
+    .execute();
 
-  await db.schema.alterTable('record').dropColumn('takedownRef').execute()
+  await db.schema.alterTable('record').dropColumn('takedownRef').execute();
   await db.schema
     .alterTable('record')
     .addColumn('takedownId', 'integer')
-    .execute()
+    .execute();
   await db.schema
     .alterTable('record')
     .addForeignKeyConstraint(
@@ -62,5 +62,5 @@ export async function down(db: Kysely<unknown>): Promise<void> {
       'moderation_event',
       ['id'],
     )
-    .execute()
+    .execute();
 }

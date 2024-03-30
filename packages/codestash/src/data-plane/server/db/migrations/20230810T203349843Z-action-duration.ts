@@ -1,23 +1,23 @@
-import { Kysely } from 'kysely'
+import { Kysely } from 'kysely';
 
 export async function up(db: Kysely<unknown>): Promise<void> {
   await db.schema
     .alterTable('moderation_action')
     .addColumn('durationInHours', 'integer')
-    .execute()
+    .execute();
   await db.schema
     .alterTable('moderation_action')
     .addColumn('expiresAt', 'varchar')
-    .execute()
+    .execute();
 }
 
 export async function down(db: Kysely<unknown>): Promise<void> {
   await db.schema
     .alterTable('moderation_action')
     .dropColumn('durationInHours')
-    .execute()
+    .execute();
   await db.schema
     .alterTable('moderation_action')
     .dropColumn('expiresAt')
-    .execute()
+    .execute();
 }

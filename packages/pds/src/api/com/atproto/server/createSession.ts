@@ -1,11 +1,11 @@
-import { DAY, MINUTE } from '@atproto/common'
-import { INVALID_HANDLE } from '@atproto/syntax'
-import { AuthRequiredError } from '@atproto/xrpc-server'
-import AppContext from '../../../../context'
-import { softDeleted } from '../../../../db/util'
-import { Server } from '../../../../lexicon'
-import { didDocForSession } from './util'
-import { authPassthru, resultPassthru } from '../../../proxy'
+import { DAY, MINUTE } from '@atproto/common';
+import { INVALID_HANDLE } from '@atproto/syntax';
+import { AuthRequiredError } from '@atproto/xrpc-server';
+import AppContext from '../../../../context';
+import { softDeleted } from '../../../../db/util';
+import { Server } from '../../../../lexicon';
+import { didDocForSession } from './util';
+import { authPassthru, resultPassthru } from '../../../proxy';
 
 export default function (server: Server, ctx: AppContext) {
   server.com.atproto.server.createSession({
@@ -28,11 +28,11 @@ export default function (server: Server, ctx: AppContext) {
             input.body,
             authPassthru(req, true),
           ),
-        )
+        );
       }
 
-      const { password } = input.body
-      const identifier = input.body.identifier.toLowerCase()
+      const { password } = input.body;
+      const identifier = input.body.identifier.toLowerCase();
 
       const user = identifier.includes('@')
         ? await ctx.accountManager.getAccountByEmail(identifier, {
@@ -42,24 +42,24 @@ export default function (server: Server, ctx: AppContext) {
         : await ctx.accountManager.getAccount(identifier, {
             includeDeactivated: true,
             includeTakenDown: true,
-          })
+          });
 
       if (!user) {
-        throw new AuthRequiredError('Invalid identifier or password')
+        throw new AuthRequiredError('Invalid identifier or password');
       }
 
-      let appPasswordName: string | null = null
+      let appPasswordName: string | null = null;
       const validAccountPass = await ctx.accountManager.verifyAccountPassword(
         user.did,
         password,
-      )
+      );
       if (!validAccountPass) {
         appPasswordName = await ctx.accountManager.verifyAppPassword(
           user.did,
           password,
-        )
+        );
         if (appPasswordName === null) {
-          throw new AuthRequiredError('Invalid identifier or password')
+          throw new AuthRequiredError('Invalid identifier or password');
         }
       }
 
@@ -67,13 +67,13 @@ export default function (server: Server, ctx: AppContext) {
         throw new AuthRequiredError(
           'Account has been taken down',
           'AccountTakedown',
-        )
+        );
       }
 
       const [{ accessJwt, refreshJwt }, didDoc] = await Promise.all([
         ctx.accountManager.createSession(user.did, appPasswordName),
         didDocForSession(ctx, user.did),
-      ])
+      ]);
 
       return {
         encoding: 'application/json',
@@ -86,7 +86,7 @@ export default function (server: Server, ctx: AppContext) {
           accessJwt,
           refreshJwt,
         },
-      }
+      };
     },
-  })
+  });
 }

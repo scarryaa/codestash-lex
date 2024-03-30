@@ -1,17 +1,17 @@
-import { CID } from 'multiformats/cid'
-import { AtUri } from '@atproto/syntax'
-import { AuthRequiredError, InvalidRequestError } from '@atproto/xrpc-server'
-import { CommitData } from '@atproto/repo'
-import { Server } from '../../../../lexicon'
-import { prepareUpdate, prepareCreate } from '../../../../repo'
-import AppContext from '../../../../context'
+import { CID } from 'multiformats/cid';
+import { AtUri } from '@atproto/syntax';
+import { AuthRequiredError, InvalidRequestError } from '@atproto/xrpc-server';
+import { CommitData } from '@atproto/repo';
+import { Server } from '../../../../lexicon';
+import { prepareUpdate, prepareCreate } from '../../../../repo';
+import AppContext from '../../../../context';
 import {
   BadCommitSwapError,
   BadRecordSwapError,
   InvalidRecordError,
   PreparedCreate,
   PreparedUpdate,
-} from '../../../../repo'
+} from '../../../../repo';
 
 export default function (server: Server, ctx: AppContext) {
   server.com.atproto.repo.putRecord({
@@ -37,30 +37,30 @@ export default function (server: Server, ctx: AppContext) {
         validate,
         swapCommit,
         swapRecord,
-      } = input.body
+      } = input.body;
       const account = await ctx.accountManager.getAccount(repo, {
         includeDeactivated: true,
-      })
+      });
 
       if (!account) {
-        throw new InvalidRequestError(`Could not find repo: ${repo}`)
+        throw new InvalidRequestError(`Could not find repo: ${repo}`);
       } else if (account.deactivatedAt) {
-        throw new InvalidRequestError('Account is deactivated')
+        throw new InvalidRequestError('Account is deactivated');
       }
-      const did = account.did
+      const did = account.did;
       if (did !== auth.credentials.did) {
-        throw new AuthRequiredError()
+        throw new AuthRequiredError();
       }
 
-      const uri = AtUri.make(did, collection, rkey)
-      const swapCommitCid = swapCommit ? CID.parse(swapCommit) : undefined
+      const uri = AtUri.make(did, collection, rkey);
+      const swapCommitCid = swapCommit ? CID.parse(swapCommit) : undefined;
       const swapRecordCid =
-        typeof swapRecord === 'string' ? CID.parse(swapRecord) : swapRecord
+        typeof swapRecord === 'string' ? CID.parse(swapRecord) : swapRecord;
 
       const { commit, write } = await ctx.actorStore.transact(
         did,
         async (actorTxn) => {
-          const current = await actorTxn.record.getRecord(uri, null, true)
+          const current = await actorTxn.record.getRecord(uri, null, true);
           const writeInfo = {
             did,
             collection,
@@ -68,18 +68,18 @@ export default function (server: Server, ctx: AppContext) {
             record,
             swapCid: swapRecordCid,
             validate,
-          }
+          };
 
-          let write: PreparedCreate | PreparedUpdate
+          let write: PreparedCreate | PreparedUpdate;
           try {
             write = current
               ? await prepareUpdate(writeInfo)
-              : await prepareCreate(writeInfo)
+              : await prepareCreate(writeInfo);
           } catch (err) {
             if (err instanceof InvalidRecordError) {
-              throw new InvalidRequestError(err.message)
+              throw new InvalidRequestError(err.message);
             }
-            throw err
+            throw err;
           }
 
           // no-op
@@ -87,29 +87,29 @@ export default function (server: Server, ctx: AppContext) {
             return {
               commit: null,
               write,
-            }
+            };
           }
 
-          let commit: CommitData
+          let commit: CommitData;
           try {
-            commit = await actorTxn.repo.processWrites([write], swapCommitCid)
+            commit = await actorTxn.repo.processWrites([write], swapCommitCid);
           } catch (err) {
             if (
               err instanceof BadCommitSwapError ||
               err instanceof BadRecordSwapError
             ) {
-              throw new InvalidRequestError(err.message, 'InvalidSwap')
+              throw new InvalidRequestError(err.message, 'InvalidSwap');
             } else {
-              throw err
+              throw err;
             }
           }
-          return { commit, write }
+          return { commit, write };
         },
-      )
+      );
 
       if (commit !== null) {
-        await ctx.sequencer.sequenceCommit(did, commit, [write])
-        await ctx.accountManager.updateRepoRoot(did, commit.cid, commit.rev)
+        await ctx.sequencer.sequenceCommit(did, commit, [write]);
+        await ctx.accountManager.updateRepoRoot(did, commit.cid, commit.rev);
       }
 
       return {
@@ -118,7 +118,7 @@ export default function (server: Server, ctx: AppContext) {
           uri: write.uri.toString(),
           cid: write.cid.toString(),
         },
-      }
+      };
     },
-  })
+  });
 }

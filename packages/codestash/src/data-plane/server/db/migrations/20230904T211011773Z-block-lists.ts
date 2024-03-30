@@ -1,4 +1,4 @@
-import { Kysely, sql } from 'kysely'
+import { Kysely, sql } from 'kysely';
 
 export async function up(db: Kysely<unknown>): Promise<void> {
   await db.schema
@@ -16,9 +16,9 @@ export async function up(db: Kysely<unknown>): Promise<void> {
         .notNull(),
     )
     .addUniqueConstraint('list_block_unique_subject', ['creator', 'subjectUri'])
-    .execute()
+    .execute();
 }
 
 export async function down(db: Kysely<unknown>): Promise<void> {
-  await db.schema.dropTable('list_block').execute()
+  await db.schema.dropTable('list_block').execute();
 }

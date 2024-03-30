@@ -1,6 +1,6 @@
-import AppContext from '../../../../context'
-import { Server } from '../../../../lexicon'
-import { authPassthru } from '../../../proxy'
+import AppContext from '../../../../context';
+import { Server } from '../../../../lexicon';
+import { authPassthru } from '../../../proxy';
 
 export default function (server: Server, ctx: AppContext) {
   server.com.atproto.server.revokeAppPassword({
@@ -10,14 +10,14 @@ export default function (server: Server, ctx: AppContext) {
         await ctx.entrywayAgent.com.atproto.server.revokeAppPassword(
           input.body,
           authPassthru(req, true),
-        )
-        return
+        );
+        return;
       }
 
-      const requester = auth.credentials.did
-      const { name } = input.body
+      const requester = auth.credentials.did;
+      const { name } = input.body;
 
-      await ctx.accountManager.revokeAppPassword(requester, name)
+      await ctx.accountManager.revokeAppPassword(requester, name);
     },
-  })
+  });
 }

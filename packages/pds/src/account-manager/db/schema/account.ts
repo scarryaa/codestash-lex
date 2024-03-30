@@ -1,15 +1,15 @@
-import { Generated, Selectable } from 'kysely'
+import { Generated, Selectable } from 'kysely';
 
 export interface Account {
-  did: string
-  email: string
-  passwordScrypt: string
-  emailConfirmedAt: string | null
-  invitesDisabled: Generated<0 | 1>
+  did: string;
+  email: string;
+  passwordScrypt: string;
+  emailConfirmedAt: string | null;
+  invitesDisabled: Generated<0 | 1>;
 }
 
-export type AccountEntry = Selectable<Account>
+export type AccountEntry = Selectable<Account>;
 
-export const tableName = 'account'
+export const tableName = 'account';
 
-export type PartialDB = { [tableName]: Account }
+export type PartialDB = { [tableName]: Account };

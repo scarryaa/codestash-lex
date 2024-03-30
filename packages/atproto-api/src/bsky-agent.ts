@@ -1,26 +1,26 @@
-import { AtUri, ensureValidDid } from '@atproto/syntax'
-import { AtpAgent } from './agent'
+import { AtUri, ensureValidDid } from '@atproto/syntax';
+import { AtpAgent } from './agent';
 import {
   AppBskyFeedPost,
   AppBskyActorProfile,
   AppBskyActorDefs,
   AppBskyLabelerDefs,
   ComAtprotoRepoPutRecord,
-} from './client'
+} from './client';
 import {
   BskyPreferences,
   BskyFeedViewPreference,
   BskyThreadViewPreference,
   BskyInterestsPreference,
-} from './types'
+} from './types';
 import {
   InterpretedLabelValueDefinition,
   LabelPreference,
   ModerationPrefs,
-} from './moderation/types'
-import { DEFAULT_LABEL_SETTINGS } from './moderation/const/labels'
-import { sanitizeMutedWordValue } from './util'
-import { interpretLabelValueDefinitions } from './moderation'
+} from './moderation/types';
+import { DEFAULT_LABEL_SETTINGS } from './moderation/const/labels';
+import { sanitizeMutedWordValue } from './util';
+import { interpretLabelValueDefinitions } from './moderation';
 
 const FEED_VIEW_PREF_DEFAULTS = {
   hideReplies: false,
@@ -28,18 +28,18 @@ const FEED_VIEW_PREF_DEFAULTS = {
   hideRepliesByLikeCount: 0,
   hideReposts: false,
   hideQuotePosts: false,
-}
+};
 const THREAD_VIEW_PREF_DEFAULTS = {
   sort: 'oldest',
   prioritizeFollowedUsers: true,
-}
+};
 
 declare global {
   interface Array<T> {
     findLast(
       predicate: (value: T, index: number, obj: T[]) => unknown,
       thisArg?: any,
-    ): T
+    ): T;
   }
 }
 
@@ -47,104 +47,105 @@ export class BskyAgent extends AtpAgent {
   clone() {
     const inst = new BskyAgent({
       service: this.service,
-    })
-    this.copyInto(inst)
-    return inst
+    });
+    this.copyInto(inst);
+    return inst;
   }
 
   get app() {
-    return this.api.app
+    return this.api.app;
   }
 
   getTimeline: typeof this.api.app.bsky.feed.getTimeline = (params, opts) =>
-    this.api.app.bsky.feed.getTimeline(params, opts)
+    this.api.app.bsky.feed.getTimeline(params, opts);
 
   getAuthorFeed: typeof this.api.app.bsky.feed.getAuthorFeed = (params, opts) =>
-    this.api.app.bsky.feed.getAuthorFeed(params, opts)
+    this.api.app.bsky.feed.getAuthorFeed(params, opts);
 
   getActorLikes: typeof this.api.app.bsky.feed.getActorLikes = (params, opts) =>
-    this.api.app.bsky.feed.getActorLikes(params, opts)
+    this.api.app.bsky.feed.getActorLikes(params, opts);
 
   getPostThread: typeof this.api.app.bsky.feed.getPostThread = (params, opts) =>
-    this.api.app.bsky.feed.getPostThread(params, opts)
+    this.api.app.bsky.feed.getPostThread(params, opts);
 
   getPost: typeof this.api.app.bsky.feed.post.get = (params) =>
-    this.api.app.bsky.feed.post.get(params)
+    this.api.app.bsky.feed.post.get(params);
 
   getPosts: typeof this.api.app.bsky.feed.getPosts = (params, opts) =>
-    this.api.app.bsky.feed.getPosts(params, opts)
+    this.api.app.bsky.feed.getPosts(params, opts);
 
   getLikes: typeof this.api.app.bsky.feed.getLikes = (params, opts) =>
-    this.api.app.bsky.feed.getLikes(params, opts)
+    this.api.app.bsky.feed.getLikes(params, opts);
 
   getRepostedBy: typeof this.api.app.bsky.feed.getRepostedBy = (params, opts) =>
-    this.api.app.bsky.feed.getRepostedBy(params, opts)
+    this.api.app.bsky.feed.getRepostedBy(params, opts);
 
   getFollows: typeof this.api.app.bsky.graph.getFollows = (params, opts) =>
-    this.api.app.bsky.graph.getFollows(params, opts)
+    this.api.app.bsky.graph.getFollows(params, opts);
 
   getFollowers: typeof this.api.app.bsky.graph.getFollowers = (params, opts) =>
-    this.api.app.bsky.graph.getFollowers(params, opts)
+    this.api.app.bsky.graph.getFollowers(params, opts);
 
   getProfile: typeof this.api.app.bsky.actor.getProfile = (params, opts) =>
-    this.api.app.bsky.actor.getProfile(params, opts)
+    this.api.app.bsky.actor.getProfile(params, opts);
 
   getProfiles: typeof this.api.app.bsky.actor.getProfiles = (params, opts) =>
-    this.api.app.bsky.actor.getProfiles(params, opts)
+    this.api.app.bsky.actor.getProfiles(params, opts);
 
   getSuggestions: typeof this.api.app.bsky.actor.getSuggestions = (
     params,
     opts,
-  ) => this.api.app.bsky.actor.getSuggestions(params, opts)
+  ) => this.api.app.bsky.actor.getSuggestions(params, opts);
 
   searchActors: typeof this.api.app.bsky.actor.searchActors = (params, opts) =>
-    this.api.app.bsky.actor.searchActors(params, opts)
+    this.api.app.bsky.actor.searchActors(params, opts);
 
   searchActorsTypeahead: typeof this.api.app.bsky.actor.searchActorsTypeahead =
     (params, opts) =>
-      this.api.app.bsky.actor.searchActorsTypeahead(params, opts)
+      this.api.app.bsky.actor.searchActorsTypeahead(params, opts);
 
   listNotifications: typeof this.api.app.bsky.notification.listNotifications = (
     params,
     opts,
-  ) => this.api.app.bsky.notification.listNotifications(params, opts)
+  ) => this.api.app.bsky.notification.listNotifications(params, opts);
 
   countUnreadNotifications: typeof this.api.app.bsky.notification.getUnreadCount =
     (params, opts) =>
-      this.api.app.bsky.notification.getUnreadCount(params, opts)
+      this.api.app.bsky.notification.getUnreadCount(params, opts);
 
   getLabelers: typeof this.api.app.bsky.labeler.getServices = (params, opts) =>
-    this.api.app.bsky.labeler.getServices(params, opts)
+    this.api.app.bsky.labeler.getServices(params, opts);
 
   async getLabelDefinitions(
     prefs: BskyPreferences | ModerationPrefs | string[],
   ): Promise<Record<string, InterpretedLabelValueDefinition[]>> {
     // collect the labeler dids
-    let dids: string[] = BskyAgent.appLabelers
+    let dids: string[] = BskyAgent.appLabelers;
     if (isBskyPrefs(prefs)) {
-      dids = dids.concat(prefs.moderationPrefs.labelers.map((l) => l.did))
+      dids = dids.concat(prefs.moderationPrefs.labelers.map((l) => l.did));
     } else if (isModPrefs(prefs)) {
-      dids = dids.concat(prefs.labelers.map((l) => l.did))
+      dids = dids.concat(prefs.labelers.map((l) => l.did));
     } else {
-      dids = dids.concat(prefs)
+      dids = dids.concat(prefs);
     }
 
     // fetch their definitions
     const labelers = await this.getLabelers({
       dids,
       detailed: true,
-    })
+    });
 
     // assemble a map of labeler dids to the interpretted label value definitions
-    const labelDefs = {}
+    const labelDefs = {};
     if (labelers.data) {
       for (const labeler of labelers.data
         .views as AppBskyLabelerDefs.LabelerViewDetailed[]) {
-        labelDefs[labeler.creator.did] = interpretLabelValueDefinitions(labeler)
+        labelDefs[labeler.creator.did] =
+          interpretLabelValueDefinitions(labeler);
       }
     }
 
-    return labelDefs
+    return labelDefs;
   }
 
   async post(
@@ -152,29 +153,29 @@ export class BskyAgent extends AtpAgent {
       Omit<AppBskyFeedPost.Record, 'createdAt'>,
   ) {
     if (!this.session) {
-      throw new Error('Not logged in')
+      throw new Error('Not logged in');
     }
-    record.createdAt = record.createdAt || new Date().toISOString()
+    record.createdAt = record.createdAt || new Date().toISOString();
     return this.api.app.bsky.feed.post.create(
       { repo: this.session.did },
       record as AppBskyFeedPost.Record,
-    )
+    );
   }
 
   async deletePost(postUri: string) {
     if (!this.session) {
-      throw new Error('Not logged in')
+      throw new Error('Not logged in');
     }
-    const postUrip = new AtUri(postUri)
+    const postUrip = new AtUri(postUri);
     return await this.api.app.bsky.feed.post.delete({
       repo: postUrip.hostname,
       rkey: postUrip.rkey,
-    })
+    });
   }
 
   async like(uri: string, cid: string) {
     if (!this.session) {
-      throw new Error('Not logged in')
+      throw new Error('Not logged in');
     }
     return await this.api.app.bsky.feed.like.create(
       { repo: this.session.did },
@@ -182,23 +183,23 @@ export class BskyAgent extends AtpAgent {
         subject: { uri, cid },
         createdAt: new Date().toISOString(),
       },
-    )
+    );
   }
 
   async deleteLike(likeUri: string) {
     if (!this.session) {
-      throw new Error('Not logged in')
+      throw new Error('Not logged in');
     }
-    const likeUrip = new AtUri(likeUri)
+    const likeUrip = new AtUri(likeUri);
     return await this.api.app.bsky.feed.like.delete({
       repo: likeUrip.hostname,
       rkey: likeUrip.rkey,
-    })
+    });
   }
 
   async repost(uri: string, cid: string) {
     if (!this.session) {
-      throw new Error('Not logged in')
+      throw new Error('Not logged in');
     }
     return await this.api.app.bsky.feed.repost.create(
       { repo: this.session.did },
@@ -206,23 +207,23 @@ export class BskyAgent extends AtpAgent {
         subject: { uri, cid },
         createdAt: new Date().toISOString(),
       },
-    )
+    );
   }
 
   async deleteRepost(repostUri: string) {
     if (!this.session) {
-      throw new Error('Not logged in')
+      throw new Error('Not logged in');
     }
-    const repostUrip = new AtUri(repostUri)
+    const repostUrip = new AtUri(repostUri);
     return await this.api.app.bsky.feed.repost.delete({
       repo: repostUrip.hostname,
       rkey: repostUrip.rkey,
-    })
+    });
   }
 
   async follow(subjectDid: string) {
     if (!this.session) {
-      throw new Error('Not logged in')
+      throw new Error('Not logged in');
     }
     return await this.api.app.bsky.graph.follow.create(
       { repo: this.session.did },
@@ -230,18 +231,18 @@ export class BskyAgent extends AtpAgent {
         subject: subjectDid,
         createdAt: new Date().toISOString(),
       },
-    )
+    );
   }
 
   async deleteFollow(followUri: string) {
     if (!this.session) {
-      throw new Error('Not logged in')
+      throw new Error('Not logged in');
     }
-    const followUrip = new AtUri(followUri)
+    const followUrip = new AtUri(followUri);
     return await this.api.app.bsky.graph.follow.delete({
       repo: followUrip.hostname,
       rkey: followUrip.rkey,
-    })
+    });
   }
 
   async upsertProfile(
@@ -250,10 +251,10 @@ export class BskyAgent extends AtpAgent {
     ) => AppBskyActorProfile.Record | Promise<AppBskyActorProfile.Record>,
   ) {
     if (!this.session) {
-      throw new Error('Not logged in')
+      throw new Error('Not logged in');
     }
 
-    let retriesRemaining = 5
+    let retriesRemaining = 5;
     while (retriesRemaining >= 0) {
       // fetch existing
       const existing = await this.com.atproto.repo
@@ -262,18 +263,18 @@ export class BskyAgent extends AtpAgent {
           collection: 'app.bsky.actor.profile',
           rkey: 'self',
         })
-        .catch((_) => undefined)
+        .catch((_) => undefined);
 
       // run the update
-      const updated = await updateFn(existing?.data.value)
+      const updated = await updateFn(existing?.data.value);
       if (updated) {
-        updated.$type = 'app.bsky.actor.profile'
+        updated.$type = 'app.bsky.actor.profile';
       }
 
       // validate the record
-      const validation = AppBskyActorProfile.validateRecord(updated)
+      const validation = AppBskyActorProfile.validateRecord(updated);
       if (!validation.success) {
-        throw validation.error
+        throw validation.error;
       }
 
       try {
@@ -284,46 +285,46 @@ export class BskyAgent extends AtpAgent {
           rkey: 'self',
           record: updated,
           swapRecord: existing?.data.cid || null,
-        })
+        });
       } catch (e: unknown) {
         if (
           retriesRemaining > 0 &&
           e instanceof ComAtprotoRepoPutRecord.InvalidSwapError
         ) {
           // try again
-          retriesRemaining--
-          continue
+          retriesRemaining--;
+          continue;
         } else {
-          throw e
+          throw e;
         }
       }
-      break
+      break;
     }
   }
 
   async mute(actor: string) {
-    return this.api.app.bsky.graph.muteActor({ actor })
+    return this.api.app.bsky.graph.muteActor({ actor });
   }
 
   async unmute(actor: string) {
-    return this.api.app.bsky.graph.unmuteActor({ actor })
+    return this.api.app.bsky.graph.unmuteActor({ actor });
   }
 
   async muteModList(uri: string) {
     return this.api.app.bsky.graph.muteActorList({
       list: uri,
-    })
+    });
   }
 
   async unmuteModList(uri: string) {
     return this.api.app.bsky.graph.unmuteActorList({
       list: uri,
-    })
+    });
   }
 
   async blockModList(uri: string) {
     if (!this.session) {
-      throw new Error('Not logged in')
+      throw new Error('Not logged in');
     }
     return await this.api.app.bsky.graph.listblock.create(
       { repo: this.session.did },
@@ -331,32 +332,32 @@ export class BskyAgent extends AtpAgent {
         subject: uri,
         createdAt: new Date().toISOString(),
       },
-    )
+    );
   }
 
   async unblockModList(uri: string) {
     if (!this.session) {
-      throw new Error('Not logged in')
+      throw new Error('Not logged in');
     }
     const listInfo = await this.api.app.bsky.graph.getList({
       list: uri,
       limit: 1,
-    })
+    });
     if (!listInfo.data.list.viewer?.blocked) {
-      return
+      return;
     }
-    const { rkey } = new AtUri(listInfo.data.list.viewer.blocked)
+    const { rkey } = new AtUri(listInfo.data.list.viewer.blocked);
     return await this.api.app.bsky.graph.listblock.delete({
       repo: this.session.did,
       rkey,
-    })
+    });
   }
 
   async updateSeenNotifications(seenAt?: string) {
-    seenAt = seenAt || new Date().toISOString()
+    seenAt = seenAt || new Date().toISOString();
     return this.api.app.bsky.notification.updateSeen({
       seenAt,
-    })
+    });
   }
 
   async getPreferences(): Promise<BskyPreferences> {
@@ -382,23 +383,23 @@ export class BskyAgent extends AtpAgent {
       interests: {
         tags: [],
       },
-    }
-    const res = await this.app.bsky.actor.getPreferences({})
-    const labelPrefs: AppBskyActorDefs.ContentLabelPref[] = []
+    };
+    const res = await this.app.bsky.actor.getPreferences({});
+    const labelPrefs: AppBskyActorDefs.ContentLabelPref[] = [];
     for (const pref of res.data.preferences) {
       if (
         AppBskyActorDefs.isAdultContentPref(pref) &&
         AppBskyActorDefs.validateAdultContentPref(pref).success
       ) {
         // adult content preferences
-        prefs.moderationPrefs.adultContentEnabled = pref.enabled
+        prefs.moderationPrefs.adultContentEnabled = pref.enabled;
       } else if (
         AppBskyActorDefs.isContentLabelPref(pref) &&
         AppBskyActorDefs.validateContentLabelPref(pref).success
       ) {
         // content label preference
-        const adjustedPref = adjustLegacyContentLabelPref(pref)
-        labelPrefs.push(adjustedPref)
+        const adjustedPref = adjustLegacyContentLabelPref(pref);
+        labelPrefs.push(adjustedPref);
       } else if (
         AppBskyActorDefs.isLabelersPref(pref) &&
         AppBskyActorDefs.validateLabelersPref(pref).success
@@ -411,21 +412,21 @@ export class BskyAgent extends AtpAgent {
               ...labeler,
               labels: {},
             })),
-          )
+          );
       } else if (
         AppBskyActorDefs.isSavedFeedsPref(pref) &&
         AppBskyActorDefs.validateSavedFeedsPref(pref).success
       ) {
         // saved and pinned feeds
-        prefs.feeds.saved = pref.saved
-        prefs.feeds.pinned = pref.pinned
+        prefs.feeds.saved = pref.saved;
+        prefs.feeds.pinned = pref.pinned;
       } else if (
         AppBskyActorDefs.isPersonalDetailsPref(pref) &&
         AppBskyActorDefs.validatePersonalDetailsPref(pref).success
       ) {
         // birth date (irl)
         if (pref.birthDate) {
-          prefs.birthDate = new Date(pref.birthDate)
+          prefs.birthDate = new Date(pref.birthDate);
         }
       } else if (
         AppBskyActorDefs.isFeedViewPref(pref) &&
@@ -433,37 +434,37 @@ export class BskyAgent extends AtpAgent {
       ) {
         // feed view preferences
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        const { $type, feed, ...v } = pref
-        prefs.feedViewPrefs[pref.feed] = { ...FEED_VIEW_PREF_DEFAULTS, ...v }
+        const { $type, feed, ...v } = pref;
+        prefs.feedViewPrefs[pref.feed] = { ...FEED_VIEW_PREF_DEFAULTS, ...v };
       } else if (
         AppBskyActorDefs.isThreadViewPref(pref) &&
         AppBskyActorDefs.validateThreadViewPref(pref).success
       ) {
         // thread view preferences
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        const { $type, ...v } = pref
-        prefs.threadViewPrefs = { ...prefs.threadViewPrefs, ...v }
+        const { $type, ...v } = pref;
+        prefs.threadViewPrefs = { ...prefs.threadViewPrefs, ...v };
       } else if (
         AppBskyActorDefs.isInterestsPref(pref) &&
         AppBskyActorDefs.validateInterestsPref(pref).success
       ) {
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        const { $type, ...v } = pref
-        prefs.interests = { ...prefs.interests, ...v }
+        const { $type, ...v } = pref;
+        prefs.interests = { ...prefs.interests, ...v };
       } else if (
         AppBskyActorDefs.isMutedWordsPref(pref) &&
         AppBskyActorDefs.validateMutedWordsPref(pref).success
       ) {
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        const { $type, ...v } = pref
-        prefs.moderationPrefs.mutedWords = v.items
+        const { $type, ...v } = pref;
+        prefs.moderationPrefs.mutedWords = v.items;
       } else if (
         AppBskyActorDefs.isHiddenPostsPref(pref) &&
         AppBskyActorDefs.validateHiddenPostsPref(pref).success
       ) {
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        const { $type, ...v } = pref
-        prefs.moderationPrefs.hiddenPosts = v.items
+        const { $type, ...v } = pref;
+        prefs.moderationPrefs.hiddenPosts = v.items;
       }
     }
 
@@ -472,58 +473,58 @@ export class BskyAgent extends AtpAgent {
       if (pref.labelerDid) {
         const labeler = prefs.moderationPrefs.labelers.find(
           (labeler) => labeler.did === pref.labelerDid,
-        )
-        if (!labeler) continue
-        labeler.labels[pref.label] = pref.visibility as LabelPreference
+        );
+        if (!labeler) continue;
+        labeler.labels[pref.label] = pref.visibility as LabelPreference;
       } else {
         prefs.moderationPrefs.labels[pref.label] =
-          pref.visibility as LabelPreference
+          pref.visibility as LabelPreference;
       }
     }
 
     prefs.moderationPrefs.labels = remapLegacyLabels(
       prefs.moderationPrefs.labels,
-    )
+    );
 
     // automatically configure the client
-    this.configureLabelersHeader(prefsArrayToLabelerDids(res.data.preferences))
+    this.configureLabelersHeader(prefsArrayToLabelerDids(res.data.preferences));
 
-    return prefs
+    return prefs;
   }
 
   async setSavedFeeds(saved: string[], pinned: string[]) {
     return updateFeedPreferences(this, () => ({
       saved,
       pinned,
-    }))
+    }));
   }
 
   async addSavedFeed(v: string) {
     return updateFeedPreferences(this, (saved: string[], pinned: string[]) => ({
       saved: [...saved.filter((uri) => uri !== v), v],
       pinned,
-    }))
+    }));
   }
 
   async removeSavedFeed(v: string) {
     return updateFeedPreferences(this, (saved: string[], pinned: string[]) => ({
       saved: saved.filter((uri) => uri !== v),
       pinned: pinned.filter((uri) => uri !== v),
-    }))
+    }));
   }
 
   async addPinnedFeed(v: string) {
     return updateFeedPreferences(this, (saved: string[], pinned: string[]) => ({
       saved: [...saved.filter((uri) => uri !== v), v],
       pinned: [...pinned.filter((uri) => uri !== v), v],
-    }))
+    }));
   }
 
   async removePinnedFeed(v: string) {
     return updateFeedPreferences(this, (saved: string[], pinned: string[]) => ({
       saved,
       pinned: pinned.filter((uri) => uri !== v),
-    }))
+    }));
   }
 
   async setAdultContentEnabled(v: boolean) {
@@ -532,19 +533,19 @@ export class BskyAgent extends AtpAgent {
         (pref) =>
           AppBskyActorDefs.isAdultContentPref(pref) &&
           AppBskyActorDefs.validateAdultContentPref(pref).success,
-      )
+      );
       if (adultContentPref) {
-        adultContentPref.enabled = v
+        adultContentPref.enabled = v;
       } else {
         adultContentPref = {
           $type: 'app.bsky.actor.defs#adultContentPref',
           enabled: v,
-        }
+        };
       }
       return prefs
         .filter((pref) => !AppBskyActorDefs.isAdultContentPref(pref))
-        .concat([adultContentPref])
-    })
+        .concat([adultContentPref]);
+    });
   }
 
   async setContentLabelPref(
@@ -553,7 +554,7 @@ export class BskyAgent extends AtpAgent {
     labelerDid?: string,
   ) {
     if (labelerDid) {
-      ensureValidDid(labelerDid)
+      ensureValidDid(labelerDid);
     }
     await updatePreferences(this, (prefs: AppBskyActorDefs.Preferences) => {
       let labelPref = prefs.findLast(
@@ -562,18 +563,18 @@ export class BskyAgent extends AtpAgent {
           AppBskyActorDefs.validateContentLabelPref(pref).success &&
           pref.label === key &&
           pref.labelerDid === labelerDid,
-      )
-      let legacyLabelPref: AppBskyActorDefs.ContentLabelPref | undefined
+      );
+      let legacyLabelPref: AppBskyActorDefs.ContentLabelPref | undefined;
 
       if (labelPref) {
-        labelPref.visibility = value
+        labelPref.visibility = value;
       } else {
         labelPref = {
           $type: 'app.bsky.actor.defs#contentLabelPref',
           label: key,
           labelerDid,
           visibility: value,
-        }
+        };
       }
 
       if (AppBskyActorDefs.isContentLabelPref(labelPref)) {
@@ -583,7 +584,7 @@ export class BskyAgent extends AtpAgent {
             'graphic-media': 'gore',
             porn: 'nsfw',
             sexual: 'suggestive',
-          }[labelPref.label]
+          }[labelPref.label];
 
           // if it's a legacy label, double-write the legacy label
           if (legacyLabelValue) {
@@ -593,17 +594,17 @@ export class BskyAgent extends AtpAgent {
                 AppBskyActorDefs.validateContentLabelPref(pref).success &&
                 pref.label === legacyLabelValue &&
                 pref.labelerDid === undefined,
-            ) as AppBskyActorDefs.ContentLabelPref | undefined
+            ) as AppBskyActorDefs.ContentLabelPref | undefined;
 
             if (legacyLabelPref) {
-              legacyLabelPref.visibility = value
+              legacyLabelPref.visibility = value;
             } else {
               legacyLabelPref = {
                 $type: 'app.bsky.actor.defs#contentLabelPref',
                 label: legacyLabelValue,
                 labelerDid: undefined,
                 visibility: value,
-              }
+              };
             }
           }
         }
@@ -617,17 +618,17 @@ export class BskyAgent extends AtpAgent {
         )
         .concat([labelPref])
         .filter((pref) => {
-          if (!legacyLabelPref) return true
+          if (!legacyLabelPref) return true;
           return (
             !AppBskyActorDefs.isContentLabelPref(pref) ||
             !(
               pref.label === legacyLabelPref.label &&
               pref.labelerDid === undefined
             )
-          )
+          );
         })
-        .concat(legacyLabelPref ? [legacyLabelPref] : [])
-    })
+        .concat(legacyLabelPref ? [legacyLabelPref] : []);
+    });
   }
 
   async addLabeler(did: string) {
@@ -638,31 +639,31 @@ export class BskyAgent extends AtpAgent {
           (pref) =>
             AppBskyActorDefs.isLabelersPref(pref) &&
             AppBskyActorDefs.validateLabelersPref(pref).success,
-        )
+        );
         if (!labelersPref) {
           labelersPref = {
             $type: 'app.bsky.actor.defs#labelersPref',
             labelers: [],
-          }
+          };
         }
         if (AppBskyActorDefs.isLabelersPref(labelersPref)) {
           let labelerPrefItem = labelersPref.labelers.find(
             (labeler) => labeler.did === did,
-          )
+          );
           if (!labelerPrefItem) {
             labelerPrefItem = {
               did,
-            }
-            labelersPref.labelers.push(labelerPrefItem)
+            };
+            labelersPref.labelers.push(labelerPrefItem);
           }
         }
         return prefs
           .filter((pref) => !AppBskyActorDefs.isLabelersPref(pref))
-          .concat([labelersPref])
+          .concat([labelersPref]);
       },
-    )
+    );
     // automatically configure the client
-    this.configureLabelersHeader(prefsArrayToLabelerDids(prefs))
+    this.configureLabelersHeader(prefsArrayToLabelerDids(prefs));
   }
 
   async removeLabeler(did: string) {
@@ -673,51 +674,51 @@ export class BskyAgent extends AtpAgent {
           (pref) =>
             AppBskyActorDefs.isLabelersPref(pref) &&
             AppBskyActorDefs.validateLabelersPref(pref).success,
-        )
+        );
         if (!labelersPref) {
           labelersPref = {
             $type: 'app.bsky.actor.defs#labelersPref',
             labelers: [],
-          }
+          };
         }
         if (AppBskyActorDefs.isLabelersPref(labelersPref)) {
           labelersPref.labelers = labelersPref.labelers.filter(
             (labeler) => labeler.did !== did,
-          )
+          );
         }
         return prefs
           .filter((pref) => !AppBskyActorDefs.isLabelersPref(pref))
-          .concat([labelersPref])
+          .concat([labelersPref]);
       },
-    )
+    );
     // automatically configure the client
-    this.configureLabelersHeader(prefsArrayToLabelerDids(prefs))
+    this.configureLabelersHeader(prefsArrayToLabelerDids(prefs));
   }
 
   async setPersonalDetails({
     birthDate,
   }: {
-    birthDate: string | Date | undefined
+    birthDate: string | Date | undefined;
   }) {
-    birthDate = birthDate instanceof Date ? birthDate.toISOString() : birthDate
+    birthDate = birthDate instanceof Date ? birthDate.toISOString() : birthDate;
     await updatePreferences(this, (prefs: AppBskyActorDefs.Preferences) => {
       let personalDetailsPref = prefs.findLast(
         (pref) =>
           AppBskyActorDefs.isPersonalDetailsPref(pref) &&
           AppBskyActorDefs.validatePersonalDetailsPref(pref).success,
-      )
+      );
       if (personalDetailsPref) {
-        personalDetailsPref.birthDate = birthDate
+        personalDetailsPref.birthDate = birthDate;
       } else {
         personalDetailsPref = {
           $type: 'app.bsky.actor.defs#personalDetailsPref',
           birthDate,
-        }
+        };
       }
       return prefs
         .filter((pref) => !AppBskyActorDefs.isPersonalDetailsPref(pref))
-        .concat([personalDetailsPref])
-    })
+        .concat([personalDetailsPref]);
+    });
   }
 
   async setFeedViewPrefs(feed: string, pref: Partial<BskyFeedViewPreference>) {
@@ -727,16 +728,16 @@ export class BskyAgent extends AtpAgent {
           AppBskyActorDefs.isFeedViewPref(pref) &&
           AppBskyActorDefs.validateFeedViewPref(pref).success &&
           pref.feed === feed,
-      )
+      );
       if (existing) {
-        pref = { ...existing, ...pref }
+        pref = { ...existing, ...pref };
       }
       return prefs
         .filter(
           (p) => !AppBskyActorDefs.isFeedViewPref(pref) || p.feed !== feed,
         )
-        .concat([{ ...pref, $type: 'app.bsky.actor.defs#feedViewPref', feed }])
-    })
+        .concat([{ ...pref, $type: 'app.bsky.actor.defs#feedViewPref', feed }]);
+    });
   }
 
   async setThreadViewPrefs(pref: Partial<BskyThreadViewPreference>) {
@@ -745,14 +746,14 @@ export class BskyAgent extends AtpAgent {
         (pref) =>
           AppBskyActorDefs.isThreadViewPref(pref) &&
           AppBskyActorDefs.validateThreadViewPref(pref).success,
-      )
+      );
       if (existing) {
-        pref = { ...existing, ...pref }
+        pref = { ...existing, ...pref };
       }
       return prefs
         .filter((p) => !AppBskyActorDefs.isThreadViewPref(p))
-        .concat([{ ...pref, $type: 'app.bsky.actor.defs#threadViewPref' }])
-    })
+        .concat([{ ...pref, $type: 'app.bsky.actor.defs#threadViewPref' }]);
+    });
   }
 
   async setInterestsPref(pref: Partial<BskyInterestsPreference>) {
@@ -761,14 +762,14 @@ export class BskyAgent extends AtpAgent {
         (pref) =>
           AppBskyActorDefs.isInterestsPref(pref) &&
           AppBskyActorDefs.validateInterestsPref(pref).success,
-      )
+      );
       if (existing) {
-        pref = { ...existing, ...pref }
+        pref = { ...existing, ...pref };
       }
       return prefs
         .filter((p) => !AppBskyActorDefs.isInterestsPref(p))
-        .concat([{ ...pref, $type: 'app.bsky.actor.defs#interestsPref' }])
-    })
+        .concat([{ ...pref, $type: 'app.bsky.actor.defs#interestsPref' }]);
+    });
   }
 
   async upsertMutedWords(newMutedWords: AppBskyActorDefs.MutedWord[]) {
@@ -777,25 +778,25 @@ export class BskyAgent extends AtpAgent {
         (pref) =>
           AppBskyActorDefs.isMutedWordsPref(pref) &&
           AppBskyActorDefs.validateMutedWordsPref(pref).success,
-      )
+      );
 
       if (mutedWordsPref && AppBskyActorDefs.isMutedWordsPref(mutedWordsPref)) {
         for (const updatedWord of newMutedWords) {
-          let foundMatch = false
+          let foundMatch = false;
           const sanitizedUpdatedValue = sanitizeMutedWordValue(
             updatedWord.value,
-          )
+          );
 
           // was trimmed down to an empty string e.g. single `#`
-          if (!sanitizedUpdatedValue) continue
+          if (!sanitizedUpdatedValue) continue;
 
           for (const existingItem of mutedWordsPref.items) {
             if (existingItem.value === sanitizedUpdatedValue) {
               existingItem.targets = Array.from(
                 new Set([...existingItem.targets, ...updatedWord.targets]),
-              )
-              foundMatch = true
-              break
+              );
+              foundMatch = true;
+              break;
             }
           }
 
@@ -803,7 +804,7 @@ export class BskyAgent extends AtpAgent {
             mutedWordsPref.items.push({
               ...updatedWord,
               value: sanitizedUpdatedValue,
-            })
+            });
           }
         }
       } else {
@@ -813,15 +814,15 @@ export class BskyAgent extends AtpAgent {
             ...w,
             value: sanitizeMutedWordValue(w.value),
           })),
-        }
+        };
       }
 
       return prefs
         .filter((p) => !AppBskyActorDefs.isMutedWordsPref(p))
         .concat([
           { ...mutedWordsPref, $type: 'app.bsky.actor.defs#mutedWordsPref' },
-        ])
-    })
+        ]);
+    });
   }
 
   async updateMutedWord(mutedWord: AppBskyActorDefs.MutedWord) {
@@ -830,13 +831,13 @@ export class BskyAgent extends AtpAgent {
         (pref) =>
           AppBskyActorDefs.isMutedWordsPref(pref) &&
           AppBskyActorDefs.validateMutedWordsPref(pref).success,
-      )
+      );
 
       if (mutedWordsPref && AppBskyActorDefs.isMutedWordsPref(mutedWordsPref)) {
         for (const existingItem of mutedWordsPref.items) {
           if (existingItem.value === mutedWord.value) {
-            existingItem.targets = mutedWord.targets
-            break
+            existingItem.targets = mutedWord.targets;
+            break;
           }
         }
       }
@@ -845,8 +846,8 @@ export class BskyAgent extends AtpAgent {
         .filter((p) => !AppBskyActorDefs.isMutedWordsPref(p))
         .concat([
           { ...mutedWordsPref, $type: 'app.bsky.actor.defs#mutedWordsPref' },
-        ])
-    })
+        ]);
+    });
   }
 
   async removeMutedWord(mutedWord: AppBskyActorDefs.MutedWord) {
@@ -855,14 +856,14 @@ export class BskyAgent extends AtpAgent {
         (pref) =>
           AppBskyActorDefs.isMutedWordsPref(pref) &&
           AppBskyActorDefs.validateMutedWordsPref(pref).success,
-      )
+      );
 
       if (mutedWordsPref && AppBskyActorDefs.isMutedWordsPref(mutedWordsPref)) {
         for (let i = 0; i < mutedWordsPref.items.length; i++) {
-          const existing = mutedWordsPref.items[i]
+          const existing = mutedWordsPref.items[i];
           if (existing.value === mutedWord.value) {
-            mutedWordsPref.items.splice(i, 1)
-            break
+            mutedWordsPref.items.splice(i, 1);
+            break;
           }
         }
       }
@@ -871,16 +872,16 @@ export class BskyAgent extends AtpAgent {
         .filter((p) => !AppBskyActorDefs.isMutedWordsPref(p))
         .concat([
           { ...mutedWordsPref, $type: 'app.bsky.actor.defs#mutedWordsPref' },
-        ])
-    })
+        ]);
+    });
   }
 
   async hidePost(postUri: string) {
-    await updateHiddenPost(this, postUri, 'hide')
+    await updateHiddenPost(this, postUri, 'hide');
   }
 
   async unhidePost(postUri: string) {
-    await updateHiddenPost(this, postUri, 'unhide')
+    await updateHiddenPost(this, postUri, 'unhide');
   }
 }
 
@@ -898,15 +899,15 @@ async function updatePreferences(
     prefs: AppBskyActorDefs.Preferences,
   ) => AppBskyActorDefs.Preferences | false,
 ) {
-  const res = await agent.app.bsky.actor.getPreferences({})
-  const newPrefs = cb(res.data.preferences)
+  const res = await agent.app.bsky.actor.getPreferences({});
+  const newPrefs = cb(res.data.preferences);
   if (newPrefs === false) {
-    return res.data.preferences
+    return res.data.preferences;
   }
   await agent.app.bsky.actor.putPreferences({
     preferences: newPrefs,
-  })
-  return newPrefs
+  });
+  return newPrefs;
 }
 
 /**
@@ -919,30 +920,30 @@ async function updateFeedPreferences(
     pinned: string[],
   ) => { saved: string[]; pinned: string[] },
 ): Promise<{ saved: string[]; pinned: string[] }> {
-  let res
+  let res;
   await updatePreferences(agent, (prefs: AppBskyActorDefs.Preferences) => {
     let feedsPref = prefs.findLast(
       (pref) =>
         AppBskyActorDefs.isSavedFeedsPref(pref) &&
         AppBskyActorDefs.validateSavedFeedsPref(pref).success,
-    ) as AppBskyActorDefs.SavedFeedsPref | undefined
+    ) as AppBskyActorDefs.SavedFeedsPref | undefined;
     if (feedsPref) {
-      res = cb(feedsPref.saved, feedsPref.pinned)
-      feedsPref.saved = res.saved
-      feedsPref.pinned = res.pinned
+      res = cb(feedsPref.saved, feedsPref.pinned);
+      feedsPref.saved = res.saved;
+      feedsPref.pinned = res.pinned;
     } else {
-      res = cb([], [])
+      res = cb([], []);
       feedsPref = {
         $type: 'app.bsky.actor.defs#savedFeedsPref',
         saved: res.saved,
         pinned: res.pinned,
-      }
+      };
     }
     return prefs
       .filter((pref) => !AppBskyActorDefs.isSavedFeedsPref(pref))
-      .concat([feedsPref])
-  })
-  return res
+      .concat([feedsPref]);
+  });
+  return res;
 }
 
 /**
@@ -951,14 +952,14 @@ async function updateFeedPreferences(
 function adjustLegacyContentLabelPref(
   pref: AppBskyActorDefs.ContentLabelPref,
 ): AppBskyActorDefs.ContentLabelPref {
-  let visibility = pref.visibility
+  let visibility = pref.visibility;
 
   // adjust legacy values
   if (visibility === 'show') {
-    visibility = 'ignore'
+    visibility = 'ignore';
   }
 
-  return { ...pref, visibility }
+  return { ...pref, visibility };
 }
 
 /**
@@ -968,21 +969,21 @@ function adjustLegacyContentLabelPref(
 function remapLegacyLabels(
   labels: BskyPreferences['moderationPrefs']['labels'],
 ) {
-  const _labels = { ...labels }
+  const _labels = { ...labels };
   const legacyToNewMap: Record<string, string | undefined> = {
     gore: 'graphic-media',
     nsfw: 'porn',
     suggestive: 'sexual',
-  }
+  };
 
   for (const labelName in _labels) {
-    const newLabelName = legacyToNewMap[labelName]!
+    const newLabelName = legacyToNewMap[labelName]!;
     if (newLabelName) {
-      _labels[newLabelName] = _labels[labelName]
+      _labels[newLabelName] = _labels[labelName];
     }
   }
 
-  return _labels
+  return _labels;
 }
 
 /**
@@ -995,14 +996,14 @@ function prefsArrayToLabelerDids(
     (pref) =>
       AppBskyActorDefs.isLabelersPref(pref) &&
       AppBskyActorDefs.validateLabelersPref(pref).success,
-  )
-  let dids: string[] = []
+  );
+  let dids: string[] = [];
   if (labelersPref) {
     dids = (labelersPref as AppBskyActorDefs.LabelersPref).labelers.map(
       (labeler) => labeler.did,
-    )
+    );
   }
-  return dids
+  return dids;
 }
 
 async function updateHiddenPost(
@@ -1015,24 +1016,24 @@ async function updateHiddenPost(
       (pref) =>
         AppBskyActorDefs.isHiddenPostsPref(pref) &&
         AppBskyActorDefs.validateHiddenPostsPref(pref).success,
-    )
+    );
     if (pref && AppBskyActorDefs.isHiddenPostsPref(pref)) {
       pref.items =
         action === 'hide'
           ? Array.from(new Set([...pref.items, postUri]))
-          : pref.items.filter((uri) => uri !== postUri)
+          : pref.items.filter((uri) => uri !== postUri);
     } else {
       if (action === 'hide') {
         pref = {
           $type: 'app.bsky.actor.defs#hiddenPostsPref',
           items: [postUri],
-        }
+        };
       }
     }
     return prefs
       .filter((p) => !AppBskyActorDefs.isInterestsPref(p))
-      .concat([{ ...pref, $type: 'app.bsky.actor.defs#hiddenPostsPref' }])
-  })
+      .concat([{ ...pref, $type: 'app.bsky.actor.defs#hiddenPostsPref' }]);
+  });
 }
 
 function isBskyPrefs(v: any): v is BskyPreferences {
@@ -1041,9 +1042,9 @@ function isBskyPrefs(v: any): v is BskyPreferences {
     typeof v === 'object' &&
     'moderationPrefs' in v &&
     isModPrefs(v.moderationPrefs)
-  )
+  );
 }
 
 function isModPrefs(v: any): v is ModerationPrefs {
-  return v && typeof v === 'object' && 'labelers' in v
+  return v && typeof v === 'object' && 'labelers' in v;
 }

@@ -1,7 +1,7 @@
 // import { AtUri } from '@atproto/syntax'
-import AtpAgent, { COM_ATPROTO_MODERATION } from '@codestash-lex/api'
+import AtpAgent, { COM_ATPROTO_MODERATION } from '@codestash-lex/api';
 // import { Database } from '@codestash-lex/codestash'
-import { TestNetwork } from '../index'
+import { TestNetwork } from '../index';
 // import { postTexts, replyTexts } from './data'
 // import labeledImgB64 from './img/labeled-img-b64'
 // import blurHashB64 from './img/blur-hash-avatar-b64'
@@ -22,26 +22,26 @@ import { TestNetwork } from '../index'
 export async function generateMockSetup(env: TestNetwork) {
   // const date = dateGen()
 
-  const rand = (n: number) => Math.floor(Math.random() * n)
+  const rand = (n: number) => Math.floor(Math.random() * n);
   const picka = <T>(arr: Array<T>): T => {
     if (arr.length) {
-      return arr[rand(arr.length)] || arr[0]
+      return arr[rand(arr.length)] || arr[0];
     }
-    throw new Error('Not found')
-  }
+    throw new Error('Not found');
+  };
 
   const clients = {
     loggedout: env.pds.getClient(),
     alice: env.pds.getClient(),
     bob: env.pds.getClient(),
     carla: env.pds.getClient(),
-  }
+  };
   interface User {
-    email: string
-    did: string
-    handle: string
-    password: string
-    agent: AtpAgent
+    email: string;
+    did: string;
+    handle: string;
+    password: string;
+    agent: AtpAgent;
   }
   const users: User[] = [
     {
@@ -65,20 +65,20 @@ export async function generateMockSetup(env: TestNetwork) {
       password: 'hunter2',
       agent: clients.carla,
     },
-  ]
+  ];
   // const alice = users[0]
   // const bob = users[1]
   // const carla = users[2]
 
-  let _i = 1
+  let _i = 1;
   for (const user of users) {
     const res = await clients.loggedout.api.com.atproto.server.createAccount({
       email: user.email,
       handle: user.handle,
       password: user.password,
-    })
-    user.agent.api.setHeader('Authorization', `Bearer ${res.data.accessJwt}`)
-    user.did = res.data.did
+    });
+    user.agent.api.setHeader('Authorization', `Bearer ${res.data.accessJwt}`);
+    user.did = res.data.did;
     console.log(res);
     await user.agent.api.org.codestash.actor.profile.create(
       { repo: user.did },
@@ -86,7 +86,7 @@ export async function generateMockSetup(env: TestNetwork) {
         displayName: ucfirst(user.handle).slice(0, -5),
         description: `Test user ${_i++}`,
       },
-    )
+    );
   }
 
   // Create moderator accounts
@@ -95,25 +95,25 @@ export async function generateMockSetup(env: TestNetwork) {
       email: 'triage@test.com',
       handle: 'triage.test',
       password: 'triage-pass',
-    })
-  env.ozone.addAdminDid(triageRes.data.did)
+    });
+  env.ozone.addAdminDid(triageRes.data.did);
   const modRes = await clients.loggedout.api.com.atproto.server.createAccount({
     email: 'mod@test.com',
     handle: 'mod.test',
     password: 'mod-pass',
-  })
-  env.ozone.addAdminDid(modRes.data.did)
+  });
+  env.ozone.addAdminDid(modRes.data.did);
   const adminRes = await clients.loggedout.api.com.atproto.server.createAccount(
     {
       email: 'admin-mod@test.com',
       handle: 'admin-mod.test',
       password: 'admin-mod-pass',
     },
-  )
-  env.ozone.addAdminDid(adminRes.data.did)
+  );
+  env.ozone.addAdminDid(adminRes.data.did);
 
   // Report one user
-  const reporter = picka(users)
+  const reporter = picka(users);
   await reporter.agent.api.com.atproto.moderation.createReport({
     reasonType: picka([
       COM_ATPROTO_MODERATION.DefsReasonSpam,
@@ -123,8 +123,8 @@ export async function generateMockSetup(env: TestNetwork) {
     subject: {
       $type: 'com.atproto.admin.defs#repoRef',
       did: picka(users).did,
-    }
-  })
+    },
+  });
 
   // everybody follows everybody
   // const follow = async (author: User, subject: User) => {
@@ -357,16 +357,16 @@ export async function generateMockSetup(env: TestNetwork) {
       email: 'mod-authority@test.com',
       handle: 'mod-authority.test',
       password: 'hunter2',
-    })
-    const agent = env.pds.getClient()
-    agent.api.setHeader('Authorization', `Bearer ${res.data.accessJwt}`)
+    });
+    const agent = env.pds.getClient();
+    agent.api.setHeader('Authorization', `Bearer ${res.data.accessJwt}`);
     await agent.api.org.codestash.actor.profile.create(
       { repo: res.data.did },
       {
         displayName: 'Dev-env Moderation',
         description: `The pretend version of mod.bsky.app`,
       },
-    )
+    );
 
     // await agent.api.org.codestash.labeler.service.create(
     //   { repo: res.data.did, rkey: 'self' },
@@ -679,16 +679,16 @@ export async function generateMockSetup(env: TestNetwork) {
       email: 'labeler@test.com',
       handle: 'labeler.test',
       password: 'hunter2',
-    })
-    const agent = env.pds.getClient()
-    agent.api.setHeader('Authorization', `Bearer ${res.data.accessJwt}`)
+    });
+    const agent = env.pds.getClient();
+    agent.api.setHeader('Authorization', `Bearer ${res.data.accessJwt}`);
     await agent.api.org.codestash.actor.profile.create(
       { repo: res.data.did },
       {
         displayName: 'Test Labeler',
         description: `Labeling things across the atmosphere`,
       },
-    )
+    );
 
     // await agent.api.org.codestash.labeler.service.create(
     //   { repo: res.data.did, rkey: 'self' },
@@ -777,50 +777,50 @@ export async function generateMockSetup(env: TestNetwork) {
     //     createdAt: date.next().value,
     //   },
     // )
-//     await createLabel(env.codestash.db, {
-//       uri: alice.did,
-//       cid: '',
-//       val: 'rude',
-//       src: res.data.did,
-//     })
-//     await createLabel(env.codestash.db, {
-//       uri: `at://${alice.did}/app.bsky.feed.generator/alice-favs`,
-//       cid: '',
-//       val: 'cool',
-//       src: res.data.did,
-//     })
-//     await createLabel(env.codestash.db, {
-//       uri: bob.did,
-//       cid: '',
-//       val: 'cool',
-//       src: res.data.did,
-//     })
-//     await createLabel(env.codestash.db, {
-//       uri: carla.did,
-//       cid: '',
-//       val: 'spam',
-//       src: res.data.did,
-//     })
-//   }
-}
+    //     await createLabel(env.codestash.db, {
+    //       uri: alice.did,
+    //       cid: '',
+    //       val: 'rude',
+    //       src: res.data.did,
+    //     })
+    //     await createLabel(env.codestash.db, {
+    //       uri: `at://${alice.did}/app.bsky.feed.generator/alice-favs`,
+    //       cid: '',
+    //       val: 'cool',
+    //       src: res.data.did,
+    //     })
+    //     await createLabel(env.codestash.db, {
+    //       uri: bob.did,
+    //       cid: '',
+    //       val: 'cool',
+    //       src: res.data.did,
+    //     })
+    //     await createLabel(env.codestash.db, {
+    //       uri: carla.did,
+    //       cid: '',
+    //       val: 'spam',
+    //       src: res.data.did,
+    //     })
+    //   }
+  }
 
-function ucfirst(str: string): string {
-  return str.at(0)?.toUpperCase() + str.slice(1)
-}
+  function ucfirst(str: string): string {
+    return str.at(0)?.toUpperCase() + str.slice(1);
+  }
 
-// const createLabel = async (
-//   db: Database,
-//   opts: { uri: string; cid: string; val: string; src?: string },
-// ) => {
-//   await db.db
-//     .insertInto('label')
-//     .values({
-//       uri: opts.uri,
-//       cid: opts.cid,
-//       val: opts.val,
-//       cts: new Date().toISOString(),
-//       neg: false,
-//       src: opts.src ?? EXAMPLE_LABELER,
-//     })
-//     .execute()
+  // const createLabel = async (
+  //   db: Database,
+  //   opts: { uri: string; cid: string; val: string; src?: string },
+  // ) => {
+  //   await db.db
+  //     .insertInto('label')
+  //     .values({
+  //       uri: opts.uri,
+  //       cid: opts.cid,
+  //       val: opts.val,
+  //       cts: new Date().toISOString(),
+  //       neg: false,
+  //       src: opts.src ?? EXAMPLE_LABELER,
+  //     })
+  //     .execute()
 }

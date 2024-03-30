@@ -1,4 +1,4 @@
-import { LexiconDoc } from '../../src/index'
+import { LexiconDoc } from '../../src/index';
 
 const lexicons: LexiconDoc[] = [
   {
@@ -522,6 +522,6 @@ const lexicons: LexiconDoc[] = [
       },
     },
   },
-]
+];
 
-export default lexicons
+export default lexicons;

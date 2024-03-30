@@ -1,6 +1,6 @@
-import { InvalidRequestError } from '@atproto/xrpc-server'
-import { Server } from '../../../../lexicon'
-import AppContext from '../../../../context'
+import { InvalidRequestError } from '@atproto/xrpc-server';
+import { Server } from '../../../../lexicon';
+import AppContext from '../../../../context';
 
 export default function (server: Server, ctx: AppContext) {
   server.com.atproto.admin.disableAccountInvites({
@@ -9,10 +9,10 @@ export default function (server: Server, ctx: AppContext) {
       if (ctx.cfg.entryway) {
         throw new InvalidRequestError(
           'Account invites are managed by the entryway service',
-        )
+        );
       }
-      const { account } = input.body
-      await ctx.accountManager.setAccountInvitesDisabled(account, true)
+      const { account } = input.body;
+      await ctx.accountManager.setAccountInvitesDisabled(account, true);
     },
-  })
+  });
 }

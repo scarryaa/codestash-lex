@@ -1,12 +1,12 @@
-import { XRPCError } from '@atproto/xrpc-server'
-import { ErrorRequestHandler } from 'express'
-import { httpLogger as log } from './logger'
+import { XRPCError } from '@atproto/xrpc-server';
+import { ErrorRequestHandler } from 'express';
+import { httpLogger as log } from './logger';
 
 export const handler: ErrorRequestHandler = (err, _req, res, next) => {
-  log.error(err, 'unexpected internal server error')
+  log.error(err, 'unexpected internal server error');
   if (res.headersSent) {
-    return next(err)
+    return next(err);
   }
-  const serverError = XRPCError.fromError(err)
-  res.status(serverError.type).json(serverError.payload)
-}
+  const serverError = XRPCError.fromError(err);
+  res.status(serverError.type).json(serverError.payload);
+};

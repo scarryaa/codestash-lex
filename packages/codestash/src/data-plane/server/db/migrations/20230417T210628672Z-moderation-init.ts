@@ -1,4 +1,4 @@
-import { Kysely } from 'kysely'
+import { Kysely } from 'kysely';
 
 export async function up(db: Kysely<unknown>): Promise<void> {
   // moderation actions
@@ -18,7 +18,7 @@ export async function up(db: Kysely<unknown>): Promise<void> {
     .addColumn('reversedReason', 'text')
     .addColumn('createLabelVals', 'varchar')
     .addColumn('negateLabelVals', 'varchar')
-    .execute()
+    .execute();
   await db.schema
     .createTable('moderation_action_subject_blob')
     .addColumn('actionId', 'integer', (col) =>
@@ -29,12 +29,12 @@ export async function up(db: Kysely<unknown>): Promise<void> {
       'actionId',
       'cid',
     ])
-    .execute()
+    .execute();
   await db.schema
     .createIndex('moderation_action_subject_blob_cid_idx')
     .on('moderation_action_subject_blob')
     .column('cid')
-    .execute()
+    .execute();
 
   // moderation reports
   await db.schema
@@ -48,7 +48,7 @@ export async function up(db: Kysely<unknown>): Promise<void> {
     .addColumn('reason', 'text')
     .addColumn('reportedByDid', 'varchar', (col) => col.notNull())
     .addColumn('createdAt', 'varchar', (col) => col.notNull())
-    .execute()
+    .execute();
 
   // moderation report resolutions
   await db.schema
@@ -65,12 +65,12 @@ export async function up(db: Kysely<unknown>): Promise<void> {
       'reportId',
       'actionId',
     ])
-    .execute()
+    .execute();
   await db.schema
     .createIndex('moderation_report_resolution_action_id_idx')
     .on('moderation_report_resolution')
     .column('actionId')
-    .execute()
+    .execute();
 
   // labels
   await db.schema
@@ -82,12 +82,12 @@ export async function up(db: Kysely<unknown>): Promise<void> {
     .addColumn('neg', 'boolean', (col) => col.notNull())
     .addColumn('cts', 'varchar', (col) => col.notNull())
     .addPrimaryKeyConstraint('label_pkey', ['src', 'uri', 'cid', 'val'])
-    .execute()
+    .execute();
   await db.schema
     .createIndex('label_uri_index')
     .on('label')
     .column('uri')
-    .execute()
+    .execute();
 
   // foreign keys
   await db.schema
@@ -98,7 +98,7 @@ export async function up(db: Kysely<unknown>): Promise<void> {
       'moderation_action',
       ['id'],
     )
-    .execute()
+    .execute();
   await db.schema
     .alterTable('record')
     .addForeignKeyConstraint(
@@ -107,21 +107,21 @@ export async function up(db: Kysely<unknown>): Promise<void> {
       'moderation_action',
       ['id'],
     )
-    .execute()
+    .execute();
 }
 
 export async function down(db: Kysely<unknown>): Promise<void> {
   await db.schema
     .alterTable('record')
     .dropConstraint('record_takedown_id_fkey')
-    .execute()
+    .execute();
   await db.schema
     .alterTable('actor')
     .dropConstraint('actor_takedown_id_fkey')
-    .execute()
-  await db.schema.dropTable('label').execute()
-  await db.schema.dropTable('moderation_report_resolution').execute()
-  await db.schema.dropTable('moderation_report').execute()
-  await db.schema.dropTable('moderation_action_subject_blob').execute()
-  await db.schema.dropTable('moderation_action').execute()
+    .execute();
+  await db.schema.dropTable('label').execute();
+  await db.schema.dropTable('moderation_report_resolution').execute();
+  await db.schema.dropTable('moderation_report').execute();
+  await db.schema.dropTable('moderation_action_subject_blob').execute();
+  await db.schema.dropTable('moderation_action').execute();
 }

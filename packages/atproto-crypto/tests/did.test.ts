@@ -1,50 +1,56 @@
-import { P256Keypair, Secp256k1Keypair } from '../src'
-import * as did from '../src/did'
-import * as uint8arrays from 'uint8arrays'
+import { P256Keypair, Secp256k1Keypair } from '../src';
+import * as did from '../src/did';
+import * as uint8arrays from 'uint8arrays';
 
 describe('secp256k1 did:key', () => {
   it('derives the correct DID from the privatekey', async () => {
     for (const vector of secpTestVectors) {
-      const keypair = await Secp256k1Keypair.import(vector.seed)
-      const did = keypair.did()
-      expect(did).toEqual(vector.id)
+      const keypair = await Secp256k1Keypair.import(vector.seed);
+      const did = keypair.did();
+      expect(did).toEqual(vector.id);
     }
-  })
+  });
 
   it('converts between bytes and did', async () => {
     for (const vector of secpTestVectors) {
-      const keypair = await Secp256k1Keypair.import(vector.seed)
-      const didKey = did.formatDidKey('ES256K', keypair.publicKeyBytes())
-      expect(didKey).toEqual(vector.id)
-      const { jwtAlg, keyBytes } = did.parseDidKey(didKey)
-      expect(jwtAlg).toBe('ES256K')
-      expect(uint8arrays.equals(keyBytes, keypair.publicKeyBytes())).toBeTruthy
+      const keypair = await Secp256k1Keypair.import(vector.seed);
+      const didKey = did.formatDidKey('ES256K', keypair.publicKeyBytes());
+      expect(didKey).toEqual(vector.id);
+      const { jwtAlg, keyBytes } = did.parseDidKey(didKey);
+      expect(jwtAlg).toBe('ES256K');
+      expect(uint8arrays.equals(keyBytes, keypair.publicKeyBytes())).toBeTruthy;
     }
-  })
-})
+  });
+});
 
 describe('P-256 did:key', () => {
   it('derives the correct DID from the JWK', async () => {
     for (const vector of p256TestVectors) {
-      const bytes = uint8arrays.fromString(vector.privateKeyBase58, 'base58btc')
-      const keypair = await P256Keypair.import(bytes)
-      const did = keypair.did()
-      expect(did).toEqual(vector.id)
+      const bytes = uint8arrays.fromString(
+        vector.privateKeyBase58,
+        'base58btc',
+      );
+      const keypair = await P256Keypair.import(bytes);
+      const did = keypair.did();
+      expect(did).toEqual(vector.id);
     }
-  })
+  });
 
   it('converts between bytes and did', async () => {
     for (const vector of p256TestVectors) {
-      const bytes = uint8arrays.fromString(vector.privateKeyBase58, 'base58btc')
-      const keypair = await P256Keypair.import(bytes)
-      const didKey = did.formatDidKey('ES256', keypair.publicKeyBytes())
-      expect(didKey).toEqual(vector.id)
-      const { jwtAlg, keyBytes } = did.parseDidKey(didKey)
-      expect(jwtAlg).toBe('ES256')
-      expect(uint8arrays.equals(keyBytes, keypair.publicKeyBytes())).toBeTruthy
+      const bytes = uint8arrays.fromString(
+        vector.privateKeyBase58,
+        'base58btc',
+      );
+      const keypair = await P256Keypair.import(bytes);
+      const didKey = did.formatDidKey('ES256', keypair.publicKeyBytes());
+      expect(didKey).toEqual(vector.id);
+      const { jwtAlg, keyBytes } = did.parseDidKey(didKey);
+      expect(jwtAlg).toBe('ES256');
+      expect(uint8arrays.equals(keyBytes, keypair.publicKeyBytes())).toBeTruthy;
     }
-  })
-})
+  });
+});
 
 // did:key secp256k1 test vectors from W3C
 // https://github.com/w3c-ccg/did-method-key/blob/main/test-vectors/secp256k1.json
@@ -69,7 +75,7 @@ const secpTestVectors = [
     seed: '175a232d440be1e0788f25488a73d9416c04b6f924bea6354bf05dd2f1a75133',
     id: 'did:key:zQ3shptjE6JwdkeKN4fcpnYQY3m9Cet3NiHdAfpvSUZBFoKBj',
   },
-]
+];
 
 // did:key p-256 test vectors from W3C
 // https://github.com/w3c-ccg/did-method-key/blob/main/test-vectors/nist-curves.json
@@ -78,4 +84,4 @@ const p256TestVectors = [
     privateKeyBase58: '9p4VRzdmhsnq869vQjVCTrRry7u4TtfRxhvBFJTGU2Cp',
     id: 'did:key:zDnaeTiq1PdzvZXUaMdezchcMJQpBdH2VN4pgrrEhMCCbmwSb',
   },
-]
+];

@@ -1,4 +1,4 @@
-import { envInt, envStr, envBool, envList } from '@atproto/common'
+import { envInt, envStr, envBool, envList } from '@atproto/common';
 
 export const readEnv = (): ServerEnvironment => {
   return {
@@ -71,9 +71,11 @@ export const readEnv = (): ServerEnvironment => {
     repoBackfillLimitMs: envInt('PDS_REPO_BACKFILL_LIMIT_MS'),
 
     // appview
-    bskyAppViewUrl: envStr('PDS_BSKY_APP_VIEW_URL'),
-    bskyAppViewDid: envStr('PDS_BSKY_APP_VIEW_DID'),
-    bskyAppViewCdnUrlPattern: envStr('PDS_BSKY_APP_VIEW_CDN_URL_PATTERN'),
+    codestashAppViewUrl: envStr('PDS_CODESTASH_APP_VIEW_URL'),
+    codestashAppViewDid: envStr('PDS_CODESTASH_APP_VIEW_DID'),
+    codestashAppViewCdnUrlPattern: envStr(
+      'PDS_CODESTASH_APP_VIEW_CDN_URL_PATTERN',
+    ),
 
     // mod service
     modServiceUrl: envStr('PDS_MOD_SERVICE_URL'),
@@ -105,106 +107,106 @@ export const readEnv = (): ServerEnvironment => {
     plcRotationKeyK256PrivateKeyHex: envStr(
       'PDS_PLC_ROTATION_KEY_K256_PRIVATE_KEY_HEX',
     ),
-  }
-}
+  };
+};
 
 export type ServerEnvironment = {
   // service
-  port?: number
-  hostname?: string
-  serviceDid?: string
-  version?: string
-  privacyPolicyUrl?: string
-  termsOfServiceUrl?: string
-  contactEmailAddress?: string
-  acceptingImports?: boolean
-  blobUploadLimit?: number
-  devMode?: boolean
+  port?: number;
+  hostname?: string;
+  serviceDid?: string;
+  version?: string;
+  privacyPolicyUrl?: string;
+  termsOfServiceUrl?: string;
+  contactEmailAddress?: string;
+  acceptingImports?: boolean;
+  blobUploadLimit?: number;
+  devMode?: boolean;
 
   // database
-  dataDirectory?: string
-  disableWalAutoCheckpoint?: boolean
-  accountDbLocation?: string
-  sequencerDbLocation?: string
-  didCacheDbLocation?: string
+  dataDirectory?: string;
+  disableWalAutoCheckpoint?: boolean;
+  accountDbLocation?: string;
+  sequencerDbLocation?: string;
+  didCacheDbLocation?: string;
 
   // actor store
-  actorStoreDirectory?: string
-  actorStoreCacheSize?: number
+  actorStoreDirectory?: string;
+  actorStoreCacheSize?: number;
 
   // blobstore: one required
-  blobstoreS3Bucket?: string
-  blobstoreDiskLocation?: string
-  blobstoreDiskTmpLocation?: string
+  blobstoreS3Bucket?: string;
+  blobstoreDiskLocation?: string;
+  blobstoreDiskTmpLocation?: string;
 
   // -- optional s3 parameters
-  blobstoreS3Region?: string
-  blobstoreS3Endpoint?: string
-  blobstoreS3ForcePathStyle?: boolean
-  blobstoreS3AccessKeyId?: string
-  blobstoreS3SecretAccessKey?: string
+  blobstoreS3Region?: string;
+  blobstoreS3Endpoint?: string;
+  blobstoreS3ForcePathStyle?: boolean;
+  blobstoreS3AccessKeyId?: string;
+  blobstoreS3SecretAccessKey?: string;
 
   // identity
-  didPlcUrl?: string
-  didCacheStaleTTL?: number
-  didCacheMaxTTL?: number
-  resolverTimeout?: number
-  recoveryDidKey?: string
-  serviceHandleDomains?: string[] // public hostname by default
-  handleBackupNameservers?: string[]
-  enableDidDocWithSession?: boolean
+  didPlcUrl?: string;
+  didCacheStaleTTL?: number;
+  didCacheMaxTTL?: number;
+  resolverTimeout?: number;
+  recoveryDidKey?: string;
+  serviceHandleDomains?: string[]; // public hostname by default
+  handleBackupNameservers?: string[];
+  enableDidDocWithSession?: boolean;
 
   // entryway
-  entrywayUrl?: string
-  entrywayDid?: string
-  entrywayJwtVerifyKeyK256PublicKeyHex?: string
-  entrywayPlcRotationKey?: string
+  entrywayUrl?: string;
+  entrywayDid?: string;
+  entrywayJwtVerifyKeyK256PublicKeyHex?: string;
+  entrywayPlcRotationKey?: string;
 
   // invites
-  inviteRequired?: boolean
-  inviteInterval?: number
-  inviteEpoch?: number
+  inviteRequired?: boolean;
+  inviteInterval?: number;
+  inviteEpoch?: number;
 
   // email
-  emailSmtpUrl?: string
-  emailFromAddress?: string
-  moderationEmailSmtpUrl?: string
-  moderationEmailAddress?: string
+  emailSmtpUrl?: string;
+  emailFromAddress?: string;
+  moderationEmailSmtpUrl?: string;
+  moderationEmailAddress?: string;
 
   // subscription
-  maxSubscriptionBuffer?: number
-  repoBackfillLimitMs?: number
+  maxSubscriptionBuffer?: number;
+  repoBackfillLimitMs?: number;
 
   // appview
-  bskyAppViewUrl?: string
-  bskyAppViewDid?: string
-  bskyAppViewCdnUrlPattern?: string
+  codestashAppViewUrl?: string;
+  codestashAppViewDid?: string;
+  codestashAppViewCdnUrlPattern?: string;
 
   // mod service
-  modServiceUrl?: string
-  modServiceDid?: string
+  modServiceUrl?: string;
+  modServiceDid?: string;
 
   // report service
-  reportServiceUrl?: string
-  reportServiceDid?: string
+  reportServiceUrl?: string;
+  reportServiceDid?: string;
 
   // rate limits
-  rateLimitsEnabled?: boolean
-  rateLimitBypassKey?: string
-  rateLimitBypassIps?: string[]
+  rateLimitsEnabled?: boolean;
+  rateLimitBypassKey?: string;
+  rateLimitBypassIps?: string[];
 
   // redis
-  redisScratchAddress?: string
-  redisScratchPassword?: string
+  redisScratchAddress?: string;
+  redisScratchPassword?: string;
 
   // crawler
-  crawlers?: string[]
+  crawlers?: string[];
 
   // secrets
-  jwtSecret?: string
-  adminPassword?: string
+  jwtSecret?: string;
+  adminPassword?: string;
 
   // keys
-  plcRotationKeyKmsKeyId?: string
-  plcRotationKeyK256PrivateKeyHex?: string
-}
+  plcRotationKeyKmsKeyId?: string;
+  plcRotationKeyK256PrivateKeyHex?: string;
+};

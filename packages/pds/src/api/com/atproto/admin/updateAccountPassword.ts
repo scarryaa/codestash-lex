@@ -1,6 +1,6 @@
-import { Server } from '../../../../lexicon'
-import AppContext from '../../../../context'
-import { authPassthru } from '../../../proxy'
+import { Server } from '../../../../lexicon';
+import AppContext from '../../../../context';
+import { authPassthru } from '../../../proxy';
 
 export default function (server: Server, ctx: AppContext) {
   server.com.atproto.admin.updateAccountPassword({
@@ -10,12 +10,12 @@ export default function (server: Server, ctx: AppContext) {
         await ctx.entrywayAgent.com.atproto.admin.updateAccountPassword(
           input.body,
           authPassthru(req, true),
-        )
-        return
+        );
+        return;
       }
 
-      const { did, password } = input.body
-      await ctx.accountManager.updateAccountPassword({ did, password })
+      const { did, password } = input.body;
+      await ctx.accountManager.updateAccountPassword({ did, password });
     },
-  })
+  });
 }

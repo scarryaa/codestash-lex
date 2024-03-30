@@ -3,9 +3,9 @@ import {
   moderatePost,
   mock,
   interpretLabelValueDefinition,
-} from '../src'
-import './util/moderation-behavior'
-import { ModerationOpts } from '../dist'
+} from '../src';
+import './util/moderation-behavior';
+import { ModerationOpts } from '../dist';
 
 describe('Moderation', () => {
   it('Applies self-labels on profiles according to the global preferences', () => {
@@ -35,13 +35,13 @@ describe('Moderation', () => {
           mutedWords: [],
         },
       },
-    )
+    );
     expect(res1.ui('avatar')).toBeModerationResult(
       ['blur'],
       'post avatar',
       JSON.stringify(res1, null, 2),
       true,
-    )
+    );
 
     // porn (ignore)
     const res2 = moderateProfile(
@@ -69,14 +69,14 @@ describe('Moderation', () => {
           mutedWords: [],
         },
       },
-    )
+    );
     expect(res2.ui('avatar')).toBeModerationResult(
       [],
       'post avatar',
       JSON.stringify(res1, null, 2),
       true,
-    )
-  })
+    );
+  });
 
   it('Ignores labels from unsubscribed moderators or ignored labels for a moderator', () => {
     // porn (moderator disabled)
@@ -105,7 +105,7 @@ describe('Moderation', () => {
           mutedWords: [],
         },
       },
-    )
+    );
     for (const k of [
       'profileList',
       'profileView',
@@ -120,7 +120,7 @@ describe('Moderation', () => {
         [],
         k,
         JSON.stringify(res1, null, 2),
-      )
+      );
     }
 
     // porn (label group disabled)
@@ -154,7 +154,7 @@ describe('Moderation', () => {
           mutedWords: [],
         },
       },
-    )
+    );
     for (const k of [
       'profileList',
       'profileView',
@@ -169,9 +169,9 @@ describe('Moderation', () => {
         [],
         k,
         JSON.stringify(res2, null, 2),
-      )
+      );
     }
-  })
+  });
 
   it('Can manually apply hiding', () => {
     const res1 = moderatePost(
@@ -201,14 +201,17 @@ describe('Moderation', () => {
           mutedWords: [],
         },
       },
-    )
-    res1.addHidden(true)
+    );
+    res1.addHidden(true);
     expect(res1.ui('contentList')).toBeModerationResult(
       ['filter', 'blur'],
       'contentList',
-    )
-    expect(res1.ui('contentView')).toBeModerationResult(['blur'], 'contentView')
-  })
+    );
+    expect(res1.ui('contentView')).toBeModerationResult(
+      ['blur'],
+      'contentView',
+    );
+  });
 
   it('Prioritizes filters and blurs correctly on merge', () => {
     const res1 = moderatePost(
@@ -253,12 +256,12 @@ describe('Moderation', () => {
           mutedWords: [],
         },
       },
-    )
-    expect((res1.ui('contentList').filters[0] as any).label.val).toBe('!hide')
-    expect((res1.ui('contentList').filters[1] as any).label.val).toBe('porn')
-    expect((res1.ui('contentList').blurs[0] as any).label.val).toBe('!hide')
-    expect((res1.ui('contentMedia').blurs[0] as any).label.val).toBe('porn')
-  })
+    );
+    expect((res1.ui('contentList').filters[0] as any).label.val).toBe('!hide');
+    expect((res1.ui('contentList').filters[1] as any).label.val).toBe('porn');
+    expect((res1.ui('contentList').blurs[0] as any).label.val).toBe('!hide');
+    expect((res1.ui('contentMedia').blurs[0] as any).label.val).toBe('porn');
+  });
 
   it('Prioritizes custom label definitions', () => {
     const modOpts: ModerationOpts = {
@@ -289,7 +292,7 @@ describe('Moderation', () => {
           ),
         ],
       },
-    }
+    };
     const res = moderatePost(
       mock.postView({
         record: {
@@ -310,16 +313,16 @@ describe('Moderation', () => {
         ],
       }),
       modOpts,
-    )
-    expect(res.ui('profileList')).toBeModerationResult([])
-    expect(res.ui('profileView')).toBeModerationResult([])
-    expect(res.ui('avatar')).toBeModerationResult([])
-    expect(res.ui('banner')).toBeModerationResult([])
-    expect(res.ui('displayName')).toBeModerationResult([])
-    expect(res.ui('contentList')).toBeModerationResult(['inform'])
-    expect(res.ui('contentView')).toBeModerationResult(['inform'])
-    expect(res.ui('contentMedia')).toBeModerationResult([])
-  })
+    );
+    expect(res.ui('profileList')).toBeModerationResult([]);
+    expect(res.ui('profileView')).toBeModerationResult([]);
+    expect(res.ui('avatar')).toBeModerationResult([]);
+    expect(res.ui('banner')).toBeModerationResult([]);
+    expect(res.ui('displayName')).toBeModerationResult([]);
+    expect(res.ui('contentList')).toBeModerationResult(['inform']);
+    expect(res.ui('contentView')).toBeModerationResult(['inform']);
+    expect(res.ui('contentMedia')).toBeModerationResult([]);
+  });
 
   it('Doesnt allow custom behaviors to override imperative labels', () => {
     const modOpts: ModerationOpts = {
@@ -350,7 +353,7 @@ describe('Moderation', () => {
           ),
         ],
       },
-    }
+    };
     const res = moderatePost(
       mock.postView({
         record: {
@@ -371,21 +374,21 @@ describe('Moderation', () => {
         ],
       }),
       modOpts,
-    )
+    );
 
-    expect(res.ui('profileList')).toBeModerationResult([])
-    expect(res.ui('profileView')).toBeModerationResult([])
-    expect(res.ui('avatar')).toBeModerationResult([])
-    expect(res.ui('banner')).toBeModerationResult([])
-    expect(res.ui('displayName')).toBeModerationResult([])
+    expect(res.ui('profileList')).toBeModerationResult([]);
+    expect(res.ui('profileView')).toBeModerationResult([]);
+    expect(res.ui('avatar')).toBeModerationResult([]);
+    expect(res.ui('banner')).toBeModerationResult([]);
+    expect(res.ui('displayName')).toBeModerationResult([]);
     expect(res.ui('contentList')).toBeModerationResult([
       'filter',
       'blur',
       'noOverride',
-    ])
-    expect(res.ui('contentView')).toBeModerationResult(['blur', 'noOverride'])
-    expect(res.ui('contentMedia')).toBeModerationResult([])
-  })
+    ]);
+    expect(res.ui('contentView')).toBeModerationResult(['blur', 'noOverride']);
+    expect(res.ui('contentMedia')).toBeModerationResult([]);
+  });
 
   it('Ignores invalid label value names', () => {
     const modOpts: ModerationOpts = {
@@ -426,7 +429,7 @@ describe('Moderation', () => {
           ),
         ],
       },
-    }
+    };
     const res = moderatePost(
       mock.postView({
         record: {
@@ -453,17 +456,17 @@ describe('Moderation', () => {
         ],
       }),
       modOpts,
-    )
+    );
 
-    expect(res.ui('profileList')).toBeModerationResult([])
-    expect(res.ui('profileView')).toBeModerationResult([])
-    expect(res.ui('avatar')).toBeModerationResult([])
-    expect(res.ui('banner')).toBeModerationResult([])
-    expect(res.ui('displayName')).toBeModerationResult([])
-    expect(res.ui('contentList')).toBeModerationResult([])
-    expect(res.ui('contentView')).toBeModerationResult([])
-    expect(res.ui('contentMedia')).toBeModerationResult([])
-  })
+    expect(res.ui('profileList')).toBeModerationResult([]);
+    expect(res.ui('profileView')).toBeModerationResult([]);
+    expect(res.ui('avatar')).toBeModerationResult([]);
+    expect(res.ui('banner')).toBeModerationResult([]);
+    expect(res.ui('displayName')).toBeModerationResult([]);
+    expect(res.ui('contentList')).toBeModerationResult([]);
+    expect(res.ui('contentView')).toBeModerationResult([]);
+    expect(res.ui('contentMedia')).toBeModerationResult([]);
+  });
 
   it('Custom labels can set the default setting', () => {
     const modOpts: ModerationOpts = {
@@ -514,7 +517,7 @@ describe('Moderation', () => {
           ),
         ],
       },
-    }
+    };
     const res1 = moderatePost(
       mock.postView({
         record: {
@@ -535,16 +538,16 @@ describe('Moderation', () => {
         ],
       }),
       modOpts,
-    )
+    );
 
-    expect(res1.ui('profileList')).toBeModerationResult([])
-    expect(res1.ui('profileView')).toBeModerationResult([])
-    expect(res1.ui('avatar')).toBeModerationResult([])
-    expect(res1.ui('banner')).toBeModerationResult([])
-    expect(res1.ui('displayName')).toBeModerationResult([])
-    expect(res1.ui('contentList')).toBeModerationResult(['filter', 'blur'])
-    expect(res1.ui('contentView')).toBeModerationResult(['inform'])
-    expect(res1.ui('contentMedia')).toBeModerationResult([])
+    expect(res1.ui('profileList')).toBeModerationResult([]);
+    expect(res1.ui('profileView')).toBeModerationResult([]);
+    expect(res1.ui('avatar')).toBeModerationResult([]);
+    expect(res1.ui('banner')).toBeModerationResult([]);
+    expect(res1.ui('displayName')).toBeModerationResult([]);
+    expect(res1.ui('contentList')).toBeModerationResult(['filter', 'blur']);
+    expect(res1.ui('contentView')).toBeModerationResult(['inform']);
+    expect(res1.ui('contentMedia')).toBeModerationResult([]);
 
     const res2 = moderatePost(
       mock.postView({
@@ -566,16 +569,16 @@ describe('Moderation', () => {
         ],
       }),
       modOpts,
-    )
+    );
 
-    expect(res2.ui('profileList')).toBeModerationResult([])
-    expect(res2.ui('profileView')).toBeModerationResult([])
-    expect(res2.ui('avatar')).toBeModerationResult([])
-    expect(res2.ui('banner')).toBeModerationResult([])
-    expect(res2.ui('displayName')).toBeModerationResult([])
-    expect(res2.ui('contentList')).toBeModerationResult(['blur'])
-    expect(res2.ui('contentView')).toBeModerationResult(['inform'])
-    expect(res2.ui('contentMedia')).toBeModerationResult([])
+    expect(res2.ui('profileList')).toBeModerationResult([]);
+    expect(res2.ui('profileView')).toBeModerationResult([]);
+    expect(res2.ui('avatar')).toBeModerationResult([]);
+    expect(res2.ui('banner')).toBeModerationResult([]);
+    expect(res2.ui('displayName')).toBeModerationResult([]);
+    expect(res2.ui('contentList')).toBeModerationResult(['blur']);
+    expect(res2.ui('contentView')).toBeModerationResult(['inform']);
+    expect(res2.ui('contentMedia')).toBeModerationResult([]);
 
     const res3 = moderatePost(
       mock.postView({
@@ -597,17 +600,17 @@ describe('Moderation', () => {
         ],
       }),
       modOpts,
-    )
+    );
 
-    expect(res3.ui('profileList')).toBeModerationResult([])
-    expect(res3.ui('profileView')).toBeModerationResult([])
-    expect(res3.ui('avatar')).toBeModerationResult([])
-    expect(res3.ui('banner')).toBeModerationResult([])
-    expect(res3.ui('displayName')).toBeModerationResult([])
-    expect(res3.ui('contentList')).toBeModerationResult([])
-    expect(res3.ui('contentView')).toBeModerationResult([])
-    expect(res3.ui('contentMedia')).toBeModerationResult([])
-  })
+    expect(res3.ui('profileList')).toBeModerationResult([]);
+    expect(res3.ui('profileView')).toBeModerationResult([]);
+    expect(res3.ui('avatar')).toBeModerationResult([]);
+    expect(res3.ui('banner')).toBeModerationResult([]);
+    expect(res3.ui('displayName')).toBeModerationResult([]);
+    expect(res3.ui('contentList')).toBeModerationResult([]);
+    expect(res3.ui('contentView')).toBeModerationResult([]);
+    expect(res3.ui('contentMedia')).toBeModerationResult([]);
+  });
 
   it('Custom labels can require adult content to be enabled', () => {
     const modOpts: ModerationOpts = {
@@ -641,7 +644,7 @@ describe('Moderation', () => {
           ),
         ],
       },
-    }
+    };
     const res = moderatePost(
       mock.postView({
         record: {
@@ -662,21 +665,21 @@ describe('Moderation', () => {
         ],
       }),
       modOpts,
-    )
+    );
 
-    expect(res.ui('profileList')).toBeModerationResult([])
-    expect(res.ui('profileView')).toBeModerationResult([])
-    expect(res.ui('avatar')).toBeModerationResult([])
-    expect(res.ui('banner')).toBeModerationResult([])
-    expect(res.ui('displayName')).toBeModerationResult([])
+    expect(res.ui('profileList')).toBeModerationResult([]);
+    expect(res.ui('profileView')).toBeModerationResult([]);
+    expect(res.ui('avatar')).toBeModerationResult([]);
+    expect(res.ui('banner')).toBeModerationResult([]);
+    expect(res.ui('displayName')).toBeModerationResult([]);
     expect(res.ui('contentList')).toBeModerationResult([
       'filter',
       'blur',
       'noOverride',
-    ])
-    expect(res.ui('contentView')).toBeModerationResult(['blur', 'noOverride'])
-    expect(res.ui('contentMedia')).toBeModerationResult([])
-  })
+    ]);
+    expect(res.ui('contentView')).toBeModerationResult(['blur', 'noOverride']);
+    expect(res.ui('contentMedia')).toBeModerationResult([]);
+  });
 
   it('Adult content disabled forces the preference to hide', () => {
     const modOpts: ModerationOpts = {
@@ -694,7 +697,7 @@ describe('Moderation', () => {
         mutedWords: [],
       },
       labelDefs: {},
-    }
+    };
     const res = moderatePost(
       mock.postView({
         record: {
@@ -715,15 +718,15 @@ describe('Moderation', () => {
         ],
       }),
       modOpts,
-    )
+    );
 
-    expect(res.ui('profileList')).toBeModerationResult([])
-    expect(res.ui('profileView')).toBeModerationResult([])
-    expect(res.ui('avatar')).toBeModerationResult([])
-    expect(res.ui('banner')).toBeModerationResult([])
-    expect(res.ui('displayName')).toBeModerationResult([])
-    expect(res.ui('contentList')).toBeModerationResult(['filter'])
-    expect(res.ui('contentView')).toBeModerationResult([])
-    expect(res.ui('contentMedia')).toBeModerationResult(['blur', 'noOverride'])
-  })
-})
+    expect(res.ui('profileList')).toBeModerationResult([]);
+    expect(res.ui('profileView')).toBeModerationResult([]);
+    expect(res.ui('avatar')).toBeModerationResult([]);
+    expect(res.ui('banner')).toBeModerationResult([]);
+    expect(res.ui('displayName')).toBeModerationResult([]);
+    expect(res.ui('contentList')).toBeModerationResult(['filter']);
+    expect(res.ui('contentView')).toBeModerationResult([]);
+    expect(res.ui('contentMedia')).toBeModerationResult(['blur', 'noOverride']);
+  });
+});

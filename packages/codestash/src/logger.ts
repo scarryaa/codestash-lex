@@ -1,19 +1,19 @@
-import pino from 'pino'
-import pinoHttp from 'pino-http'
-import * as jose from 'jose'
-import { subsystemLogger } from '@atproto/common'
-import { parseBasicAuth } from './auth-verifier'
+import pino from 'pino';
+import pinoHttp from 'pino-http';
+import * as jose from 'jose';
+import { subsystemLogger } from '@atproto/common';
+import { parseBasicAuth } from './auth-verifier';
 
 export const dbLogger: ReturnType<typeof subsystemLogger> =
-  subsystemLogger('codestash:db')
+  subsystemLogger('codestash:db');
 export const cacheLogger: ReturnType<typeof subsystemLogger> =
-  subsystemLogger('codestash:cache')
+  subsystemLogger('codestash:cache');
 export const subLogger: ReturnType<typeof subsystemLogger> =
-  subsystemLogger('codestash:sub')
+  subsystemLogger('codestash:sub');
 export const labelerLogger: ReturnType<typeof subsystemLogger> =
-  subsystemLogger('codestash:labeler')
+  subsystemLogger('codestash:labeler');
 export const httpLogger: ReturnType<typeof subsystemLogger> =
-  subsystemLogger('codestash')
+  subsystemLogger('codestash');
 
 export const loggerMiddleware = pinoHttp({
   logger: httpLogger,
@@ -22,27 +22,27 @@ export const loggerMiddleware = pinoHttp({
       return {
         code: err?.code,
         message: err?.message,
-      }
+      };
     },
     req: (req) => {
-      const serialized = pino.stdSerializers.req(req)
-      const authHeader = serialized.headers.authorization || ''
-      let auth: string | undefined = undefined
+      const serialized = pino.stdSerializers.req(req);
+      const authHeader = serialized.headers.authorization || '';
+      let auth: string | undefined = undefined;
       if (authHeader.startsWith('Bearer ')) {
-        const token = authHeader.slice('Bearer '.length)
-        const { iss } = jose.decodeJwt(token)
+        const token = authHeader.slice('Bearer '.length);
+        const { iss } = jose.decodeJwt(token);
         if (iss) {
-          auth = 'Bearer ' + iss
+          auth = 'Bearer ' + iss;
         } else {
-          auth = 'Bearer Invalid'
+          auth = 'Bearer Invalid';
         }
       }
       if (authHeader.startsWith('Basic ')) {
-        const parsed = parseBasicAuth(authHeader)
+        const parsed = parseBasicAuth(authHeader);
         if (!parsed) {
-          auth = 'Basic Invalid'
+          auth = 'Basic Invalid';
         } else {
-          auth = 'Basic ' + parsed.username
+          auth = 'Basic ' + parsed.username;
         }
       }
       return {
@@ -51,7 +51,7 @@ export const loggerMiddleware = pinoHttp({
           ...serialized.headers,
           authorization: auth,
         },
-      }
+      };
     },
   },
-})
+});

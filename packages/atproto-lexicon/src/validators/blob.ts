@@ -1,6 +1,6 @@
-import { BlobRef } from '../blob-refs'
-import { Lexicons } from '../lexicons'
-import { LexUserType, ValidationResult, ValidationError } from '../types'
+import { BlobRef } from '../blob-refs';
+import { Lexicons } from '../lexicons';
+import { LexUserType, ValidationResult, ValidationError } from '../types';
 
 export function blob(
   lexicons: Lexicons,
@@ -13,7 +13,7 @@ export function blob(
     return {
       success: false,
       error: new ValidationError(`${path} should be a blob ref`),
-    }
+    };
   }
-  return { success: true, value }
+  return { success: true, value };
 }

@@ -1,14 +1,14 @@
-import * as http from 'http'
-import getPort from 'get-port'
-import { LexiconDoc } from '@atproto/lexicon'
-import { createServer, closeServer } from './_util'
-import * as xrpcServer from '../src'
+import * as http from 'http';
+import getPort from 'get-port';
+import { LexiconDoc } from '@atproto/lexicon';
+import { createServer, closeServer } from './_util';
+import * as xrpcServer from '../src';
 import xrpc, {
   Client,
   ServiceClient,
   XRPCError,
   XRPCInvalidResponseError,
-} from '@atproto/xrpc'
+} from '@atproto/xrpc';
 
 const LEXICONS: LexiconDoc[] = [
   {
@@ -73,7 +73,7 @@ const LEXICONS: LexiconDoc[] = [
       },
     },
   },
-]
+];
 
 const MISMATCHED_LEXICONS: LexiconDoc[] = [
   {
@@ -103,140 +103,140 @@ const MISMATCHED_LEXICONS: LexiconDoc[] = [
       },
     },
   },
-]
+];
 
 describe('Errors', () => {
-  let s: http.Server
-  const server = xrpcServer.createServer(LEXICONS, { validateResponse: false }) // disable validateResponse to test client validation
+  let s: http.Server;
+  const server = xrpcServer.createServer(LEXICONS, { validateResponse: false }); // disable validateResponse to test client validation
   server.method('io.example.error', (ctx: { params: xrpcServer.Params }) => {
     if (ctx.params.which === 'foo') {
-      throw new xrpcServer.InvalidRequestError('It was this one!', 'Foo')
+      throw new xrpcServer.InvalidRequestError('It was this one!', 'Foo');
     } else if (ctx.params.which === 'bar') {
-      return { status: 400, error: 'Bar', message: 'It was that one!' }
+      return { status: 400, error: 'Bar', message: 'It was that one!' };
     } else {
-      return { status: 400 }
+      return { status: 400 };
     }
-  })
+  });
   server.method('io.example.throwFalsyValue', () => {
-    throw ''
-  })
+    throw '';
+  });
   server.method('io.example.query', () => {
-    return undefined
-  })
+    return undefined;
+  });
   // @ts-ignore We're intentionally giving the wrong response! -prf
   server.method('io.example.invalidResponse', () => {
-    return { encoding: 'json', body: { something: 'else' } }
-  })
+    return { encoding: 'json', body: { something: 'else' } };
+  });
   server.method('io.example.procedure', () => {
-    return undefined
-  })
-  xrpc.addLexicons(LEXICONS)
-  const badXrpc = new Client()
-  badXrpc.addLexicons(MISMATCHED_LEXICONS)
+    return undefined;
+  });
+  xrpc.addLexicons(LEXICONS);
+  const badXrpc = new Client();
+  badXrpc.addLexicons(MISMATCHED_LEXICONS);
 
-  let client: ServiceClient
-  let badClient: ServiceClient
+  let client: ServiceClient;
+  let badClient: ServiceClient;
   beforeAll(async () => {
-    const port = await getPort()
-    s = await createServer(port, server)
-    client = xrpc.service(`http://localhost:${port}`)
-    badClient = badXrpc.service(`http://localhost:${port}`)
-  })
+    const port = await getPort();
+    s = await createServer(port, server);
+    client = xrpc.service(`http://localhost:${port}`);
+    badClient = badXrpc.service(`http://localhost:${port}`);
+  });
   afterAll(async () => {
-    await closeServer(s)
-  })
+    await closeServer(s);
+  });
 
   it('serves requests', async () => {
     try {
       await client.call('io.example.error', {
         which: 'foo',
-      })
-      throw new Error('Didnt throw')
+      });
+      throw new Error('Didnt throw');
     } catch (e) {
-      expect(e).toBeInstanceOf(XRPCError)
-      expect((e as XRPCError).success).toBeFalsy()
-      expect((e as XRPCError).error).toBe('Foo')
-      expect((e as XRPCError).message).toBe('It was this one!')
+      expect(e).toBeInstanceOf(XRPCError);
+      expect((e as XRPCError).success).toBeFalsy();
+      expect((e as XRPCError).error).toBe('Foo');
+      expect((e as XRPCError).message).toBe('It was this one!');
     }
     try {
       await client.call('io.example.error', {
         which: 'bar',
-      })
-      throw new Error('Didnt throw')
+      });
+      throw new Error('Didnt throw');
     } catch (e) {
-      expect(e).toBeInstanceOf(XRPCError)
-      expect((e as XRPCError).success).toBeFalsy()
-      expect((e as XRPCError).error).toBe('Bar')
-      expect((e as XRPCError).message).toBe('It was that one!')
+      expect(e).toBeInstanceOf(XRPCError);
+      expect((e as XRPCError).success).toBeFalsy();
+      expect((e as XRPCError).error).toBe('Bar');
+      expect((e as XRPCError).message).toBe('It was that one!');
     }
     try {
-      await client.call('io.example.throwFalsyValue')
-      throw new Error('Didnt throw')
+      await client.call('io.example.throwFalsyValue');
+      throw new Error('Didnt throw');
     } catch (e) {
-      expect(e instanceof XRPCError).toBeTruthy()
-      expect((e as XRPCError).success).toBeFalsy()
-      expect((e as XRPCError).error).toBe('InternalServerError')
-      expect((e as XRPCError).message).toBe('Internal Server Error')
+      expect(e instanceof XRPCError).toBeTruthy();
+      expect((e as XRPCError).success).toBeFalsy();
+      expect((e as XRPCError).error).toBe('InternalServerError');
+      expect((e as XRPCError).message).toBe('Internal Server Error');
     }
     try {
       await client.call('io.example.error', {
         which: 'other',
-      })
-      throw new Error('Didnt throw')
+      });
+      throw new Error('Didnt throw');
     } catch (e) {
-      expect(e).toBeInstanceOf(XRPCError)
-      expect((e as XRPCError).success).toBeFalsy()
-      expect((e as XRPCError).error).toBe('InvalidRequest')
-      expect((e as XRPCError).message).toBe('Invalid Request')
+      expect(e).toBeInstanceOf(XRPCError);
+      expect((e as XRPCError).success).toBeFalsy();
+      expect((e as XRPCError).error).toBe('InvalidRequest');
+      expect((e as XRPCError).message).toBe('Invalid Request');
     }
     try {
-      await client.call('io.example.invalidResponse')
-      throw new Error('Didnt throw')
+      await client.call('io.example.invalidResponse');
+      throw new Error('Didnt throw');
     } catch (e: any) {
-      expect(e).toBeInstanceOf(XRPCError)
-      expect(e).toBeInstanceOf(XRPCInvalidResponseError)
-      expect(e.success).toBeFalsy()
-      expect(e.error).toBe('Invalid Response')
+      expect(e).toBeInstanceOf(XRPCError);
+      expect(e).toBeInstanceOf(XRPCInvalidResponseError);
+      expect(e.success).toBeFalsy();
+      expect(e.error).toBe('Invalid Response');
       expect(e.message).toBe(
         'The server gave an invalid response and may be out of date.',
-      )
-      const err = e as XRPCInvalidResponseError
+      );
+      const err = e as XRPCInvalidResponseError;
       expect(err.validationError.message).toBe(
         'Output must have the property "expectedValue"',
-      )
-      expect(err.responseBody).toStrictEqual({ something: 'else' })
+      );
+      expect(err.responseBody).toStrictEqual({ something: 'else' });
     }
-  })
+  });
 
   it('serves error for missing/mismatch schemas', async () => {
-    await client.call('io.example.query') // No error
-    await client.call('io.example.procedure') // No error
+    await client.call('io.example.query'); // No error
+    await client.call('io.example.procedure'); // No error
     try {
-      await badClient.call('io.example.query')
-      throw new Error('Didnt throw')
+      await badClient.call('io.example.query');
+      throw new Error('Didnt throw');
     } catch (e: any) {
-      expect(e).toBeInstanceOf(XRPCError)
-      expect(e.success).toBeFalsy()
-      expect(e.error).toBe('InvalidRequest')
-      expect(e.message).toBe('Incorrect HTTP method (POST) expected GET')
+      expect(e).toBeInstanceOf(XRPCError);
+      expect(e.success).toBeFalsy();
+      expect(e.error).toBe('InvalidRequest');
+      expect(e.message).toBe('Incorrect HTTP method (POST) expected GET');
     }
     try {
-      await badClient.call('io.example.procedure')
-      throw new Error('Didnt throw')
+      await badClient.call('io.example.procedure');
+      throw new Error('Didnt throw');
     } catch (e: any) {
-      expect(e).toBeInstanceOf(XRPCError)
-      expect(e.success).toBeFalsy()
-      expect(e.error).toBe('InvalidRequest')
-      expect(e.message).toBe('Incorrect HTTP method (GET) expected POST')
+      expect(e).toBeInstanceOf(XRPCError);
+      expect(e.success).toBeFalsy();
+      expect(e.error).toBe('InvalidRequest');
+      expect(e.message).toBe('Incorrect HTTP method (GET) expected POST');
     }
     try {
-      await badClient.call('io.example.doesNotExist')
-      throw new Error('Didnt throw')
+      await badClient.call('io.example.doesNotExist');
+      throw new Error('Didnt throw');
     } catch (e: any) {
-      expect(e).toBeInstanceOf(XRPCError)
-      expect(e.success).toBeFalsy()
-      expect(e.error).toBe('MethodNotImplemented')
-      expect(e.message).toBe('Method Not Implemented')
+      expect(e).toBeInstanceOf(XRPCError);
+      expect(e.success).toBeFalsy();
+      expect(e.error).toBe('MethodNotImplemented');
+      expect(e.message).toBe('Method Not Implemented');
     }
-  })
-})
+  });
+});

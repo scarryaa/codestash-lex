@@ -1,73 +1,73 @@
-import { RichText, mock, moderatePost } from '../src/'
+import { RichText, mock, moderatePost } from '../src/';
 
-import { hasMutedWord } from '../src/moderation/mutewords'
+import { hasMutedWord } from '../src/moderation/mutewords';
 
 describe(`hasMutedWord`, () => {
   describe(`tags`, () => {
     it(`match: outline tag`, () => {
       const rt = new RichText({
         text: `This is a post #inlineTag`,
-      })
-      rt.detectFacetsWithoutResolution()
+      });
+      rt.detectFacetsWithoutResolution();
 
       const match = hasMutedWord({
         mutedWords: [{ value: 'outlineTag', targets: ['tag'] }],
         text: rt.text,
         facets: rt.facets,
         outlineTags: ['outlineTag'],
-      })
+      });
 
-      expect(match).toBe(true)
-    })
+      expect(match).toBe(true);
+    });
 
     it(`match: inline tag`, () => {
       const rt = new RichText({
         text: `This is a post #inlineTag`,
-      })
-      rt.detectFacetsWithoutResolution()
+      });
+      rt.detectFacetsWithoutResolution();
 
       const match = hasMutedWord({
         mutedWords: [{ value: 'inlineTag', targets: ['tag'] }],
         text: rt.text,
         facets: rt.facets,
         outlineTags: ['outlineTag'],
-      })
+      });
 
-      expect(match).toBe(true)
-    })
+      expect(match).toBe(true);
+    });
 
     it(`match: content target matches inline tag`, () => {
       const rt = new RichText({
         text: `This is a post #inlineTag`,
-      })
-      rt.detectFacetsWithoutResolution()
+      });
+      rt.detectFacetsWithoutResolution();
 
       const match = hasMutedWord({
         mutedWords: [{ value: 'inlineTag', targets: ['content'] }],
         text: rt.text,
         facets: rt.facets,
         outlineTags: ['outlineTag'],
-      })
+      });
 
-      expect(match).toBe(true)
-    })
+      expect(match).toBe(true);
+    });
 
     it(`no match: only tag targets`, () => {
       const rt = new RichText({
         text: `This is a post`,
-      })
-      rt.detectFacetsWithoutResolution()
+      });
+      rt.detectFacetsWithoutResolution();
 
       const match = hasMutedWord({
         mutedWords: [{ value: 'inlineTag', targets: ['tag'] }],
         text: rt.text,
         facets: rt.facets,
         outlineTags: [],
-      })
+      });
 
-      expect(match).toBe(false)
-    })
-  })
+      expect(match).toBe(false);
+    });
+  });
 
   describe(`early exits`, () => {
     it(`match: single character 希`, () => {
@@ -76,140 +76,140 @@ describe(`hasMutedWord`, () => {
        */
       const rt = new RichText({
         text: `改善希望です`,
-      })
-      rt.detectFacetsWithoutResolution()
+      });
+      rt.detectFacetsWithoutResolution();
 
       const match = hasMutedWord({
         mutedWords: [{ value: '希', targets: ['content'] }],
         text: rt.text,
         facets: rt.facets,
         outlineTags: [],
-      })
+      });
 
-      expect(match).toBe(true)
-    })
+      expect(match).toBe(true);
+    });
 
     it(`match: single char with length > 1 ☠︎`, () => {
       const rt = new RichText({
         text: `Idk why ☠︎ but maybe`,
-      })
-      rt.detectFacetsWithoutResolution()
+      });
+      rt.detectFacetsWithoutResolution();
 
       const match = hasMutedWord({
         mutedWords: [{ value: '☠︎', targets: ['content'] }],
         text: rt.text,
         facets: rt.facets,
         outlineTags: [],
-      })
+      });
 
-      expect(match).toBe(true)
-    })
+      expect(match).toBe(true);
+    });
 
     it(`no match: long muted word, short post`, () => {
       const rt = new RichText({
         text: `hey`,
-      })
-      rt.detectFacetsWithoutResolution()
+      });
+      rt.detectFacetsWithoutResolution();
 
       const match = hasMutedWord({
         mutedWords: [{ value: 'politics', targets: ['content'] }],
         text: rt.text,
         facets: rt.facets,
         outlineTags: [],
-      })
+      });
 
-      expect(match).toBe(false)
-    })
+      expect(match).toBe(false);
+    });
 
     it(`match: exact text`, () => {
       const rt = new RichText({
         text: `javascript`,
-      })
-      rt.detectFacetsWithoutResolution()
+      });
+      rt.detectFacetsWithoutResolution();
 
       const match = hasMutedWord({
         mutedWords: [{ value: 'javascript', targets: ['content'] }],
         text: rt.text,
         facets: rt.facets,
         outlineTags: [],
-      })
+      });
 
-      expect(match).toBe(true)
-    })
-  })
+      expect(match).toBe(true);
+    });
+  });
 
   describe(`general content`, () => {
     it(`match: word within post`, () => {
       const rt = new RichText({
         text: `This is a post about javascript`,
-      })
-      rt.detectFacetsWithoutResolution()
+      });
+      rt.detectFacetsWithoutResolution();
 
       const match = hasMutedWord({
         mutedWords: [{ value: 'javascript', targets: ['content'] }],
         text: rt.text,
         facets: rt.facets,
         outlineTags: [],
-      })
+      });
 
-      expect(match).toBe(true)
-    })
+      expect(match).toBe(true);
+    });
 
     it(`no match: partial word`, () => {
       const rt = new RichText({
         text: `Use your brain, Eric`,
-      })
-      rt.detectFacetsWithoutResolution()
+      });
+      rt.detectFacetsWithoutResolution();
 
       const match = hasMutedWord({
         mutedWords: [{ value: 'ai', targets: ['content'] }],
         text: rt.text,
         facets: rt.facets,
         outlineTags: [],
-      })
+      });
 
-      expect(match).toBe(false)
-    })
+      expect(match).toBe(false);
+    });
 
     it(`match: multiline`, () => {
       const rt = new RichText({
         text: `Use your\n\tbrain, Eric`,
-      })
-      rt.detectFacetsWithoutResolution()
+      });
+      rt.detectFacetsWithoutResolution();
 
       const match = hasMutedWord({
         mutedWords: [{ value: 'brain', targets: ['content'] }],
         text: rt.text,
         facets: rt.facets,
         outlineTags: [],
-      })
+      });
 
-      expect(match).toBe(true)
-    })
+      expect(match).toBe(true);
+    });
 
     it(`match: :)`, () => {
       const rt = new RichText({
         text: `So happy :)`,
-      })
-      rt.detectFacetsWithoutResolution()
+      });
+      rt.detectFacetsWithoutResolution();
 
       const match = hasMutedWord({
         mutedWords: [{ value: `:)`, targets: ['content'] }],
         text: rt.text,
         facets: rt.facets,
         outlineTags: [],
-      })
+      });
 
-      expect(match).toBe(true)
-    })
-  })
+      expect(match).toBe(true);
+    });
+  });
 
   describe(`punctuation semi-fuzzy`, () => {
     describe(`yay!`, () => {
       const rt = new RichText({
         text: `We're federating, yay!`,
-      })
-      rt.detectFacetsWithoutResolution()
+      });
+      rt.detectFacetsWithoutResolution();
 
       it(`match: yay!`, () => {
         const match = hasMutedWord({
@@ -217,10 +217,10 @@ describe(`hasMutedWord`, () => {
           text: rt.text,
           facets: rt.facets,
           outlineTags: [],
-        })
+        });
 
-        expect(match).toBe(true)
-      })
+        expect(match).toBe(true);
+      });
 
       it(`match: yay`, () => {
         const match = hasMutedWord({
@@ -228,17 +228,17 @@ describe(`hasMutedWord`, () => {
           text: rt.text,
           facets: rt.facets,
           outlineTags: [],
-        })
+        });
 
-        expect(match).toBe(true)
-      })
-    })
+        expect(match).toBe(true);
+      });
+    });
 
     describe(`y!ppee!!`, () => {
       const rt = new RichText({
         text: `We're federating, y!ppee!!`,
-      })
-      rt.detectFacetsWithoutResolution()
+      });
+      rt.detectFacetsWithoutResolution();
 
       it(`match: y!ppee`, () => {
         const match = hasMutedWord({
@@ -246,10 +246,10 @@ describe(`hasMutedWord`, () => {
           text: rt.text,
           facets: rt.facets,
           outlineTags: [],
-        })
+        });
 
-        expect(match).toBe(true)
-      })
+        expect(match).toBe(true);
+      });
 
       // single exclamation point, source has double
       it(`no match: y!ppee!`, () => {
@@ -258,17 +258,17 @@ describe(`hasMutedWord`, () => {
           text: rt.text,
           facets: rt.facets,
           outlineTags: [],
-        })
+        });
 
-        expect(match).toBe(true)
-      })
-    })
+        expect(match).toBe(true);
+      });
+    });
 
     describe(`apostrophes: Bluesky's`, () => {
       const rt = new RichText({
         text: `Yay, Bluesky's mutewords work`,
-      })
-      rt.detectFacetsWithoutResolution()
+      });
+      rt.detectFacetsWithoutResolution();
 
       it(`match: Bluesky's`, () => {
         const match = hasMutedWord({
@@ -276,10 +276,10 @@ describe(`hasMutedWord`, () => {
           text: rt.text,
           facets: rt.facets,
           outlineTags: [],
-        })
+        });
 
-        expect(match).toBe(true)
-      })
+        expect(match).toBe(true);
+      });
 
       it(`match: Bluesky`, () => {
         const match = hasMutedWord({
@@ -287,10 +287,10 @@ describe(`hasMutedWord`, () => {
           text: rt.text,
           facets: rt.facets,
           outlineTags: [],
-        })
+        });
 
-        expect(match).toBe(true)
-      })
+        expect(match).toBe(true);
+      });
 
       it(`match: bluesky`, () => {
         const match = hasMutedWord({
@@ -298,10 +298,10 @@ describe(`hasMutedWord`, () => {
           text: rt.text,
           facets: rt.facets,
           outlineTags: [],
-        })
+        });
 
-        expect(match).toBe(true)
-      })
+        expect(match).toBe(true);
+      });
 
       it(`match: blueskys`, () => {
         const match = hasMutedWord({
@@ -309,17 +309,17 @@ describe(`hasMutedWord`, () => {
           text: rt.text,
           facets: rt.facets,
           outlineTags: [],
-        })
+        });
 
-        expect(match).toBe(true)
-      })
-    })
+        expect(match).toBe(true);
+      });
+    });
 
     describe(`Why so S@assy?`, () => {
       const rt = new RichText({
         text: `Why so S@assy?`,
-      })
-      rt.detectFacetsWithoutResolution()
+      });
+      rt.detectFacetsWithoutResolution();
 
       it(`match: S@assy`, () => {
         const match = hasMutedWord({
@@ -327,10 +327,10 @@ describe(`hasMutedWord`, () => {
           text: rt.text,
           facets: rt.facets,
           outlineTags: [],
-        })
+        });
 
-        expect(match).toBe(true)
-      })
+        expect(match).toBe(true);
+      });
 
       it(`match: s@assy`, () => {
         const match = hasMutedWord({
@@ -338,17 +338,17 @@ describe(`hasMutedWord`, () => {
           text: rt.text,
           facets: rt.facets,
           outlineTags: [],
-        })
+        });
 
-        expect(match).toBe(true)
-      })
-    })
+        expect(match).toBe(true);
+      });
+    });
 
     describe(`New York Times`, () => {
       const rt = new RichText({
         text: `New York Times`,
-      })
-      rt.detectFacetsWithoutResolution()
+      });
+      rt.detectFacetsWithoutResolution();
 
       // case insensitive
       it(`match: new york times`, () => {
@@ -357,17 +357,17 @@ describe(`hasMutedWord`, () => {
           text: rt.text,
           facets: rt.facets,
           outlineTags: [],
-        })
+        });
 
-        expect(match).toBe(true)
-      })
-    })
+        expect(match).toBe(true);
+      });
+    });
 
     describe(`!command`, () => {
       const rt = new RichText({
         text: `Idk maybe a bot !command`,
-      })
-      rt.detectFacetsWithoutResolution()
+      });
+      rt.detectFacetsWithoutResolution();
 
       it(`match: !command`, () => {
         const match = hasMutedWord({
@@ -375,10 +375,10 @@ describe(`hasMutedWord`, () => {
           text: rt.text,
           facets: rt.facets,
           outlineTags: [],
-        })
+        });
 
-        expect(match).toBe(true)
-      })
+        expect(match).toBe(true);
+      });
 
       it(`match: command`, () => {
         const match = hasMutedWord({
@@ -386,33 +386,33 @@ describe(`hasMutedWord`, () => {
           text: rt.text,
           facets: rt.facets,
           outlineTags: [],
-        })
+        });
 
-        expect(match).toBe(true)
-      })
+        expect(match).toBe(true);
+      });
 
       it(`no match: !command`, () => {
         const rt = new RichText({
           text: `Idk maybe a bot command`,
-        })
-        rt.detectFacetsWithoutResolution()
+        });
+        rt.detectFacetsWithoutResolution();
 
         const match = hasMutedWord({
           mutedWords: [{ value: `!command`, targets: ['content'] }],
           text: rt.text,
           facets: rt.facets,
           outlineTags: [],
-        })
+        });
 
-        expect(match).toBe(false)
-      })
-    })
+        expect(match).toBe(false);
+      });
+    });
 
     describe(`e/acc`, () => {
       const rt = new RichText({
         text: `I'm e/acc pilled`,
-      })
-      rt.detectFacetsWithoutResolution()
+      });
+      rt.detectFacetsWithoutResolution();
 
       it(`match: e/acc`, () => {
         const match = hasMutedWord({
@@ -420,10 +420,10 @@ describe(`hasMutedWord`, () => {
           text: rt.text,
           facets: rt.facets,
           outlineTags: [],
-        })
+        });
 
-        expect(match).toBe(true)
-      })
+        expect(match).toBe(true);
+      });
 
       it(`match: acc`, () => {
         const match = hasMutedWord({
@@ -431,17 +431,17 @@ describe(`hasMutedWord`, () => {
           text: rt.text,
           facets: rt.facets,
           outlineTags: [],
-        })
+        });
 
-        expect(match).toBe(true)
-      })
-    })
+        expect(match).toBe(true);
+      });
+    });
 
     describe(`super-bad`, () => {
       const rt = new RichText({
         text: `I'm super-bad`,
-      })
-      rt.detectFacetsWithoutResolution()
+      });
+      rt.detectFacetsWithoutResolution();
 
       it(`match: super-bad`, () => {
         const match = hasMutedWord({
@@ -449,10 +449,10 @@ describe(`hasMutedWord`, () => {
           text: rt.text,
           facets: rt.facets,
           outlineTags: [],
-        })
+        });
 
-        expect(match).toBe(true)
-      })
+        expect(match).toBe(true);
+      });
 
       it(`match: super`, () => {
         const match = hasMutedWord({
@@ -460,10 +460,10 @@ describe(`hasMutedWord`, () => {
           text: rt.text,
           facets: rt.facets,
           outlineTags: [],
-        })
+        });
 
-        expect(match).toBe(true)
-      })
+        expect(match).toBe(true);
+      });
 
       it(`match: bad`, () => {
         const match = hasMutedWord({
@@ -471,10 +471,10 @@ describe(`hasMutedWord`, () => {
           text: rt.text,
           facets: rt.facets,
           outlineTags: [],
-        })
+        });
 
-        expect(match).toBe(true)
-      })
+        expect(match).toBe(true);
+      });
 
       it(`match: super bad`, () => {
         const match = hasMutedWord({
@@ -482,10 +482,10 @@ describe(`hasMutedWord`, () => {
           text: rt.text,
           facets: rt.facets,
           outlineTags: [],
-        })
+        });
 
-        expect(match).toBe(true)
-      })
+        expect(match).toBe(true);
+      });
 
       it(`match: superbad`, () => {
         const match = hasMutedWord({
@@ -493,17 +493,17 @@ describe(`hasMutedWord`, () => {
           text: rt.text,
           facets: rt.facets,
           outlineTags: [],
-        })
+        });
 
-        expect(match).toBe(true)
-      })
-    })
+        expect(match).toBe(true);
+      });
+    });
 
     describe(`idk_what_this_would_be`, () => {
       const rt = new RichText({
         text: `Weird post with idk_what_this_would_be`,
-      })
-      rt.detectFacetsWithoutResolution()
+      });
+      rt.detectFacetsWithoutResolution();
 
       it(`match: idk what this would be`, () => {
         const match = hasMutedWord({
@@ -513,10 +513,10 @@ describe(`hasMutedWord`, () => {
           text: rt.text,
           facets: rt.facets,
           outlineTags: [],
-        })
+        });
 
-        expect(match).toBe(true)
-      })
+        expect(match).toBe(true);
+      });
 
       it(`no match: idk what this would be for`, () => {
         // extra word
@@ -527,10 +527,10 @@ describe(`hasMutedWord`, () => {
           text: rt.text,
           facets: rt.facets,
           outlineTags: [],
-        })
+        });
 
-        expect(match).toBe(false)
-      })
+        expect(match).toBe(false);
+      });
 
       it(`match: idk`, () => {
         // extra word
@@ -539,10 +539,10 @@ describe(`hasMutedWord`, () => {
           text: rt.text,
           facets: rt.facets,
           outlineTags: [],
-        })
+        });
 
-        expect(match).toBe(true)
-      })
+        expect(match).toBe(true);
+      });
 
       it(`match: idkwhatthiswouldbe`, () => {
         const match = hasMutedWord({
@@ -550,17 +550,17 @@ describe(`hasMutedWord`, () => {
           text: rt.text,
           facets: rt.facets,
           outlineTags: [],
-        })
+        });
 
-        expect(match).toBe(true)
-      })
-    })
+        expect(match).toBe(true);
+      });
+    });
 
     describe(`parentheses`, () => {
       const rt = new RichText({
         text: `Post with context(iykyk)`,
-      })
-      rt.detectFacetsWithoutResolution()
+      });
+      rt.detectFacetsWithoutResolution();
 
       it(`match: context(iykyk)`, () => {
         const match = hasMutedWord({
@@ -568,10 +568,10 @@ describe(`hasMutedWord`, () => {
           text: rt.text,
           facets: rt.facets,
           outlineTags: [],
-        })
+        });
 
-        expect(match).toBe(true)
-      })
+        expect(match).toBe(true);
+      });
 
       it(`match: context`, () => {
         const match = hasMutedWord({
@@ -579,10 +579,10 @@ describe(`hasMutedWord`, () => {
           text: rt.text,
           facets: rt.facets,
           outlineTags: [],
-        })
+        });
 
-        expect(match).toBe(true)
-      })
+        expect(match).toBe(true);
+      });
 
       it(`match: iykyk`, () => {
         const match = hasMutedWord({
@@ -590,10 +590,10 @@ describe(`hasMutedWord`, () => {
           text: rt.text,
           facets: rt.facets,
           outlineTags: [],
-        })
+        });
 
-        expect(match).toBe(true)
-      })
+        expect(match).toBe(true);
+      });
 
       it(`match: (iykyk)`, () => {
         const match = hasMutedWord({
@@ -601,17 +601,17 @@ describe(`hasMutedWord`, () => {
           text: rt.text,
           facets: rt.facets,
           outlineTags: [],
-        })
+        });
 
-        expect(match).toBe(true)
-      })
-    })
+        expect(match).toBe(true);
+      });
+    });
 
     describe(`🦋`, () => {
       const rt = new RichText({
         text: `Post with 🦋`,
-      })
-      rt.detectFacetsWithoutResolution()
+      });
+      rt.detectFacetsWithoutResolution();
 
       it(`match: 🦋`, () => {
         const match = hasMutedWord({
@@ -619,19 +619,19 @@ describe(`hasMutedWord`, () => {
           text: rt.text,
           facets: rt.facets,
           outlineTags: [],
-        })
+        });
 
-        expect(match).toBe(true)
-      })
-    })
-  })
+        expect(match).toBe(true);
+      });
+    });
+  });
 
   describe(`phrases`, () => {
     describe(`I like turtles, or how I learned to stop worrying and love the internet.`, () => {
       const rt = new RichText({
         text: `I like turtles, or how I learned to stop worrying and love the internet.`,
-      })
-      rt.detectFacetsWithoutResolution()
+      });
+      rt.detectFacetsWithoutResolution();
 
       it(`match: stop worrying`, () => {
         const match = hasMutedWord({
@@ -639,10 +639,10 @@ describe(`hasMutedWord`, () => {
           text: rt.text,
           facets: rt.facets,
           outlineTags: [],
-        })
+        });
 
-        expect(match).toBe(true)
-      })
+        expect(match).toBe(true);
+      });
 
       it(`match: turtles, or how`, () => {
         const match = hasMutedWord({
@@ -650,20 +650,20 @@ describe(`hasMutedWord`, () => {
           text: rt.text,
           facets: rt.facets,
           outlineTags: [],
-        })
+        });
 
-        expect(match).toBe(true)
-      })
-    })
-  })
+        expect(match).toBe(true);
+      });
+    });
+  });
 
   describe(`languages without spaces`, () => {
     // I love turtles, or how I learned to stop worrying and love the internet
     describe(`私はカメが好きです、またはどのようにして心配するのをやめてインターネットを愛するようになったのか`, () => {
       const rt = new RichText({
         text: `私はカメが好きです、またはどのようにして心配するのをやめてインターネットを愛するようになったのか`,
-      })
-      rt.detectFacetsWithoutResolution()
+      });
+      rt.detectFacetsWithoutResolution();
 
       // internet
       it(`match: インターネット`, () => {
@@ -673,12 +673,12 @@ describe(`hasMutedWord`, () => {
           facets: rt.facets,
           outlineTags: [],
           languages: ['ja'],
-        })
+        });
 
-        expect(match).toBe(true)
-      })
-    })
-  })
+        expect(match).toBe(true);
+      });
+    });
+  });
 
   describe(`doesn't mute own post`, () => {
     it(`does mute if it isn't own post`, () => {
@@ -704,9 +704,9 @@ describe(`hasMutedWord`, () => {
           },
           labelDefs: {},
         },
-      )
-      expect(res.causes[0].type).toBe('mute-word')
-    })
+      );
+      expect(res.causes[0].type).toBe('mute-word');
+    });
 
     it(`doesn't mute own post when muted word is in text`, () => {
       const res = moderatePost(
@@ -731,14 +731,14 @@ describe(`hasMutedWord`, () => {
           },
           labelDefs: {},
         },
-      )
-      expect(res.causes.length).toBe(0)
-    })
+      );
+      expect(res.causes.length).toBe(0);
+    });
 
     it(`doesn't mute own post when muted word is in tags`, () => {
       const rt = new RichText({
         text: `Mute #words!`,
-      })
+      });
       const res = moderatePost(
         mock.postView({
           record: mock.post({
@@ -762,8 +762,8 @@ describe(`hasMutedWord`, () => {
           },
           labelDefs: {},
         },
-      )
-      expect(res.causes.length).toBe(0)
-    })
-  })
-})
+      );
+      expect(res.causes.length).toBe(0);
+    });
+  });
+});

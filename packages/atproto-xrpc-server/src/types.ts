@@ -1,170 +1,170 @@
-import { IncomingMessage } from 'http'
-import express from 'express'
-import { isHttpError } from 'http-errors'
-import zod from 'zod'
+import { IncomingMessage } from 'http';
+import express from 'express';
+import { isHttpError } from 'http-errors';
+import zod from 'zod';
 import {
   ResponseType,
   ResponseTypeStrings,
   ResponseTypeNames,
-} from '@atproto/xrpc'
+} from '@atproto/xrpc';
 
 export type Options = {
-  validateResponse?: boolean
+  validateResponse?: boolean;
   payload?: {
-    jsonLimit?: number
-    blobLimit?: number
-    textLimit?: number
-  }
+    jsonLimit?: number;
+    blobLimit?: number;
+    textLimit?: number;
+  };
   rateLimits?: {
-    creator: RateLimiterCreator
-    global?: ServerRateLimitDescription[]
-    shared?: ServerRateLimitDescription[]
-  }
-}
+    creator: RateLimiterCreator;
+    global?: ServerRateLimitDescription[];
+    shared?: ServerRateLimitDescription[];
+  };
+};
 
-export type UndecodedParams = typeof express.request['query']
+export type UndecodedParams = (typeof express.request)['query'];
 
-export type Primitive = string | number | boolean
-export type Params = Record<string, Primitive | Primitive[] | undefined>
+export type Primitive = string | number | boolean;
+export type Params = Record<string, Primitive | Primitive[] | undefined>;
 
 export const handlerInput = zod.object({
   encoding: zod.string(),
   body: zod.any(),
-})
-export type HandlerInput = zod.infer<typeof handlerInput>
+});
+export type HandlerInput = zod.infer<typeof handlerInput>;
 
 export const handlerAuth = zod.object({
   credentials: zod.any(),
   artifacts: zod.any(),
-})
-export type HandlerAuth = zod.infer<typeof handlerAuth>
+});
+export type HandlerAuth = zod.infer<typeof handlerAuth>;
 
 export const handlerSuccess = zod.object({
   encoding: zod.string(),
   body: zod.any(),
   headers: zod.record(zod.string()).optional(),
-})
-export type HandlerSuccess = zod.infer<typeof handlerSuccess>
+});
+export type HandlerSuccess = zod.infer<typeof handlerSuccess>;
 
 export const handlerPipeThrough = zod.object({
   encoding: zod.string(),
   buffer: zod.instanceof(ArrayBuffer),
   headers: zod.record(zod.string()).optional(),
-})
-export type HandlerPipeThrough = zod.infer<typeof handlerPipeThrough>
+});
+export type HandlerPipeThrough = zod.infer<typeof handlerPipeThrough>;
 
 export const handlerError = zod.object({
   status: zod.number(),
   error: zod.string().optional(),
   message: zod.string().optional(),
-})
-export type HandlerError = zod.infer<typeof handlerError>
+});
+export type HandlerError = zod.infer<typeof handlerError>;
 
-export type HandlerOutput = HandlerSuccess | HandlerPipeThrough | HandlerError
+export type HandlerOutput = HandlerSuccess | HandlerPipeThrough | HandlerError;
 
 export type XRPCReqContext = {
-  auth: HandlerAuth | undefined
-  params: Params
-  input: HandlerInput | undefined
-  req: express.Request
-  res: express.Response
-}
+  auth: HandlerAuth | undefined;
+  params: Params;
+  input: HandlerInput | undefined;
+  req: express.Request;
+  res: express.Response;
+};
 
 export type XRPCHandler = (
   ctx: XRPCReqContext,
-) => Promise<HandlerOutput> | HandlerOutput | undefined
+) => Promise<HandlerOutput> | HandlerOutput | undefined;
 
 export type XRPCStreamHandler = (ctx: {
-  auth: HandlerAuth | undefined
-  params: Params
-  req: IncomingMessage
-  signal: AbortSignal
-}) => AsyncIterable<unknown>
+  auth: HandlerAuth | undefined;
+  params: Params;
+  req: IncomingMessage;
+  signal: AbortSignal;
+}) => AsyncIterable<unknown>;
 
-export type AuthOutput = HandlerAuth | HandlerError
+export type AuthOutput = HandlerAuth | HandlerError;
 
 export type AuthVerifier = (ctx: {
-  req: express.Request
-  res: express.Response
-}) => Promise<AuthOutput> | AuthOutput
+  req: express.Request;
+  res: express.Response;
+}) => Promise<AuthOutput> | AuthOutput;
 
 export type StreamAuthVerifier = (ctx: {
-  req: IncomingMessage
-}) => Promise<AuthOutput> | AuthOutput
+  req: IncomingMessage;
+}) => Promise<AuthOutput> | AuthOutput;
 
-export type CalcKeyFn = (ctx: XRPCReqContext) => string | null
-export type CalcPointsFn = (ctx: XRPCReqContext) => number
+export type CalcKeyFn = (ctx: XRPCReqContext) => string | null;
+export type CalcPointsFn = (ctx: XRPCReqContext) => number;
 
 export interface RateLimiterI {
-  consume: RateLimiterConsume
+  consume: RateLimiterConsume;
 }
 
 export type RateLimiterConsume = (
   ctx: XRPCReqContext,
   opts?: { calcKey?: CalcKeyFn; calcPoints?: CalcPointsFn },
-) => Promise<RateLimiterStatus | RateLimitExceededError | null>
+) => Promise<RateLimiterStatus | RateLimitExceededError | null>;
 
 export type RateLimiterCreator = (opts: {
-  keyPrefix: string
-  durationMs: number
-  points: number
-  calcKey?: CalcKeyFn
-  calcPoints?: CalcPointsFn
-}) => RateLimiterI
+  keyPrefix: string;
+  durationMs: number;
+  points: number;
+  calcKey?: CalcKeyFn;
+  calcPoints?: CalcPointsFn;
+}) => RateLimiterI;
 
 export type ServerRateLimitDescription = {
-  name: string
-  durationMs: number
-  points: number
-  calcKey?: CalcKeyFn
-  calcPoints?: CalcPointsFn
-}
+  name: string;
+  durationMs: number;
+  points: number;
+  calcKey?: CalcKeyFn;
+  calcPoints?: CalcPointsFn;
+};
 
 export type SharedRateLimitOpts = {
-  name: string
-  calcKey?: CalcKeyFn
-  calcPoints?: CalcPointsFn
-}
+  name: string;
+  calcKey?: CalcKeyFn;
+  calcPoints?: CalcPointsFn;
+};
 
 export type RouteRateLimitOpts = {
-  durationMs: number
-  points: number
-  calcKey?: CalcKeyFn
-  calcPoints?: CalcPointsFn
-}
+  durationMs: number;
+  points: number;
+  calcKey?: CalcKeyFn;
+  calcPoints?: CalcPointsFn;
+};
 
-export type HandlerRateLimitOpts = SharedRateLimitOpts | RouteRateLimitOpts
+export type HandlerRateLimitOpts = SharedRateLimitOpts | RouteRateLimitOpts;
 
 export const isShared = (
   opts: HandlerRateLimitOpts,
 ): opts is SharedRateLimitOpts => {
-  return typeof opts['name'] === 'string'
-}
+  return typeof opts['name'] === 'string';
+};
 
 export type RateLimiterStatus = {
-  limit: number
-  duration: number
-  remainingPoints: number
-  msBeforeNext: number
-  consumedPoints: number
-  isFirstInDuration: boolean
-}
+  limit: number;
+  duration: number;
+  remainingPoints: number;
+  msBeforeNext: number;
+  consumedPoints: number;
+  isFirstInDuration: boolean;
+};
 
 export type RouteOpts = {
-  blobLimit?: number
-}
+  blobLimit?: number;
+};
 
 export type XRPCHandlerConfig = {
-  opts?: RouteOpts
-  rateLimit?: HandlerRateLimitOpts | HandlerRateLimitOpts[]
-  auth?: AuthVerifier
-  handler: XRPCHandler
-}
+  opts?: RouteOpts;
+  rateLimit?: HandlerRateLimitOpts | HandlerRateLimitOpts[];
+  auth?: AuthVerifier;
+  handler: XRPCHandler;
+};
 
 export type XRPCStreamHandlerConfig = {
-  auth?: StreamAuthVerifier
-  handler: XRPCStreamHandler
-}
+  auth?: StreamAuthVerifier;
+  handler: XRPCStreamHandler;
+};
 
 export class XRPCError extends Error {
   constructor(
@@ -172,7 +172,7 @@ export class XRPCError extends Error {
     public errorMessage?: string,
     public customErrorName?: string,
   ) {
-    super(errorMessage)
+    super(errorMessage);
   }
 
   get payload() {
@@ -182,33 +182,33 @@ export class XRPCError extends Error {
         this.type === ResponseType.InternalServerError
           ? this.typeStr // Do not respond with error details for 500s
           : this.errorMessage || this.typeStr,
-    }
+    };
   }
 
   get typeName(): string | undefined {
-    return ResponseTypeNames[this.type]
+    return ResponseTypeNames[this.type];
   }
 
   get typeStr(): string | undefined {
-    return ResponseTypeStrings[this.type]
+    return ResponseTypeStrings[this.type];
   }
 
   static fromError(error: unknown) {
     if (error instanceof XRPCError) {
-      return error
+      return error;
     }
-    let resultErr: XRPCError
+    let resultErr: XRPCError;
     if (isHttpError(error)) {
-      resultErr = new XRPCError(error.status, error.message, error.name)
+      resultErr = new XRPCError(error.status, error.message, error.name);
     } else if (isHandlerError(error)) {
-      resultErr = new XRPCError(error.status, error.message, error.error)
+      resultErr = new XRPCError(error.status, error.message, error.error);
     } else if (error instanceof Error) {
-      resultErr = new InternalServerError(error.message)
+      resultErr = new InternalServerError(error.message);
     } else {
-      resultErr = new InternalServerError('Unexpected internal server error')
+      resultErr = new InternalServerError('Unexpected internal server error');
     }
-    resultErr.cause = error
-    return resultErr
+    resultErr.cause = error;
+    return resultErr;
   }
 }
 
@@ -219,24 +219,24 @@ export function isHandlerError(v: unknown): v is HandlerError {
     typeof v['status'] === 'number' &&
     (v['error'] === undefined || typeof v['error'] === 'string') &&
     (v['message'] === undefined || typeof v['message'] === 'string')
-  )
+  );
 }
 
 export class InvalidRequestError extends XRPCError {
   constructor(errorMessage?: string, customErrorName?: string) {
-    super(ResponseType.InvalidRequest, errorMessage, customErrorName)
+    super(ResponseType.InvalidRequest, errorMessage, customErrorName);
   }
 }
 
 export class AuthRequiredError extends XRPCError {
   constructor(errorMessage?: string, customErrorName?: string) {
-    super(ResponseType.AuthRequired, errorMessage, customErrorName)
+    super(ResponseType.AuthRequired, errorMessage, customErrorName);
   }
 }
 
 export class ForbiddenError extends XRPCError {
   constructor(errorMessage?: string, customErrorName?: string) {
-    super(ResponseType.Forbidden, errorMessage, customErrorName)
+    super(ResponseType.Forbidden, errorMessage, customErrorName);
   }
 }
 
@@ -246,36 +246,36 @@ export class RateLimitExceededError extends XRPCError {
     errorMessage?: string,
     customErrorName?: string,
   ) {
-    super(ResponseType.RateLimitExceeded, errorMessage, customErrorName)
+    super(ResponseType.RateLimitExceeded, errorMessage, customErrorName);
   }
 }
 
 export class InternalServerError extends XRPCError {
   constructor(errorMessage?: string, customErrorName?: string) {
-    super(ResponseType.InternalServerError, errorMessage, customErrorName)
+    super(ResponseType.InternalServerError, errorMessage, customErrorName);
   }
 }
 
 export class UpstreamFailureError extends XRPCError {
   constructor(errorMessage?: string, customErrorName?: string) {
-    super(ResponseType.UpstreamFailure, errorMessage, customErrorName)
+    super(ResponseType.UpstreamFailure, errorMessage, customErrorName);
   }
 }
 
 export class NotEnoughResourcesError extends XRPCError {
   constructor(errorMessage?: string, customErrorName?: string) {
-    super(ResponseType.NotEnoughResources, errorMessage, customErrorName)
+    super(ResponseType.NotEnoughResources, errorMessage, customErrorName);
   }
 }
 
 export class UpstreamTimeoutError extends XRPCError {
   constructor(errorMessage?: string, customErrorName?: string) {
-    super(ResponseType.UpstreamTimeout, errorMessage, customErrorName)
+    super(ResponseType.UpstreamTimeout, errorMessage, customErrorName);
   }
 }
 
 export class MethodNotImplementedError extends XRPCError {
   constructor(errorMessage?: string, customErrorName?: string) {
-    super(ResponseType.MethodNotImplemented, errorMessage, customErrorName)
+    super(ResponseType.MethodNotImplemented, errorMessage, customErrorName);
   }
 }

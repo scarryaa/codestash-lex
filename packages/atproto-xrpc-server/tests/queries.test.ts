@@ -1,9 +1,9 @@
-import * as http from 'http'
-import getPort from 'get-port'
-import { LexiconDoc } from '@atproto/lexicon'
-import xrpc, { ServiceClient } from '@atproto/xrpc'
-import { createServer, closeServer } from './_util'
-import * as xrpcServer from '../src'
+import * as http from 'http';
+import getPort from 'get-port';
+import { LexiconDoc } from '@atproto/lexicon';
+import xrpc, { ServiceClient } from '@atproto/xrpc';
+import { createServer, closeServer } from './_util';
+import * as xrpcServer from '../src';
 
 const LEXICONS: LexiconDoc[] = [
   {
@@ -65,20 +65,20 @@ const LEXICONS: LexiconDoc[] = [
       },
     },
   },
-]
+];
 
 describe('Queries', () => {
-  let s: http.Server
-  const server = xrpcServer.createServer(LEXICONS)
+  let s: http.Server;
+  const server = xrpcServer.createServer(LEXICONS);
   server.method('io.example.pingOne', (ctx: { params: xrpcServer.Params }) => {
-    return { encoding: 'text/plain', body: ctx.params.message }
-  })
+    return { encoding: 'text/plain', body: ctx.params.message };
+  });
   server.method('io.example.pingTwo', (ctx: { params: xrpcServer.Params }) => {
     return {
       encoding: 'application/octet-stream',
       body: new TextEncoder().encode(String(ctx.params.message)),
-    }
-  })
+    };
+  });
   server.method(
     'io.example.pingThree',
     (ctx: { params: xrpcServer.Params }) => {
@@ -86,42 +86,44 @@ describe('Queries', () => {
         encoding: 'application/json',
         body: { message: ctx.params.message },
         headers: { 'x-test-header-name': 'test-value' },
-      }
+      };
     },
-  )
-  xrpc.addLexicons(LEXICONS)
+  );
+  xrpc.addLexicons(LEXICONS);
 
-  let client: ServiceClient
+  let client: ServiceClient;
   beforeAll(async () => {
-    const port = await getPort()
-    s = await createServer(port, server)
-    client = xrpc.service(`http://localhost:${port}`)
-  })
+    const port = await getPort();
+    s = await createServer(port, server);
+    client = xrpc.service(`http://localhost:${port}`);
+  });
   afterAll(async () => {
-    await closeServer(s)
-  })
+    await closeServer(s);
+  });
 
   it('serves requests', async () => {
     const res1 = await client.call('io.example.pingOne', {
       message: 'hello world',
-    })
-    expect(res1.success).toBeTruthy()
-    expect(res1.headers['content-type']).toBe('text/plain; charset=utf-8')
-    expect(res1.data).toBe('hello world')
+    });
+    expect(res1.success).toBeTruthy();
+    expect(res1.headers['content-type']).toBe('text/plain; charset=utf-8');
+    expect(res1.data).toBe('hello world');
 
     const res2 = await client.call('io.example.pingTwo', {
       message: 'hello world',
-    })
-    expect(res2.success).toBeTruthy()
-    expect(res2.headers['content-type']).toBe('application/octet-stream')
-    expect(new TextDecoder().decode(res2.data)).toBe('hello world')
+    });
+    expect(res2.success).toBeTruthy();
+    expect(res2.headers['content-type']).toBe('application/octet-stream');
+    expect(new TextDecoder().decode(res2.data)).toBe('hello world');
 
     const res3 = await client.call('io.example.pingThree', {
       message: 'hello world',
-    })
-    expect(res3.success).toBeTruthy()
-    expect(res3.headers['content-type']).toBe('application/json; charset=utf-8')
-    expect(res3.data?.message).toBe('hello world')
-    expect(res3.headers['x-test-header-name']).toEqual('test-value')
-  })
-})
+    });
+    expect(res3.success).toBeTruthy();
+    expect(res3.headers['content-type']).toBe(
+      'application/json; charset=utf-8',
+    );
+    expect(res3.data?.message).toBe('hello world');
+    expect(res3.headers['x-test-header-name']).toEqual('test-value');
+  });
+});

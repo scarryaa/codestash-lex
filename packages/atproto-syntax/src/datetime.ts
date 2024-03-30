@@ -2,13 +2,13 @@
  * Syntax is described at: https://atproto.com/specs/lexicon#datetime
  */
 export const ensureValidDatetime = (dtStr: string): void => {
-  const date = new Date(dtStr)
+  const date = new Date(dtStr);
   // must parse as ISO 8601; this also verifies semantics like month is not 13 or 00
   if (isNaN(date.getTime())) {
-    throw new InvalidDatetimeError('datetime did not parse as ISO 8601')
+    throw new InvalidDatetimeError('datetime did not parse as ISO 8601');
   }
   if (date.toISOString().startsWith('-')) {
-    throw new InvalidDatetimeError('datetime normalized to a negative time')
+    throw new InvalidDatetimeError('datetime normalized to a negative time');
   }
   // regex and other checks for RFC-3339
   if (
@@ -16,35 +16,37 @@ export const ensureValidDatetime = (dtStr: string): void => {
       dtStr,
     )
   ) {
-    throw new InvalidDatetimeError("datetime didn't validate via regex")
+    throw new InvalidDatetimeError("datetime didn't validate via regex");
   }
   if (dtStr.length > 64) {
-    throw new InvalidDatetimeError('datetime is too long (64 chars max)')
+    throw new InvalidDatetimeError('datetime is too long (64 chars max)');
   }
   if (dtStr.endsWith('-00:00')) {
     throw new InvalidDatetimeError(
       'datetime can not use "-00:00" for UTC timezone',
-    )
+    );
   }
   if (dtStr.startsWith('000')) {
-    throw new InvalidDatetimeError('datetime so close to year zero not allowed')
+    throw new InvalidDatetimeError(
+      'datetime so close to year zero not allowed',
+    );
   }
-}
+};
 
 /* Same logic as ensureValidDatetime(), but returns a boolean instead of throwing an exception.
  */
 export const isValidDatetime = (dtStr: string): boolean => {
   try {
-    ensureValidDatetime(dtStr)
+    ensureValidDatetime(dtStr);
   } catch (err) {
     if (err instanceof InvalidDatetimeError) {
-      return false
+      return false;
     }
-    throw err
+    throw err;
   }
 
-  return true
-}
+  return true;
+};
 
 /* Takes a flexible datetime string and normalizes representation.
  *
@@ -58,39 +60,39 @@ export const isValidDatetime = (dtStr: string): boolean => {
  */
 export const normalizeDatetime = (dtStr: string): string => {
   if (isValidDatetime(dtStr)) {
-    const outStr = new Date(dtStr).toISOString()
+    const outStr = new Date(dtStr).toISOString();
     if (isValidDatetime(outStr)) {
-      return outStr
+      return outStr;
     }
   }
 
   // check if this permissive datetime is missing a timezone
   if (!/.*(([+-]\d\d:?\d\d)|[a-zA-Z])$/.test(dtStr)) {
-    const date = new Date(dtStr + 'Z')
+    const date = new Date(dtStr + 'Z');
     if (!isNaN(date.getTime())) {
-      const tzStr = date.toISOString()
+      const tzStr = date.toISOString();
       if (isValidDatetime(tzStr)) {
-        return tzStr
+        return tzStr;
       }
     }
   }
 
   // finally try parsing as simple datetime
-  const date = new Date(dtStr)
+  const date = new Date(dtStr);
   if (isNaN(date.getTime())) {
     throw new InvalidDatetimeError(
       'datetime did not parse as any timestamp format',
-    )
+    );
   }
-  const isoStr = date.toISOString()
+  const isoStr = date.toISOString();
   if (isValidDatetime(isoStr)) {
-    return isoStr
+    return isoStr;
   } else {
     throw new InvalidDatetimeError(
       'datetime normalized to invalid timestamp string',
-    )
+    );
   }
-}
+};
 
 /* Variant of normalizeDatetime() which always returns a valid datetime strings.
  *
@@ -98,14 +100,14 @@ export const normalizeDatetime = (dtStr: string): string => {
  */
 export const normalizeDatetimeAlways = (dtStr: string): string => {
   try {
-    return normalizeDatetime(dtStr)
+    return normalizeDatetime(dtStr);
   } catch (err) {
     if (err instanceof InvalidDatetimeError) {
-      return new Date(0).toISOString()
+      return new Date(0).toISOString();
     }
-    throw err
+    throw err;
   }
-}
+};
 
 /* Indicates a datetime string did not pass full atproto Lexicon datetime string format checks.
  */

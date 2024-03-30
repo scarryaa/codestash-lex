@@ -1,9 +1,9 @@
-import * as http from 'http'
-import getPort from 'get-port'
-import { LexiconDoc } from '@atproto/lexicon'
-import xrpc, { ServiceClient } from '@atproto/xrpc'
-import { createServer, closeServer } from './_util'
-import * as xrpcServer from '../src'
+import * as http from 'http';
+import getPort from 'get-port';
+import { LexiconDoc } from '@atproto/lexicon';
+import xrpc, { ServiceClient } from '@atproto/xrpc';
+import { createServer, closeServer } from './_util';
+import * as xrpcServer from '../src';
 
 const LEXICONS: LexiconDoc[] = [
   {
@@ -29,29 +29,29 @@ const LEXICONS: LexiconDoc[] = [
       },
     },
   },
-]
+];
 
 describe('Parameters', () => {
-  let s: http.Server
-  const server = xrpcServer.createServer(LEXICONS)
+  let s: http.Server;
+  const server = xrpcServer.createServer(LEXICONS);
   server.method(
     'io.example.paramTest',
     (ctx: { params: xrpcServer.Params }) => ({
       encoding: 'json',
       body: ctx.params,
     }),
-  )
-  xrpc.addLexicons(LEXICONS)
+  );
+  xrpc.addLexicons(LEXICONS);
 
-  let client: ServiceClient
+  let client: ServiceClient;
   beforeAll(async () => {
-    const port = await getPort()
-    s = await createServer(port, server)
-    client = xrpc.service(`http://localhost:${port}`)
-  })
+    const port = await getPort();
+    s = await createServer(port, server);
+    client = xrpc.service(`http://localhost:${port}`);
+  });
   afterAll(async () => {
-    await closeServer(s)
-  })
+    await closeServer(s);
+  });
 
   it('validates query params', async () => {
     const res1 = await client.call('io.example.paramTest', {
@@ -60,26 +60,26 @@ describe('Parameters', () => {
       bool: true,
       arr: [1, 2],
       def: 5,
-    })
-    expect(res1.success).toBeTruthy()
-    expect(res1.data.str).toBe('valid')
-    expect(res1.data.int).toBe(5)
-    expect(res1.data.bool).toBe(true)
-    expect(res1.data.arr).toEqual([1, 2])
-    expect(res1.data.def).toEqual(5)
+    });
+    expect(res1.success).toBeTruthy();
+    expect(res1.data.str).toBe('valid');
+    expect(res1.data.int).toBe(5);
+    expect(res1.data.bool).toBe(true);
+    expect(res1.data.arr).toEqual([1, 2]);
+    expect(res1.data.def).toEqual(5);
 
     const res2 = await client.call('io.example.paramTest', {
       str: 10,
       int: '5',
       bool: 'foo',
       arr: '3',
-    })
-    expect(res2.success).toBeTruthy()
-    expect(res2.data.str).toBe('10')
-    expect(res2.data.int).toBe(5)
-    expect(res2.data.bool).toBe(true)
-    expect(res2.data.arr).toEqual([3])
-    expect(res2.data.def).toEqual(0)
+    });
+    expect(res2.success).toBeTruthy();
+    expect(res2.data.str).toBe('10');
+    expect(res2.data.int).toBe(5);
+    expect(res2.data.bool).toBe(true);
+    expect(res2.data.arr).toEqual([3]);
+    expect(res2.data.def).toEqual(0);
 
     // @TODO test sending blatantly bad types
     await expect(
@@ -89,7 +89,7 @@ describe('Parameters', () => {
         bool: true,
         arr: [1],
       }),
-    ).rejects.toThrow('str must not be shorter than 2 characters')
+    ).rejects.toThrow('str must not be shorter than 2 characters');
     await expect(
       client.call('io.example.paramTest', {
         str: 'loooooooooooooong',
@@ -97,14 +97,14 @@ describe('Parameters', () => {
         bool: true,
         arr: [1],
       }),
-    ).rejects.toThrow('str must not be longer than 10 characters')
+    ).rejects.toThrow('str must not be longer than 10 characters');
     await expect(
       client.call('io.example.paramTest', {
         int: 5,
         bool: true,
         arr: [1],
       }),
-    ).rejects.toThrow(`Params must have the property "str"`)
+    ).rejects.toThrow(`Params must have the property "str"`);
 
     await expect(
       client.call('io.example.paramTest', {
@@ -113,7 +113,7 @@ describe('Parameters', () => {
         bool: true,
         arr: [1],
       }),
-    ).rejects.toThrow('int can not be less than 2')
+    ).rejects.toThrow('int can not be less than 2');
     await expect(
       client.call('io.example.paramTest', {
         str: 'valid',
@@ -121,14 +121,14 @@ describe('Parameters', () => {
         bool: true,
         arr: [1],
       }),
-    ).rejects.toThrow('int can not be greater than 10')
+    ).rejects.toThrow('int can not be greater than 10');
     await expect(
       client.call('io.example.paramTest', {
         str: 'valid',
         bool: true,
         arr: [1],
       }),
-    ).rejects.toThrow(`Params must have the property "int"`)
+    ).rejects.toThrow(`Params must have the property "int"`);
 
     await expect(
       client.call('io.example.paramTest', {
@@ -136,7 +136,7 @@ describe('Parameters', () => {
         int: 5,
         arr: [1],
       }),
-    ).rejects.toThrow(`Params must have the property "bool"`)
+    ).rejects.toThrow(`Params must have the property "bool"`);
 
     await expect(
       client.call('io.example.paramTest', {
@@ -145,7 +145,7 @@ describe('Parameters', () => {
         bool: true,
         arr: [],
       }),
-    ).rejects.toThrow('Error: Params must have the property "arr"')
+    ).rejects.toThrow('Error: Params must have the property "arr"');
     await expect(
       client.call('io.example.paramTest', {
         str: 'valid',
@@ -153,6 +153,6 @@ describe('Parameters', () => {
         bool: true,
         arr: [1, 2, 3],
       }),
-    ).rejects.toThrow('Error: arr must not have more than 2 elements')
-  })
-})
+    ).rejects.toThrow('Error: arr must not have more than 2 elements');
+  });
+});

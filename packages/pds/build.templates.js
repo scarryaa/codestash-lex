@@ -1,7 +1,7 @@
 /* eslint-env node */
 
-const hbsPlugin = require('esbuild-plugin-handlebars')
-const { globSync } = require('glob')
+const hbsPlugin = require('esbuild-plugin-handlebars');
+const { globSync } = require('glob');
 
 require('esbuild').build({
   logLevel: 'info',
@@ -18,4 +18,4 @@ require('esbuild').build({
       precompileOptions: {},
     }),
   ],
-})
+});

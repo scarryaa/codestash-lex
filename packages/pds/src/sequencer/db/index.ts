@@ -1,10 +1,10 @@
-import { Database, Migrator } from '../../db'
-import { SequencerDbSchema } from './schema'
-import migrations from './migrations'
+import { Database, Migrator } from '../../db';
+import { SequencerDbSchema } from './schema';
+import migrations from './migrations';
 
-export * from './schema'
+export * from './schema';
 
-export type SequencerDb = Database<SequencerDbSchema>
+export type SequencerDb = Database<SequencerDbSchema>;
 
 export const getDb = (
   location: string,
@@ -12,10 +12,10 @@ export const getDb = (
 ): SequencerDb => {
   const pragmas: Record<string, string> = disableWalAutoCheckpoint
     ? { wal_autocheckpoint: '0' }
-    : {}
-  return Database.sqlite(location, pragmas)
-}
+    : {};
+  return Database.sqlite(location, pragmas);
+};
 
 export const getMigrator = (db: Database<SequencerDbSchema>) => {
-  return new Migrator(db.db, migrations)
-}
+  return new Migrator(db.db, migrations);
+};

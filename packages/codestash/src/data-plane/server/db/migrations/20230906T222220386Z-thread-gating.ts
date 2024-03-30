@@ -1,4 +1,4 @@
-import { Kysely } from 'kysely'
+import { Kysely } from 'kysely';
 
 export async function up(db: Kysely<unknown>): Promise<void> {
   await db.schema
@@ -9,19 +9,19 @@ export async function up(db: Kysely<unknown>): Promise<void> {
     .addColumn('postUri', 'varchar', (col) => col.notNull().unique())
     .addColumn('createdAt', 'varchar', (col) => col.notNull())
     .addColumn('indexedAt', 'varchar', (col) => col.notNull())
-    .execute()
+    .execute();
   await db.schema
     .alterTable('post')
     .addColumn('invalidReplyRoot', 'boolean')
-    .execute()
+    .execute();
   await db.schema
     .alterTable('post')
     .addColumn('violatesThreadGate', 'boolean')
-    .execute()
+    .execute();
 }
 
 export async function down(db: Kysely<unknown>): Promise<void> {
-  await db.schema.dropTable('thread_gate').execute()
-  await db.schema.alterTable('post').dropColumn('invalidReplyRoot').execute()
-  await db.schema.alterTable('post').dropColumn('violatesThreadGate').execute()
+  await db.schema.dropTable('thread_gate').execute();
+  await db.schema.alterTable('post').dropColumn('invalidReplyRoot').execute();
+  await db.schema.alterTable('post').dropColumn('violatesThreadGate').execute();
 }

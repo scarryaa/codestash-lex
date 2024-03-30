@@ -1,4 +1,4 @@
-import { Kysely } from 'kysely'
+import { Kysely } from 'kysely';
 
 export async function up(db: Kysely<unknown>): Promise<void> {
   await db.schema
@@ -8,9 +8,9 @@ export async function up(db: Kysely<unknown>): Promise<void> {
     .addColumn('token', 'varchar', (col) => col.notNull())
     .addColumn('appId', 'varchar', (col) => col.notNull())
     .addPrimaryKeyConstraint('notification_push_token_pkey', ['did', 'token'])
-    .execute()
+    .execute();
 }
 
 export async function down(db: Kysely<unknown>): Promise<void> {
-  await db.schema.dropTable('notification_push_token').execute()
+  await db.schema.dropTable('notification_push_token').execute();
 }

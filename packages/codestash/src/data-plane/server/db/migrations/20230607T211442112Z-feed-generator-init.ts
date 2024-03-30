@@ -1,4 +1,4 @@
-import { Kysely, sql } from 'kysely'
+import { Kysely, sql } from 'kysely';
 
 export async function up(db: Kysely<unknown>): Promise<void> {
   await db.schema
@@ -19,16 +19,16 @@ export async function up(db: Kysely<unknown>): Promise<void> {
         .stored()
         .notNull(),
     )
-    .execute()
+    .execute();
 
   await db.schema
     .createIndex('feed_generator_creator_index')
     .on('feed_generator')
     .column('creator')
-    .execute()
+    .execute();
 }
 
 export async function down(db: Kysely<unknown>): Promise<void> {
-  await db.schema.dropIndex('feed_generator_creator_index').execute()
-  await db.schema.dropTable('feed_generator').execute()
+  await db.schema.dropIndex('feed_generator_creator_index').execute();
+  await db.schema.dropTable('feed_generator').execute();
 }

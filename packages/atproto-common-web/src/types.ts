@@ -1,13 +1,13 @@
-import { CID } from 'multiformats/cid'
-import { z } from 'zod'
-import { Def } from './check'
+import { CID } from 'multiformats/cid';
+import { z } from 'zod';
+import { Def } from './check';
 
 const cidSchema = z
   .any()
   .refine((obj: unknown) => CID.asCID(obj) !== null, {
     message: 'Not a CID',
   })
-  .transform((obj: unknown) => CID.asCID(obj) as CID)
+  .transform((obj: unknown) => CID.asCID(obj) as CID);
 
 export const schema = {
   cid: cidSchema,
@@ -16,7 +16,7 @@ export const schema = {
   array: z.array(z.unknown()),
   map: z.record(z.string(), z.unknown()),
   unknown: z.unknown(),
-}
+};
 
 export const def = {
   cid: {
@@ -39,8 +39,8 @@ export const def = {
     name: 'unknown',
     schema: schema.unknown,
   } as Def<unknown>,
-}
+};
 
-export type ArrayEl<A> = A extends readonly (infer T)[] ? T : never
+export type ArrayEl<A> = A extends readonly (infer T)[] ? T : never;
 
-export type NotEmptyArray<T> = [T, ...T[]]
+export type NotEmptyArray<T> = [T, ...T[]];

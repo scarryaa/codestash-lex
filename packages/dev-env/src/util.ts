@@ -1,92 +1,95 @@
-import axios from 'axios'
-import * as plc from '@did-plc/lib'
-import { IdResolver } from '@atproto/identity'
-import { Secp256k1Keypair } from '@atproto/crypto'
-import { TestPds } from './pds'
-import { TestCodestash } from './codestash'
-import { DidAndKey } from './types'
+import axios from 'axios';
+import * as plc from '@did-plc/lib';
+import { IdResolver } from '@atproto/identity';
+import { Secp256k1Keypair } from '@atproto/crypto';
+import { TestPds } from './pds';
+import { TestCodestash } from './codestash';
+import { DidAndKey } from './types';
 
-export const mockNetworkUtilities = (pds: TestPds, codestash?: TestCodestash) => {
-  mockResolvers(pds.ctx.idResolver, pds)
+export const mockNetworkUtilities = (
+  pds: TestPds,
+  codestash?: TestCodestash,
+) => {
+  mockResolvers(pds.ctx.idResolver, pds);
   if (codestash) {
     // mockResolvers(codestash.ctx.idResolver, pds)
-    mockResolvers(codestash.dataplane.idResolver, pds)
+    mockResolvers(codestash.dataplane.idResolver, pds);
   }
-}
+};
 
 export const mockResolvers = (idResolver: IdResolver, pds: TestPds) => {
   // Map pds public url to its local url when resolving from plc
-  const origResolveDid = idResolver.did.resolveNoCache
+  const origResolveDid = idResolver.did.resolveNoCache;
   idResolver.did.resolveNoCache = async (did: string) => {
     const result = await (origResolveDid.call(
       idResolver.did,
       did,
-    ) as ReturnType<typeof origResolveDid>)
-    const service = result?.service?.find((svc) => svc.id === '#atproto_pds')
+    ) as ReturnType<typeof origResolveDid>);
+    const service = result?.service?.find((svc) => svc.id === '#atproto_pds');
     if (typeof service?.serviceEndpoint === 'string') {
       service.serviceEndpoint = service.serviceEndpoint.replace(
         pds.ctx.cfg.service.publicUrl,
         `http://localhost:${pds.port}`,
-      )
+      );
     }
-    return result
-  }
+    return result;
+  };
 
-  const origResolveHandleDns = idResolver.handle.resolveDns
+  const origResolveHandleDns = idResolver.handle.resolveDns;
   idResolver.handle.resolve = async (handle: string) => {
     const isPdsHandle = pds.ctx.cfg.identity.serviceHandleDomains.some(
       (domain) => handle.endsWith(domain),
-    )
+    );
     if (!isPdsHandle) {
-      return origResolveHandleDns.call(idResolver.handle, handle)
+      return origResolveHandleDns.call(idResolver.handle, handle);
     }
 
-    const url = `${pds.url}/.well-known/atproto-did`
+    const url = `${pds.url}/.well-known/atproto-did`;
     try {
-      const res = await axios.get(url, { headers: { host: handle } })
-      return res.data
+      const res = await axios.get(url, { headers: { host: handle } });
+      return res.data;
     } catch (err) {
-      return undefined
+      return undefined;
     }
-  }
-}
+  };
+};
 
 export const mockMailer = (pds: TestPds) => {
-  const mailer = pds.ctx.mailer
-  const _origSendMail = mailer.transporter.sendMail
+  const mailer = pds.ctx.mailer;
+  const _origSendMail = mailer.transporter.sendMail;
   mailer.transporter.sendMail = async (opts) => {
-    const result = await _origSendMail.call(mailer.transporter, opts)
-    console.log(`✉️ Email: ${JSON.stringify(result, null, 2)}`)
-    return result
-  }
-}
+    const result = await _origSendMail.call(mailer.transporter, opts);
+    console.log(`✉️ Email: ${JSON.stringify(result, null, 2)}`);
+    return result;
+  };
+};
 
-const usedLockIds = new Set()
+const usedLockIds = new Set();
 export const uniqueLockId = () => {
-  let lockId: number
+  let lockId: number;
   do {
-    lockId = 1000 + Math.ceil(1000 * Math.random())
-  } while (usedLockIds.has(lockId))
-  usedLockIds.add(lockId)
-  return lockId
-}
+    lockId = 1000 + Math.ceil(1000 * Math.random());
+  } while (usedLockIds.has(lockId));
+  usedLockIds.add(lockId);
+  return lockId;
+};
 
 export const createDidAndKey = async (opts: {
-  plcUrl: string
-  handle: string
-  pds: string
+  plcUrl: string;
+  handle: string;
+  pds: string;
 }): Promise<DidAndKey> => {
-  const { plcUrl, handle, pds } = opts
-  const key = await Secp256k1Keypair.create({ exportable: true })
+  const { plcUrl, handle, pds } = opts;
+  const key = await Secp256k1Keypair.create({ exportable: true });
   const did = await new plc.Client(plcUrl).createDid({
     signingKey: key.did(),
     rotationKeys: [key.did()],
     handle,
     pds,
     signer: key,
-  })
+  });
   return {
     key,
     did,
-  }
-}
+  };
+};

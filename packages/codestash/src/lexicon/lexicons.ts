@@ -1,7 +1,7 @@
 /**
  * GENERATED CODE - DO NOT MODIFY
  */
-import { LexiconDoc, Lexicons } from '@atproto/lexicon'
+import { LexiconDoc, Lexicons } from '@atproto/lexicon';
 
 export const schemaDict = {
   OrgCodestashActorDefs: {
@@ -3902,9 +3902,9 @@ export const schemaDict = {
       },
     },
   },
-}
-export const schemas: LexiconDoc[] = Object.values(schemaDict) as LexiconDoc[]
-export const lexicons: Lexicons = new Lexicons(schemas)
+};
+export const schemas: LexiconDoc[] = Object.values(schemaDict) as LexiconDoc[];
+export const lexicons: Lexicons = new Lexicons(schemas);
 export const ids = {
   OrgCodestashActorDefs: 'org.codestash.actor.defs',
   OrgCodestashActorGetProfile: 'org.codestash.actor.getProfile',
@@ -3997,4 +3997,4 @@ export const ids = {
   ComAtprotoTempFetchLabels: 'com.atproto.temp.fetchLabels',
   ComAtprotoTempRequestPhoneVerification:
     'com.atproto.temp.requestPhoneVerification',
-}
+};

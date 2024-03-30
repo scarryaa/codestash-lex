@@ -1,8 +1,8 @@
-import assert from 'node:assert'
-import { InvalidRequestError } from '@atproto/xrpc-server'
-import { Server } from '../../../../lexicon'
-import AppContext from '../../../../context'
-import { resultPassthru } from '../../../proxy'
+import assert from 'node:assert';
+import { InvalidRequestError } from '@atproto/xrpc-server';
+import { Server } from '../../../../lexicon';
+import AppContext from '../../../../context';
+import { resultPassthru } from '../../../proxy';
 
 export default function (server: Server, ctx: AppContext) {
   server.com.atproto.admin.sendEmail({
@@ -12,18 +12,18 @@ export default function (server: Server, ctx: AppContext) {
         content,
         recipientDid,
         subject = 'Message via your PDS',
-      } = input.body
+      } = input.body;
 
       const account = await ctx.accountManager.getAccount(recipientDid, {
         includeDeactivated: true,
         includeTakenDown: true,
-      })
+      });
       if (!account) {
-        throw new InvalidRequestError('Recipient not found')
+        throw new InvalidRequestError('Recipient not found');
       }
 
       if (ctx.entrywayAgent) {
-        assert(ctx.cfg.entryway)
+        assert(ctx.cfg.entryway);
         return resultPassthru(
           await ctx.entrywayAgent.com.atproto.admin.sendEmail(input.body, {
             encoding: 'application/json',
@@ -32,22 +32,22 @@ export default function (server: Server, ctx: AppContext) {
               ctx.cfg.entryway?.did,
             )),
           }),
-        )
+        );
       }
 
       if (!account.email) {
-        throw new InvalidRequestError('account does not have an email address')
+        throw new InvalidRequestError('account does not have an email address');
       }
 
       await ctx.moderationMailer.send(
         { content },
         { subject, to: account.email },
-      )
+      );
 
       return {
         encoding: 'application/json',
         body: { sent: true },
-      }
+      };
     },
-  })
+  });
 }

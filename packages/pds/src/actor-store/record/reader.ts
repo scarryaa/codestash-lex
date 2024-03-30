@@ -1,12 +1,12 @@
-import * as syntax from '@atproto/syntax'
-import { AtUri, ensureValidAtUri } from '@atproto/syntax'
-import { cborToLexRecord } from '@atproto/repo'
-import { CID } from 'multiformats/cid'
-import { countAll, notSoftDeletedClause } from '../../db/util'
-import { ids } from '../../lexicon/lexicons'
-import { ActorDb, Backlink } from '../db'
-import { StatusAttr } from '../../lexicon/types/com/atproto/admin/defs'
-import { RepoRecord } from '@atproto/lexicon'
+import * as syntax from '@atproto/syntax';
+import { AtUri, ensureValidAtUri } from '@atproto/syntax';
+import { cborToLexRecord } from '@atproto/repo';
+import { CID } from 'multiformats/cid';
+import { countAll, notSoftDeletedClause } from '../../db/util';
+import { ids } from '../../lexicon/lexicons';
+import { ActorDb, Backlink } from '../db';
+import { StatusAttr } from '../../lexicon/types/com/atproto/admin/defs';
+import { RepoRecord } from '@atproto/lexicon';
 
 export class RecordReader {
   constructor(public db: ActorDb) {}
@@ -15,8 +15,8 @@ export class RecordReader {
     const res = await this.db.db
       .selectFrom('record')
       .select(countAll.as('count'))
-      .executeTakeFirst()
-    return res?.count ?? 0
+      .executeTakeFirst();
+    return res?.count ?? 0;
   }
 
   async listCollections(): Promise<string[]> {
@@ -24,19 +24,19 @@ export class RecordReader {
       .selectFrom('record')
       .select('collection')
       .groupBy('collection')
-      .execute()
+      .execute();
 
-    return collections.map((row) => row.collection)
+    return collections.map((row) => row.collection);
   }
 
   async listRecordsForCollection(opts: {
-    collection: string
-    limit: number
-    reverse: boolean
-    cursor?: string
-    rkeyStart?: string
-    rkeyEnd?: string
-    includeSoftDeleted?: boolean
+    collection: string;
+    limit: number;
+    reverse: boolean;
+    cursor?: string;
+    rkeyStart?: string;
+    rkeyEnd?: string;
+    includeSoftDeleted?: boolean;
   }): Promise<{ uri: string; cid: string; value: object }[]> {
     const {
       collection,
@@ -46,9 +46,9 @@ export class RecordReader {
       rkeyStart,
       rkeyEnd,
       includeSoftDeleted = false,
-    } = opts
+    } = opts;
 
-    const { ref } = this.db.db.dynamic
+    const { ref } = this.db.db.dynamic;
     let builder = this.db.db
       .selectFrom('record')
       .innerJoin('repo_block', 'repo_block.cid', 'record.cid')
@@ -58,31 +58,31 @@ export class RecordReader {
       )
       .orderBy('record.rkey', reverse ? 'asc' : 'desc')
       .limit(limit)
-      .selectAll()
+      .selectAll();
 
     // prioritize cursor but fall back to soon-to-be-depcreated rkey start/end
     if (cursor !== undefined) {
       if (reverse) {
-        builder = builder.where('record.rkey', '>', cursor)
+        builder = builder.where('record.rkey', '>', cursor);
       } else {
-        builder = builder.where('record.rkey', '<', cursor)
+        builder = builder.where('record.rkey', '<', cursor);
       }
     } else {
       if (rkeyStart !== undefined) {
-        builder = builder.where('record.rkey', '>', rkeyStart)
+        builder = builder.where('record.rkey', '>', rkeyStart);
       }
       if (rkeyEnd !== undefined) {
-        builder = builder.where('record.rkey', '<', rkeyEnd)
+        builder = builder.where('record.rkey', '<', rkeyEnd);
       }
     }
-    const res = await builder.execute()
+    const res = await builder.execute();
     return res.map((row) => {
       return {
         uri: row.uri,
         cid: row.cid,
         value: cborToLexRecord(row.content),
-      }
-    })
+      };
+    });
   }
 
   async getRecord(
@@ -90,13 +90,13 @@ export class RecordReader {
     cid: string | null,
     includeSoftDeleted = false,
   ): Promise<{
-    uri: string
-    cid: string
-    value: object
-    indexedAt: string
-    takedownRef: string | null
+    uri: string;
+    cid: string;
+    value: object;
+    indexedAt: string;
+    takedownRef: string | null;
   } | null> {
-    const { ref } = this.db.db.dynamic
+    const { ref } = this.db.db.dynamic;
     let builder = this.db.db
       .selectFrom('record')
       .innerJoin('repo_block', 'repo_block.cid', 'record.cid')
@@ -104,19 +104,19 @@ export class RecordReader {
       .selectAll()
       .if(!includeSoftDeleted, (qb) =>
         qb.where(notSoftDeletedClause(ref('record'))),
-      )
+      );
     if (cid) {
-      builder = builder.where('record.cid', '=', cid)
+      builder = builder.where('record.cid', '=', cid);
     }
-    const record = await builder.executeTakeFirst()
-    if (!record) return null
+    const record = await builder.executeTakeFirst();
+    if (!record) return null;
     return {
       uri: record.uri,
       cid: record.cid,
       value: cborToLexRecord(record.content),
       indexedAt: record.indexedAt,
       takedownRef: record.takedownRef ? record.takedownRef.toString() : null,
-    }
+    };
   }
 
   async hasRecord(
@@ -124,19 +124,19 @@ export class RecordReader {
     cid: string | null,
     includeSoftDeleted = false,
   ): Promise<boolean> {
-    const { ref } = this.db.db.dynamic
+    const { ref } = this.db.db.dynamic;
     let builder = this.db.db
       .selectFrom('record')
       .select('uri')
       .where('record.uri', '=', uri.toString())
       .if(!includeSoftDeleted, (qb) =>
         qb.where(notSoftDeletedClause(ref('record'))),
-      )
+      );
     if (cid) {
-      builder = builder.where('record.cid', '=', cid)
+      builder = builder.where('record.cid', '=', cid);
     }
-    const record = await builder.executeTakeFirst()
-    return !!record
+    const record = await builder.executeTakeFirst();
+    return !!record;
   }
 
   async getRecordTakedownStatus(uri: AtUri): Promise<StatusAttr | null> {
@@ -144,11 +144,11 @@ export class RecordReader {
       .selectFrom('record')
       .select('takedownRef')
       .where('uri', '=', uri.toString())
-      .executeTakeFirst()
-    if (!res) return null
+      .executeTakeFirst();
+    if (!res) return null;
     return res.takedownRef
       ? { applied: true, ref: res.takedownRef }
-      : { applied: false }
+      : { applied: false };
   }
 
   async getCurrentRecordCid(uri: AtUri): Promise<CID | null> {
@@ -156,16 +156,16 @@ export class RecordReader {
       .selectFrom('record')
       .select('cid')
       .where('uri', '=', uri.toString())
-      .executeTakeFirst()
-    return res ? CID.parse(res.cid) : null
+      .executeTakeFirst();
+    return res ? CID.parse(res.cid) : null;
   }
 
   async getRecordBacklinks(opts: {
-    collection: string
-    path: string
-    linkTo: string
+    collection: string;
+    path: string;
+    linkTo: string;
   }) {
-    const { collection, path, linkTo } = opts
+    const { collection, path, linkTo } = opts;
     return await this.db.db
       .selectFrom('record')
       .innerJoin('backlink', 'backlink.uri', 'record.uri')
@@ -173,14 +173,14 @@ export class RecordReader {
       .where('backlink.linkTo', '=', linkTo)
       .where('record.collection', '=', collection)
       .selectAll('record')
-      .execute()
+      .execute();
   }
 
   // @NOTE this logic is a placeholder until we allow users to specify these constraints themselves.
   // Ensures that we don't end-up with duplicate likes, reposts, and follows from race conditions.
 
   async getBacklinkConflicts(uri: AtUri, record: RepoRecord): Promise<AtUri[]> {
-    const recordBacklinks = getBacklinks(uri, record)
+    const recordBacklinks = getBacklinks(uri, record);
     const conflicts = await Promise.all(
       recordBacklinks.map((backlink) =>
         this.getRecordBacklinks({
@@ -189,10 +189,10 @@ export class RecordReader {
           linkTo: backlink.linkTo,
         }),
       ),
-    )
+    );
     return conflicts
       .flat()
-      .map(({ rkey }) => AtUri.make(uri.hostname, uri.collection, rkey))
+      .map(({ rkey }) => AtUri.make(uri.hostname, uri.collection, rkey));
   }
 }
 
@@ -242,5 +242,5 @@ export const getBacklinks = (uri: AtUri, record: RepoRecord): Backlink[] => {
   //     },
   //   ]
   // }
-  return []
-}
+  return [];
+};

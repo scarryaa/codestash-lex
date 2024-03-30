@@ -1,6 +1,6 @@
-import { check, ipldToJson, schema } from '@atproto/common-web'
-import { CID } from 'multiformats/cid'
-import { z } from 'zod'
+import { check, ipldToJson, schema } from '@atproto/common-web';
+import { CID } from 'multiformats/cid';
+import { z } from 'zod';
 
 export const typedJsonBlobRef = z
   .object({
@@ -9,22 +9,22 @@ export const typedJsonBlobRef = z
     mimeType: z.string(),
     size: z.number(),
   })
-  .strict()
-export type TypedJsonBlobRef = z.infer<typeof typedJsonBlobRef>
+  .strict();
+export type TypedJsonBlobRef = z.infer<typeof typedJsonBlobRef>;
 
 export const untypedJsonBlobRef = z
   .object({
     cid: z.string(),
     mimeType: z.string(),
   })
-  .strict()
-export type UntypedJsonBlobRef = z.infer<typeof untypedJsonBlobRef>
+  .strict();
+export type UntypedJsonBlobRef = z.infer<typeof untypedJsonBlobRef>;
 
-export const jsonBlobRef = z.union([typedJsonBlobRef, untypedJsonBlobRef])
-export type JsonBlobRef = z.infer<typeof jsonBlobRef>
+export const jsonBlobRef = z.union([typedJsonBlobRef, untypedJsonBlobRef]);
+export type JsonBlobRef = z.infer<typeof jsonBlobRef>;
 
 export class BlobRef {
-  public original: JsonBlobRef
+  public original: JsonBlobRef;
 
   constructor(
     public ref: CID,
@@ -37,21 +37,21 @@ export class BlobRef {
       ref,
       mimeType,
       size,
-    }
+    };
   }
 
   static asBlobRef(obj: unknown): BlobRef | null {
     if (check.is(obj, jsonBlobRef)) {
-      return BlobRef.fromJsonRef(obj)
+      return BlobRef.fromJsonRef(obj);
     }
-    return null
+    return null;
   }
 
   static fromJsonRef(json: JsonBlobRef): BlobRef {
     if (check.is(json, typedJsonBlobRef)) {
-      return new BlobRef(json.ref, json.mimeType, json.size)
+      return new BlobRef(json.ref, json.mimeType, json.size);
     } else {
-      return new BlobRef(CID.parse(json.cid), json.mimeType, -1, json)
+      return new BlobRef(CID.parse(json.cid), json.mimeType, -1, json);
     }
   }
 
@@ -61,10 +61,10 @@ export class BlobRef {
       ref: this.ref,
       mimeType: this.mimeType,
       size: this.size,
-    }
+    };
   }
 
   toJSON() {
-    return ipldToJson(this.ipld())
+    return ipldToJson(this.ipld());
   }
 }

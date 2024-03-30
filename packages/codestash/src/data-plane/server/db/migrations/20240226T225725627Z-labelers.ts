@@ -1,4 +1,4 @@
-import { Kysely, sql } from 'kysely'
+import { Kysely, sql } from 'kysely';
 
 export async function up(db: Kysely<unknown>): Promise<void> {
   await db.schema
@@ -14,14 +14,14 @@ export async function up(db: Kysely<unknown>): Promise<void> {
         .stored()
         .notNull(),
     )
-    .execute()
+    .execute();
   await db.schema
     .createIndex('labeler_order_by_idx')
     .on('labeler')
     .columns(['sortAt', 'cid'])
-    .execute()
+    .execute();
 }
 
 export async function down(db: Kysely<unknown>): Promise<void> {
-  await db.schema.dropTable('labeler').execute()
+  await db.schema.dropTable('labeler').execute();
 }

@@ -1,5 +1,5 @@
-import { CID } from 'multiformats/cid'
-import { AccountDb } from '../db'
+import { CID } from 'multiformats/cid';
+import { AccountDb } from '../db';
 
 export const updateRoot = async (
   db: AccountDb,
@@ -20,5 +20,5 @@ export const updateRoot = async (
       .onConflict((oc) =>
         oc.column('did').doUpdateSet({ cid: cid.toString(), rev }),
       ),
-  )
-}
+  );
+};

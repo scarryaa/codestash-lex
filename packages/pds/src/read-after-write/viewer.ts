@@ -1,16 +1,16 @@
-import util from 'util'
-import { CID } from 'multiformats/cid'
-import { AtUri, INVALID_HANDLE } from '@atproto/syntax'
-import { cborToLexRecord } from '@atproto/repo'
-import { AtpAgent } from '@codestash-lex/api'
-import { createServiceAuthHeaders } from '@atproto/xrpc-server'
-import { Record as ProfileRecord } from '../lexicon/types/org/codestash/actor/profile'
-import { ids } from '../lexicon/lexicons'
+import util from 'util';
+import { CID } from 'multiformats/cid';
+import { AtUri, INVALID_HANDLE } from '@atproto/syntax';
+import { cborToLexRecord } from '@atproto/repo';
+import { AtpAgent } from '@codestash-lex/api';
+import { createServiceAuthHeaders } from '@atproto/xrpc-server';
+import { Record as ProfileRecord } from '../lexicon/types/org/codestash/actor/profile';
+import { ids } from '../lexicon/lexicons';
 import {
   UserProfileBasic,
   UserProfileDetailed,
   UserProfileAdvanced,
-} from '../lexicon/types/org/codestash/actor/defs'
+} from '../lexicon/types/org/codestash/actor/defs';
 // import {
 //   FeedViewPost,
 //   GeneratorView,
@@ -35,74 +35,78 @@ import {
 //   Main as EmbedRecordWithMedia,
 //   isMain as isEmbedRecordWithMedia,
 // } from '../lexicon/types/app/bsky/embed/recordWithMedia'
-import { ActorStoreReader } from '../actor-store'
-import { LocalRecords, RecordDescript } from './types'
-import { AccountManager } from '../account-manager'
+import { ActorStoreReader } from '../actor-store';
+import { LocalRecords, RecordDescript } from './types';
+import { AccountManager } from '../account-manager';
 
-type CommonSignedUris = 'avatar' | 'banner' | 'feed_thumbnail' | 'feed_fullsize'
+type CommonSignedUris =
+  | 'avatar'
+  | 'banner'
+  | 'feed_thumbnail'
+  | 'feed_fullsize';
 
-export type LocalViewerCreator = (actorStore: ActorStoreReader) => LocalViewer
+export type LocalViewerCreator = (actorStore: ActorStoreReader) => LocalViewer;
 
 export class LocalViewer {
-  did: string
-  actorStore: ActorStoreReader
-  accountManager: AccountManager
-  pdsHostname: string
-  appViewAgent?: AtpAgent
-  appviewDid?: string
-  appviewCdnUrlPattern?: string
+  did: string;
+  actorStore: ActorStoreReader;
+  accountManager: AccountManager;
+  pdsHostname: string;
+  appViewAgent?: AtpAgent;
+  appviewDid?: string;
+  appviewCdnUrlPattern?: string;
 
   constructor(params: {
-    actorStore: ActorStoreReader
-    accountManager: AccountManager
-    pdsHostname: string
-    appViewAgent?: AtpAgent
-    appviewDid?: string
-    appviewCdnUrlPattern?: string
+    actorStore: ActorStoreReader;
+    accountManager: AccountManager;
+    pdsHostname: string;
+    appViewAgent?: AtpAgent;
+    appviewDid?: string;
+    appviewCdnUrlPattern?: string;
   }) {
-    this.did = params.actorStore.did
-    this.actorStore = params.actorStore
-    this.accountManager = params.accountManager
-    this.pdsHostname = params.pdsHostname
-    this.appViewAgent = params.appViewAgent
-    this.appviewDid = params.appviewDid
-    this.appviewCdnUrlPattern = params.appviewCdnUrlPattern
+    this.did = params.actorStore.did;
+    this.actorStore = params.actorStore;
+    this.accountManager = params.accountManager;
+    this.pdsHostname = params.pdsHostname;
+    this.appViewAgent = params.appViewAgent;
+    this.appviewDid = params.appviewDid;
+    this.appviewCdnUrlPattern = params.appviewCdnUrlPattern;
   }
 
   static creator(params: {
-    accountManager: AccountManager
-    pdsHostname: string
-    appViewAgent?: AtpAgent
-    appviewDid?: string
-    appviewCdnUrlPattern?: string
+    accountManager: AccountManager;
+    pdsHostname: string;
+    appViewAgent?: AtpAgent;
+    appviewDid?: string;
+    appviewCdnUrlPattern?: string;
   }): LocalViewerCreator {
     return (actorStore) => {
-      return new LocalViewer({ ...params, actorStore })
-    }
+      return new LocalViewer({ ...params, actorStore });
+    };
   }
 
   getImageUrl(pattern: CommonSignedUris, cid: string) {
     if (!this.appviewCdnUrlPattern) {
-      return `https://${this.pdsHostname}/xrpc/${ids.ComAtprotoSyncGetBlob}?did=${this.did}&cid=${cid}`
+      return `https://${this.pdsHostname}/xrpc/${ids.ComAtprotoSyncGetBlob}?did=${this.did}&cid=${cid}`;
     }
-    return util.format(this.appviewCdnUrlPattern, pattern, this.did, cid)
+    return util.format(this.appviewCdnUrlPattern, pattern, this.did, cid);
   }
 
   async serviceAuthHeaders(did: string) {
     if (!this.appviewDid) {
-      throw new Error('Could not find bsky appview did')
+      throw new Error('Could not find bsky appview did');
     }
-    const keypair = await this.actorStore.keypair()
+    const keypair = await this.actorStore.keypair();
 
     return createServiceAuthHeaders({
       iss: did,
       aud: this.appviewDid,
       keypair,
-    })
+    });
   }
 
   async getRecordsSinceRev(rev: string): Promise<LocalRecords> {
-    return getRecordsSinceRev(this.actorStore, rev)
+    return getRecordsSinceRev(this.actorStore, rev);
   }
 
   async getProfileBasic(): Promise<UserProfileBasic | null> {
@@ -111,15 +115,15 @@ export class LocalViewer {
       .leftJoin('repo_block', 'repo_block.cid', 'record.cid')
       .where('record.collection', '=', ids.OrgCodestashActorProfile)
       .where('record.rkey', '=', 'self')
-      .selectAll()
+      .selectAll();
     const [profileRes, accountRes] = await Promise.all([
       profileQuery.executeTakeFirst(),
       this.accountManager.getAccount(this.did),
-    ])
-    if (!accountRes) return null
+    ]);
+    if (!accountRes) return null;
     const record = profileRes?.content
       ? (cborToLexRecord(profileRes.content) as ProfileRecord)
-      : null
+      : null;
     return {
       did: this.did,
       handle: accountRes.handle ?? INVALID_HANDLE,
@@ -127,7 +131,7 @@ export class LocalViewer {
       avatar: record?.avatar
         ? this.getImageUrl('avatar', record.avatar.ref.toString())
         : undefined,
-    }
+    };
   }
 
   // async formatAndInsertPostsInFeed(
@@ -305,14 +309,17 @@ export class LocalViewer {
       avatar: record.avatar
         ? this.getImageUrl('avatar', record.avatar.ref.toString())
         : undefined,
-    }
+    };
   }
 
-  updateProfileView(view: UserProfileDetailed, record: ProfileRecord): UserProfileDetailed {
+  updateProfileView(
+    view: UserProfileDetailed,
+    record: ProfileRecord,
+  ): UserProfileDetailed {
     return {
       ...this.updateProfileViewBasic(view, record),
       description: record.description,
-    }
+    };
   }
 
   updateProfileDetailed(
@@ -324,7 +331,7 @@ export class LocalViewer {
       banner: record.banner
         ? this.getImageUrl('banner', record.banner.ref.toString())
         : undefined,
-    }
+    };
   }
 }
 
@@ -339,7 +346,7 @@ export const getRecordsSinceRev = async (
     .where('record.repoRev', '>', rev)
     .limit(10)
     .orderBy('record.repoRev', 'asc')
-    .execute()
+    .execute();
   // sanity check to ensure that the clock received is not before _all_ local records (for instance in case of account migration)
   if (res.length > 0) {
     const sanityCheckRes = await actorStore.db.db
@@ -347,9 +354,9 @@ export const getRecordsSinceRev = async (
       .selectAll()
       .where('record.repoRev', '<=', rev)
       .limit(1)
-      .executeTakeFirst()
+      .executeTakeFirst();
     if (!sanityCheckRes) {
-      return { count: 0, profile: null }
+      return { count: 0, profile: null };
     }
   }
   return res.reduce(
@@ -359,16 +366,16 @@ export const getRecordsSinceRev = async (
         cid: CID.parse(cur.cid),
         indexedAt: cur.indexedAt,
         record: cborToLexRecord(cur.content),
-      }
+      };
       if (
         descript.uri.collection === ids.OrgCodestashActorProfile &&
         descript.uri.rkey === 'self'
       ) {
-        acc.profile = descript as RecordDescript<ProfileRecord>
+        acc.profile = descript as RecordDescript<ProfileRecord>;
       }
-      acc.count++
-      return acc
+      acc.count++;
+      return acc;
     },
     { count: 0, profile: null } as LocalRecords,
-  )
-}
+  );
+};

@@ -6,9 +6,9 @@ import {
   AppBskyEmbedRecord,
   AppBskyGraphDefs,
   AppBskyNotificationListNotifications,
-} from './client'
+} from './client';
 
-const FAKE_CID = 'bafyreiclp443lavogvhj3d2ob2cxbfuscni2k5jk7bebjzg7khl3esabwq'
+const FAKE_CID = 'bafyreiclp443lavogvhj3d2ob2cxbfuscni2k5jk7bebjzg7khl3esabwq';
 
 export const mock = {
   post({
@@ -17,10 +17,10 @@ export const mock = {
     reply,
     embed,
   }: {
-    text: string
-    facets?: AppBskyFeedPost.Record['facets']
-    reply?: AppBskyFeedPost.ReplyRef
-    embed?: AppBskyFeedPost.Record['embed']
+    text: string;
+    facets?: AppBskyFeedPost.Record['facets'];
+    reply?: AppBskyFeedPost.ReplyRef;
+    embed?: AppBskyFeedPost.Record['embed'];
   }): AppBskyFeedPost.Record {
     return {
       $type: 'app.bsky.feed.post',
@@ -30,7 +30,7 @@ export const mock = {
       embed,
       langs: ['en'],
       createdAt: new Date().toISOString(),
-    }
+    };
   },
 
   postView({
@@ -43,14 +43,14 @@ export const mock = {
     viewer,
     labels,
   }: {
-    record: AppBskyFeedPost.Record
-    author: AppBskyActorDefs.ProfileViewBasic
-    embed?: AppBskyFeedDefs.PostView['embed']
-    replyCount?: number
-    repostCount?: number
-    likeCount?: number
-    viewer?: AppBskyFeedDefs.ViewerState
-    labels?: ComAtprotoLabelDefs.Label[]
+    record: AppBskyFeedPost.Record;
+    author: AppBskyActorDefs.ProfileViewBasic;
+    embed?: AppBskyFeedDefs.PostView['embed'];
+    replyCount?: number;
+    repostCount?: number;
+    likeCount?: number;
+    viewer?: AppBskyFeedDefs.ViewerState;
+    labels?: ComAtprotoLabelDefs.Label[];
   }): AppBskyFeedDefs.PostView {
     return {
       $type: 'app.bsky.feed.defs#postView',
@@ -65,7 +65,7 @@ export const mock = {
       indexedAt: new Date().toISOString(),
       viewer,
       labels,
-    }
+    };
   },
 
   embedRecordView({
@@ -73,9 +73,9 @@ export const mock = {
     author,
     labels,
   }: {
-    record: AppBskyFeedPost.Record
-    author: AppBskyActorDefs.ProfileViewBasic
-    labels?: ComAtprotoLabelDefs.Label[]
+    record: AppBskyFeedPost.Record;
+    author: AppBskyActorDefs.ProfileViewBasic;
+    labels?: ComAtprotoLabelDefs.Label[];
   }): AppBskyEmbedRecord.View {
     return {
       $type: 'app.bsky.embed.record#view',
@@ -88,7 +88,7 @@ export const mock = {
         labels,
         indexedAt: new Date().toISOString(),
       },
-    }
+    };
   },
 
   profileViewBasic({
@@ -98,11 +98,11 @@ export const mock = {
     viewer,
     labels,
   }: {
-    handle: string
-    displayName?: string
-    description?: string
-    viewer?: AppBskyActorDefs.ViewerState
-    labels?: ComAtprotoLabelDefs.Label[]
+    handle: string;
+    displayName?: string;
+    description?: string;
+    viewer?: AppBskyActorDefs.ViewerState;
+    labels?: ComAtprotoLabelDefs.Label[];
   }): AppBskyActorDefs.ProfileViewBasic {
     return {
       did: `did:web:${handle}`,
@@ -111,7 +111,7 @@ export const mock = {
       description, // technically not in ProfileViewBasic but useful in some cases
       viewer,
       labels,
-    }
+    };
   },
 
   actorViewerState({
@@ -123,13 +123,13 @@ export const mock = {
     following,
     followedBy,
   }: {
-    muted?: boolean
-    mutedByList?: AppBskyGraphDefs.ListViewBasic
-    blockedBy?: boolean
-    blocking?: string
-    blockingByList?: AppBskyGraphDefs.ListViewBasic
-    following?: string
-    followedBy?: string
+    muted?: boolean;
+    mutedByList?: AppBskyGraphDefs.ListViewBasic;
+    blockedBy?: boolean;
+    blocking?: string;
+    blockingByList?: AppBskyGraphDefs.ListViewBasic;
+    following?: string;
+    followedBy?: string;
   }): AppBskyActorDefs.ViewerState {
     return {
       muted,
@@ -139,7 +139,7 @@ export const mock = {
       blockingByList,
       following,
       followedBy,
-    }
+    };
   },
 
   listViewBasic({ name }: { name: string }): AppBskyGraphDefs.ListViewBasic {
@@ -149,7 +149,7 @@ export const mock = {
       name,
       purpose: 'app.bsky.graph.defs#modlist',
       indexedAt: new Date().toISOString(),
-    }
+    };
   },
 
   replyNotification({
@@ -157,9 +157,9 @@ export const mock = {
     record,
     labels,
   }: {
-    record: AppBskyFeedPost.Record
-    author: AppBskyActorDefs.ProfileViewBasic
-    labels?: ComAtprotoLabelDefs.Label[]
+    record: AppBskyFeedPost.Record;
+    author: AppBskyActorDefs.ProfileViewBasic;
+    labels?: ComAtprotoLabelDefs.Label[];
   }): AppBskyNotificationListNotifications.Notification {
     return {
       uri: `at://${author.did}/app.bsky.feed.post/fake`,
@@ -171,7 +171,7 @@ export const mock = {
       isRead: false,
       indexedAt: new Date().toISOString(),
       labels,
-    }
+    };
   },
 
   followNotification({
@@ -179,9 +179,9 @@ export const mock = {
     subjectDid,
     labels,
   }: {
-    author: AppBskyActorDefs.ProfileViewBasic
-    subjectDid: string
-    labels?: ComAtprotoLabelDefs.Label[]
+    author: AppBskyActorDefs.ProfileViewBasic;
+    subjectDid: string;
+    labels?: ComAtprotoLabelDefs.Label[];
   }): AppBskyNotificationListNotifications.Notification {
     return {
       uri: `at://${author.did}/app.bsky.graph.follow/fake`,
@@ -196,7 +196,7 @@ export const mock = {
       isRead: false,
       indexedAt: new Date().toISOString(),
       labels,
-    }
+    };
   },
 
   label({
@@ -204,15 +204,15 @@ export const mock = {
     uri,
     src,
   }: {
-    val: string
-    uri: string
-    src?: string
+    val: string;
+    uri: string;
+    src?: string;
   }): ComAtprotoLabelDefs.Label {
     return {
       src: src || 'did:plc:fake-labeler',
       uri,
       val,
       cts: new Date().toISOString(),
-    }
+    };
   },
-}
+};

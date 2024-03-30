@@ -1,12 +1,12 @@
-import { Server } from '../../../../lexicon'
-import AppContext from '../../../../context'
-import { isValidDidDocForService } from './util'
+import { Server } from '../../../../lexicon';
+import AppContext from '../../../../context';
+import { isValidDidDocForService } from './util';
 
 export default function (server: Server, ctx: AppContext) {
   server.com.atproto.server.checkAccountStatus({
     auth: ctx.authVerifier.access,
     handler: async ({ auth }) => {
-      const requester = auth.credentials.did
+      const requester = auth.credentials.did;
       const [
         repoRoot,
         repoBlocks,
@@ -20,12 +20,12 @@ export default function (server: Server, ctx: AppContext) {
           store.record.recordCount(),
           store.repo.blob.blobCount(),
           store.repo.blob.recordBlobCount(),
-        ])
-      })
+        ]);
+      });
       const [activated, validDid] = await Promise.all([
         ctx.accountManager.isAccountActivated(requester),
         isValidDidDocForService(ctx, requester),
-      ])
+      ]);
 
       return {
         encoding: 'application/json',
@@ -40,7 +40,7 @@ export default function (server: Server, ctx: AppContext) {
           expectedBlobs,
           importedBlobs,
         },
-      }
+      };
     },
-  })
+  });
 }

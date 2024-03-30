@@ -1,4 +1,4 @@
-import { Generated, GeneratedAlways, Insertable, Selectable } from 'kysely'
+import { Generated, GeneratedAlways, Insertable, Selectable } from 'kysely';
 
 export type RepoSeqEventType =
   | 'append'
@@ -6,20 +6,20 @@ export type RepoSeqEventType =
   | 'handle'
   | 'migrate'
   | 'identity'
-  | 'tombstone'
+  | 'tombstone';
 
 export interface RepoSeq {
-  seq: GeneratedAlways<number>
-  did: string
-  eventType: RepoSeqEventType
-  event: Uint8Array
-  invalidated: Generated<0 | 1>
-  sequencedAt: string
+  seq: GeneratedAlways<number>;
+  did: string;
+  eventType: RepoSeqEventType;
+  event: Uint8Array;
+  invalidated: Generated<0 | 1>;
+  sequencedAt: string;
 }
 
-export type RepoSeqInsert = Insertable<RepoSeq>
-export type RepoSeqEntry = Selectable<RepoSeq>
+export type RepoSeqInsert = Insertable<RepoSeq>;
+export type RepoSeqEntry = Selectable<RepoSeq>;
 
 export type SequencerDbSchema = {
-  repo_seq: RepoSeq
-}
+  repo_seq: RepoSeq;
+};

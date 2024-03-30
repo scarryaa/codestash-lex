@@ -1,4 +1,4 @@
-import { Kysely, sql } from 'kysely'
+import { Kysely, sql } from 'kysely';
 
 export async function up(db: Kysely<unknown>): Promise<void> {
   await db.schema
@@ -10,17 +10,17 @@ export async function up(db: Kysely<unknown>): Promise<void> {
     .addColumn('createdAt', 'timestamptz', (col) =>
       col.notNull().defaultTo(sql`CURRENT_TIMESTAMP`),
     )
-    .execute()
+    .execute();
   await db.schema
     .createTable('mute_item')
     .addColumn('actorDid', 'varchar', (col) => col.notNull())
     .addColumn('subject', 'varchar', (col) => col.notNull())
     .addColumn('fromId', 'bigint', (col) => col.notNull())
     .addPrimaryKeyConstraint('mute_item_pkey', ['actorDid', 'subject'])
-    .execute()
+    .execute();
 }
 
 export async function down(db: Kysely<unknown>): Promise<void> {
-  await db.schema.dropTable('mute_item').execute()
-  await db.schema.dropTable('mute_op').execute()
+  await db.schema.dropTable('mute_item').execute();
+  await db.schema.dropTable('mute_op').execute();
 }

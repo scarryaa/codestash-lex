@@ -7,82 +7,82 @@ import {
   Options as XrpcOptions,
   AuthVerifier,
   StreamAuthVerifier,
-} from '@atproto/xrpc-server'
-import { schemas } from './lexicons'
-import * as OrgCodestashActorGetProfile from './types/org/codestash/actor/getProfile'
-import * as OrgCodestashPing from './types/org/codestash/ping'
-import * as ComAtprotoAdminDeleteAccount from './types/com/atproto/admin/deleteAccount'
-import * as ComAtprotoAdminDisableAccountInvites from './types/com/atproto/admin/disableAccountInvites'
-import * as ComAtprotoAdminDisableInviteCodes from './types/com/atproto/admin/disableInviteCodes'
-import * as ComAtprotoAdminEnableAccountInvites from './types/com/atproto/admin/enableAccountInvites'
-import * as ComAtprotoAdminGetAccountInfo from './types/com/atproto/admin/getAccountInfo'
-import * as ComAtprotoAdminGetAccountInfos from './types/com/atproto/admin/getAccountInfos'
-import * as ComAtprotoAdminGetInviteCodes from './types/com/atproto/admin/getInviteCodes'
-import * as ComAtprotoAdminGetSubjectStatus from './types/com/atproto/admin/getSubjectStatus'
-import * as ComAtprotoAdminSendEmail from './types/com/atproto/admin/sendEmail'
-import * as ComAtprotoAdminUpdateAccountEmail from './types/com/atproto/admin/updateAccountEmail'
-import * as ComAtprotoAdminUpdateAccountHandle from './types/com/atproto/admin/updateAccountHandle'
-import * as ComAtprotoAdminUpdateAccountPassword from './types/com/atproto/admin/updateAccountPassword'
-import * as ComAtprotoAdminUpdateSubjectStatus from './types/com/atproto/admin/updateSubjectStatus'
-import * as ComAtprotoIdentityGetRecommendedDidCredentials from './types/com/atproto/identity/getRecommendedDidCredentials'
-import * as ComAtprotoIdentityRequestPlcOperationSignature from './types/com/atproto/identity/requestPlcOperationSignature'
-import * as ComAtprotoIdentityResolveHandle from './types/com/atproto/identity/resolveHandle'
-import * as ComAtprotoIdentitySignPlcOperation from './types/com/atproto/identity/signPlcOperation'
-import * as ComAtprotoIdentitySubmitPlcOperation from './types/com/atproto/identity/submitPlcOperation'
-import * as ComAtprotoIdentityUpdateHandle from './types/com/atproto/identity/updateHandle'
-import * as ComAtprotoLabelQueryLabels from './types/com/atproto/label/queryLabels'
-import * as ComAtprotoLabelSubscribeLabels from './types/com/atproto/label/subscribeLabels'
-import * as ComAtprotoModerationCreateReport from './types/com/atproto/moderation/createReport'
-import * as ComAtprotoRepoApplyWrites from './types/com/atproto/repo/applyWrites'
-import * as ComAtprotoRepoCreateRecord from './types/com/atproto/repo/createRecord'
-import * as ComAtprotoRepoDeleteRecord from './types/com/atproto/repo/deleteRecord'
-import * as ComAtprotoRepoDescribeRepo from './types/com/atproto/repo/describeRepo'
-import * as ComAtprotoRepoGetRecord from './types/com/atproto/repo/getRecord'
-import * as ComAtprotoRepoImportRepo from './types/com/atproto/repo/importRepo'
-import * as ComAtprotoRepoListMissingBlobs from './types/com/atproto/repo/listMissingBlobs'
-import * as ComAtprotoRepoListRecords from './types/com/atproto/repo/listRecords'
-import * as ComAtprotoRepoPutRecord from './types/com/atproto/repo/putRecord'
-import * as ComAtprotoRepoUploadBlob from './types/com/atproto/repo/uploadBlob'
-import * as ComAtprotoServerActivateAccount from './types/com/atproto/server/activateAccount'
-import * as ComAtprotoServerCheckAccountStatus from './types/com/atproto/server/checkAccountStatus'
-import * as ComAtprotoServerConfirmEmail from './types/com/atproto/server/confirmEmail'
-import * as ComAtprotoServerCreateAccount from './types/com/atproto/server/createAccount'
-import * as ComAtprotoServerCreateAppPassword from './types/com/atproto/server/createAppPassword'
-import * as ComAtprotoServerCreateInviteCode from './types/com/atproto/server/createInviteCode'
-import * as ComAtprotoServerCreateInviteCodes from './types/com/atproto/server/createInviteCodes'
-import * as ComAtprotoServerCreateSession from './types/com/atproto/server/createSession'
-import * as ComAtprotoServerDeactivateAccount from './types/com/atproto/server/deactivateAccount'
-import * as ComAtprotoServerDeleteAccount from './types/com/atproto/server/deleteAccount'
-import * as ComAtprotoServerDeleteSession from './types/com/atproto/server/deleteSession'
-import * as ComAtprotoServerDescribeServer from './types/com/atproto/server/describeServer'
-import * as ComAtprotoServerGetAccountInviteCodes from './types/com/atproto/server/getAccountInviteCodes'
-import * as ComAtprotoServerGetServiceAuth from './types/com/atproto/server/getServiceAuth'
-import * as ComAtprotoServerGetSession from './types/com/atproto/server/getSession'
-import * as ComAtprotoServerListAppPasswords from './types/com/atproto/server/listAppPasswords'
-import * as ComAtprotoServerRefreshSession from './types/com/atproto/server/refreshSession'
-import * as ComAtprotoServerRequestAccountDelete from './types/com/atproto/server/requestAccountDelete'
-import * as ComAtprotoServerRequestEmailConfirmation from './types/com/atproto/server/requestEmailConfirmation'
-import * as ComAtprotoServerRequestEmailUpdate from './types/com/atproto/server/requestEmailUpdate'
-import * as ComAtprotoServerRequestPasswordReset from './types/com/atproto/server/requestPasswordReset'
-import * as ComAtprotoServerReserveSigningKey from './types/com/atproto/server/reserveSigningKey'
-import * as ComAtprotoServerResetPassword from './types/com/atproto/server/resetPassword'
-import * as ComAtprotoServerRevokeAppPassword from './types/com/atproto/server/revokeAppPassword'
-import * as ComAtprotoServerUpdateEmail from './types/com/atproto/server/updateEmail'
-import * as ComAtprotoSyncGetBlob from './types/com/atproto/sync/getBlob'
-import * as ComAtprotoSyncGetBlocks from './types/com/atproto/sync/getBlocks'
-import * as ComAtprotoSyncGetCheckout from './types/com/atproto/sync/getCheckout'
-import * as ComAtprotoSyncGetHead from './types/com/atproto/sync/getHead'
-import * as ComAtprotoSyncGetLatestCommit from './types/com/atproto/sync/getLatestCommit'
-import * as ComAtprotoSyncGetRecord from './types/com/atproto/sync/getRecord'
-import * as ComAtprotoSyncGetRepo from './types/com/atproto/sync/getRepo'
-import * as ComAtprotoSyncListBlobs from './types/com/atproto/sync/listBlobs'
-import * as ComAtprotoSyncListRepos from './types/com/atproto/sync/listRepos'
-import * as ComAtprotoSyncNotifyOfUpdate from './types/com/atproto/sync/notifyOfUpdate'
-import * as ComAtprotoSyncRequestCrawl from './types/com/atproto/sync/requestCrawl'
-import * as ComAtprotoSyncSubscribeRepos from './types/com/atproto/sync/subscribeRepos'
-import * as ComAtprotoTempCheckSignupQueue from './types/com/atproto/temp/checkSignupQueue'
-import * as ComAtprotoTempFetchLabels from './types/com/atproto/temp/fetchLabels'
-import * as ComAtprotoTempRequestPhoneVerification from './types/com/atproto/temp/requestPhoneVerification'
+} from '@atproto/xrpc-server';
+import { schemas } from './lexicons';
+import * as OrgCodestashActorGetProfile from './types/org/codestash/actor/getProfile';
+import * as OrgCodestashPing from './types/org/codestash/ping';
+import * as ComAtprotoAdminDeleteAccount from './types/com/atproto/admin/deleteAccount';
+import * as ComAtprotoAdminDisableAccountInvites from './types/com/atproto/admin/disableAccountInvites';
+import * as ComAtprotoAdminDisableInviteCodes from './types/com/atproto/admin/disableInviteCodes';
+import * as ComAtprotoAdminEnableAccountInvites from './types/com/atproto/admin/enableAccountInvites';
+import * as ComAtprotoAdminGetAccountInfo from './types/com/atproto/admin/getAccountInfo';
+import * as ComAtprotoAdminGetAccountInfos from './types/com/atproto/admin/getAccountInfos';
+import * as ComAtprotoAdminGetInviteCodes from './types/com/atproto/admin/getInviteCodes';
+import * as ComAtprotoAdminGetSubjectStatus from './types/com/atproto/admin/getSubjectStatus';
+import * as ComAtprotoAdminSendEmail from './types/com/atproto/admin/sendEmail';
+import * as ComAtprotoAdminUpdateAccountEmail from './types/com/atproto/admin/updateAccountEmail';
+import * as ComAtprotoAdminUpdateAccountHandle from './types/com/atproto/admin/updateAccountHandle';
+import * as ComAtprotoAdminUpdateAccountPassword from './types/com/atproto/admin/updateAccountPassword';
+import * as ComAtprotoAdminUpdateSubjectStatus from './types/com/atproto/admin/updateSubjectStatus';
+import * as ComAtprotoIdentityGetRecommendedDidCredentials from './types/com/atproto/identity/getRecommendedDidCredentials';
+import * as ComAtprotoIdentityRequestPlcOperationSignature from './types/com/atproto/identity/requestPlcOperationSignature';
+import * as ComAtprotoIdentityResolveHandle from './types/com/atproto/identity/resolveHandle';
+import * as ComAtprotoIdentitySignPlcOperation from './types/com/atproto/identity/signPlcOperation';
+import * as ComAtprotoIdentitySubmitPlcOperation from './types/com/atproto/identity/submitPlcOperation';
+import * as ComAtprotoIdentityUpdateHandle from './types/com/atproto/identity/updateHandle';
+import * as ComAtprotoLabelQueryLabels from './types/com/atproto/label/queryLabels';
+import * as ComAtprotoLabelSubscribeLabels from './types/com/atproto/label/subscribeLabels';
+import * as ComAtprotoModerationCreateReport from './types/com/atproto/moderation/createReport';
+import * as ComAtprotoRepoApplyWrites from './types/com/atproto/repo/applyWrites';
+import * as ComAtprotoRepoCreateRecord from './types/com/atproto/repo/createRecord';
+import * as ComAtprotoRepoDeleteRecord from './types/com/atproto/repo/deleteRecord';
+import * as ComAtprotoRepoDescribeRepo from './types/com/atproto/repo/describeRepo';
+import * as ComAtprotoRepoGetRecord from './types/com/atproto/repo/getRecord';
+import * as ComAtprotoRepoImportRepo from './types/com/atproto/repo/importRepo';
+import * as ComAtprotoRepoListMissingBlobs from './types/com/atproto/repo/listMissingBlobs';
+import * as ComAtprotoRepoListRecords from './types/com/atproto/repo/listRecords';
+import * as ComAtprotoRepoPutRecord from './types/com/atproto/repo/putRecord';
+import * as ComAtprotoRepoUploadBlob from './types/com/atproto/repo/uploadBlob';
+import * as ComAtprotoServerActivateAccount from './types/com/atproto/server/activateAccount';
+import * as ComAtprotoServerCheckAccountStatus from './types/com/atproto/server/checkAccountStatus';
+import * as ComAtprotoServerConfirmEmail from './types/com/atproto/server/confirmEmail';
+import * as ComAtprotoServerCreateAccount from './types/com/atproto/server/createAccount';
+import * as ComAtprotoServerCreateAppPassword from './types/com/atproto/server/createAppPassword';
+import * as ComAtprotoServerCreateInviteCode from './types/com/atproto/server/createInviteCode';
+import * as ComAtprotoServerCreateInviteCodes from './types/com/atproto/server/createInviteCodes';
+import * as ComAtprotoServerCreateSession from './types/com/atproto/server/createSession';
+import * as ComAtprotoServerDeactivateAccount from './types/com/atproto/server/deactivateAccount';
+import * as ComAtprotoServerDeleteAccount from './types/com/atproto/server/deleteAccount';
+import * as ComAtprotoServerDeleteSession from './types/com/atproto/server/deleteSession';
+import * as ComAtprotoServerDescribeServer from './types/com/atproto/server/describeServer';
+import * as ComAtprotoServerGetAccountInviteCodes from './types/com/atproto/server/getAccountInviteCodes';
+import * as ComAtprotoServerGetServiceAuth from './types/com/atproto/server/getServiceAuth';
+import * as ComAtprotoServerGetSession from './types/com/atproto/server/getSession';
+import * as ComAtprotoServerListAppPasswords from './types/com/atproto/server/listAppPasswords';
+import * as ComAtprotoServerRefreshSession from './types/com/atproto/server/refreshSession';
+import * as ComAtprotoServerRequestAccountDelete from './types/com/atproto/server/requestAccountDelete';
+import * as ComAtprotoServerRequestEmailConfirmation from './types/com/atproto/server/requestEmailConfirmation';
+import * as ComAtprotoServerRequestEmailUpdate from './types/com/atproto/server/requestEmailUpdate';
+import * as ComAtprotoServerRequestPasswordReset from './types/com/atproto/server/requestPasswordReset';
+import * as ComAtprotoServerReserveSigningKey from './types/com/atproto/server/reserveSigningKey';
+import * as ComAtprotoServerResetPassword from './types/com/atproto/server/resetPassword';
+import * as ComAtprotoServerRevokeAppPassword from './types/com/atproto/server/revokeAppPassword';
+import * as ComAtprotoServerUpdateEmail from './types/com/atproto/server/updateEmail';
+import * as ComAtprotoSyncGetBlob from './types/com/atproto/sync/getBlob';
+import * as ComAtprotoSyncGetBlocks from './types/com/atproto/sync/getBlocks';
+import * as ComAtprotoSyncGetCheckout from './types/com/atproto/sync/getCheckout';
+import * as ComAtprotoSyncGetHead from './types/com/atproto/sync/getHead';
+import * as ComAtprotoSyncGetLatestCommit from './types/com/atproto/sync/getLatestCommit';
+import * as ComAtprotoSyncGetRecord from './types/com/atproto/sync/getRecord';
+import * as ComAtprotoSyncGetRepo from './types/com/atproto/sync/getRepo';
+import * as ComAtprotoSyncListBlobs from './types/com/atproto/sync/listBlobs';
+import * as ComAtprotoSyncListRepos from './types/com/atproto/sync/listRepos';
+import * as ComAtprotoSyncNotifyOfUpdate from './types/com/atproto/sync/notifyOfUpdate';
+import * as ComAtprotoSyncRequestCrawl from './types/com/atproto/sync/requestCrawl';
+import * as ComAtprotoSyncSubscribeRepos from './types/com/atproto/sync/subscribeRepos';
+import * as ComAtprotoTempCheckSignupQueue from './types/com/atproto/temp/checkSignupQueue';
+import * as ComAtprotoTempFetchLabels from './types/com/atproto/temp/fetchLabels';
+import * as ComAtprotoTempRequestPhoneVerification from './types/com/atproto/temp/requestPhoneVerification';
 
 export const COM_ATPROTO_MODERATION = {
   DefsReasonSpam: 'com.atproto.moderation.defs#reasonSpam',
@@ -92,42 +92,42 @@ export const COM_ATPROTO_MODERATION = {
   DefsReasonRude: 'com.atproto.moderation.defs#reasonRude',
   DefsReasonOther: 'com.atproto.moderation.defs#reasonOther',
   DefsReasonAppeal: 'com.atproto.moderation.defs#reasonAppeal',
-}
+};
 
 export function createServer(options?: XrpcOptions): Server {
-  return new Server(options)
+  return new Server(options);
 }
 
 export class Server {
-  xrpc: XrpcServer
-  org: OrgNS
-  com: ComNS
+  xrpc: XrpcServer;
+  org: OrgNS;
+  com: ComNS;
 
   constructor(options?: XrpcOptions) {
-    this.xrpc = createXrpcServer(schemas, options)
+    this.xrpc = createXrpcServer(schemas, options);
     console.log(schemas);
-    this.org = new OrgNS(this)
-    this.com = new ComNS(this)
+    this.org = new OrgNS(this);
+    this.com = new ComNS(this);
   }
 }
 
 export class OrgNS {
-  _server: Server
-  codestash: OrgCodestashNS
+  _server: Server;
+  codestash: OrgCodestashNS;
 
   constructor(server: Server) {
-    this._server = server
-    this.codestash = new OrgCodestashNS(server)
+    this._server = server;
+    this.codestash = new OrgCodestashNS(server);
   }
 }
 
 export class OrgCodestashNS {
-  _server: Server
-  actor: OrgCodestashActorNS
+  _server: Server;
+  actor: OrgCodestashActorNS;
 
   constructor(server: Server) {
-    this._server = server
-    this.actor = new OrgCodestashActorNS(server)
+    this._server = server;
+    this.actor = new OrgCodestashActorNS(server);
   }
 
   ping<AV extends AuthVerifier>(
@@ -137,16 +137,16 @@ export class OrgCodestashNS {
       OrgCodestashPing.HandlerReqCtx<ExtractAuth<AV>>
     >,
   ) {
-    const nsid = 'org.codestash.ping' // @ts-ignore
-    return this._server.xrpc.method(nsid, cfg)
+    const nsid = 'org.codestash.ping'; // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg);
   }
 }
 
 export class OrgCodestashActorNS {
-  _server: Server
+  _server: Server;
 
   constructor(server: Server) {
-    this._server = server
+    this._server = server;
   }
 
   getProfile<AV extends AuthVerifier>(
@@ -156,50 +156,50 @@ export class OrgCodestashActorNS {
       OrgCodestashActorGetProfile.HandlerReqCtx<ExtractAuth<AV>>
     >,
   ) {
-    const nsid = 'org.codestash.actor.getProfile' // @ts-ignore
-    return this._server.xrpc.method(nsid, cfg)
+    const nsid = 'org.codestash.actor.getProfile'; // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg);
   }
 }
 
 export class ComNS {
-  _server: Server
-  atproto: ComAtprotoNS
+  _server: Server;
+  atproto: ComAtprotoNS;
 
   constructor(server: Server) {
-    this._server = server
-    this.atproto = new ComAtprotoNS(server)
+    this._server = server;
+    this.atproto = new ComAtprotoNS(server);
   }
 }
 
 export class ComAtprotoNS {
-  _server: Server
-  admin: ComAtprotoAdminNS
-  identity: ComAtprotoIdentityNS
-  label: ComAtprotoLabelNS
-  moderation: ComAtprotoModerationNS
-  repo: ComAtprotoRepoNS
-  server: ComAtprotoServerNS
-  sync: ComAtprotoSyncNS
-  temp: ComAtprotoTempNS
+  _server: Server;
+  admin: ComAtprotoAdminNS;
+  identity: ComAtprotoIdentityNS;
+  label: ComAtprotoLabelNS;
+  moderation: ComAtprotoModerationNS;
+  repo: ComAtprotoRepoNS;
+  server: ComAtprotoServerNS;
+  sync: ComAtprotoSyncNS;
+  temp: ComAtprotoTempNS;
 
   constructor(server: Server) {
-    this._server = server
-    this.admin = new ComAtprotoAdminNS(server)
-    this.identity = new ComAtprotoIdentityNS(server)
-    this.label = new ComAtprotoLabelNS(server)
-    this.moderation = new ComAtprotoModerationNS(server)
-    this.repo = new ComAtprotoRepoNS(server)
-    this.server = new ComAtprotoServerNS(server)
-    this.sync = new ComAtprotoSyncNS(server)
-    this.temp = new ComAtprotoTempNS(server)
+    this._server = server;
+    this.admin = new ComAtprotoAdminNS(server);
+    this.identity = new ComAtprotoIdentityNS(server);
+    this.label = new ComAtprotoLabelNS(server);
+    this.moderation = new ComAtprotoModerationNS(server);
+    this.repo = new ComAtprotoRepoNS(server);
+    this.server = new ComAtprotoServerNS(server);
+    this.sync = new ComAtprotoSyncNS(server);
+    this.temp = new ComAtprotoTempNS(server);
   }
 }
 
 export class ComAtprotoAdminNS {
-  _server: Server
+  _server: Server;
 
   constructor(server: Server) {
-    this._server = server
+    this._server = server;
   }
 
   deleteAccount<AV extends AuthVerifier>(
@@ -209,8 +209,8 @@ export class ComAtprotoAdminNS {
       ComAtprotoAdminDeleteAccount.HandlerReqCtx<ExtractAuth<AV>>
     >,
   ) {
-    const nsid = 'com.atproto.admin.deleteAccount' // @ts-ignore
-    return this._server.xrpc.method(nsid, cfg)
+    const nsid = 'com.atproto.admin.deleteAccount'; // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg);
   }
 
   disableAccountInvites<AV extends AuthVerifier>(
@@ -220,8 +220,8 @@ export class ComAtprotoAdminNS {
       ComAtprotoAdminDisableAccountInvites.HandlerReqCtx<ExtractAuth<AV>>
     >,
   ) {
-    const nsid = 'com.atproto.admin.disableAccountInvites' // @ts-ignore
-    return this._server.xrpc.method(nsid, cfg)
+    const nsid = 'com.atproto.admin.disableAccountInvites'; // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg);
   }
 
   disableInviteCodes<AV extends AuthVerifier>(
@@ -231,8 +231,8 @@ export class ComAtprotoAdminNS {
       ComAtprotoAdminDisableInviteCodes.HandlerReqCtx<ExtractAuth<AV>>
     >,
   ) {
-    const nsid = 'com.atproto.admin.disableInviteCodes' // @ts-ignore
-    return this._server.xrpc.method(nsid, cfg)
+    const nsid = 'com.atproto.admin.disableInviteCodes'; // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg);
   }
 
   enableAccountInvites<AV extends AuthVerifier>(
@@ -242,8 +242,8 @@ export class ComAtprotoAdminNS {
       ComAtprotoAdminEnableAccountInvites.HandlerReqCtx<ExtractAuth<AV>>
     >,
   ) {
-    const nsid = 'com.atproto.admin.enableAccountInvites' // @ts-ignore
-    return this._server.xrpc.method(nsid, cfg)
+    const nsid = 'com.atproto.admin.enableAccountInvites'; // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg);
   }
 
   getAccountInfo<AV extends AuthVerifier>(
@@ -253,8 +253,8 @@ export class ComAtprotoAdminNS {
       ComAtprotoAdminGetAccountInfo.HandlerReqCtx<ExtractAuth<AV>>
     >,
   ) {
-    const nsid = 'com.atproto.admin.getAccountInfo' // @ts-ignore
-    return this._server.xrpc.method(nsid, cfg)
+    const nsid = 'com.atproto.admin.getAccountInfo'; // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg);
   }
 
   getAccountInfos<AV extends AuthVerifier>(
@@ -264,8 +264,8 @@ export class ComAtprotoAdminNS {
       ComAtprotoAdminGetAccountInfos.HandlerReqCtx<ExtractAuth<AV>>
     >,
   ) {
-    const nsid = 'com.atproto.admin.getAccountInfos' // @ts-ignore
-    return this._server.xrpc.method(nsid, cfg)
+    const nsid = 'com.atproto.admin.getAccountInfos'; // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg);
   }
 
   getInviteCodes<AV extends AuthVerifier>(
@@ -275,8 +275,8 @@ export class ComAtprotoAdminNS {
       ComAtprotoAdminGetInviteCodes.HandlerReqCtx<ExtractAuth<AV>>
     >,
   ) {
-    const nsid = 'com.atproto.admin.getInviteCodes' // @ts-ignore
-    return this._server.xrpc.method(nsid, cfg)
+    const nsid = 'com.atproto.admin.getInviteCodes'; // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg);
   }
 
   getSubjectStatus<AV extends AuthVerifier>(
@@ -286,8 +286,8 @@ export class ComAtprotoAdminNS {
       ComAtprotoAdminGetSubjectStatus.HandlerReqCtx<ExtractAuth<AV>>
     >,
   ) {
-    const nsid = 'com.atproto.admin.getSubjectStatus' // @ts-ignore
-    return this._server.xrpc.method(nsid, cfg)
+    const nsid = 'com.atproto.admin.getSubjectStatus'; // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg);
   }
 
   sendEmail<AV extends AuthVerifier>(
@@ -297,8 +297,8 @@ export class ComAtprotoAdminNS {
       ComAtprotoAdminSendEmail.HandlerReqCtx<ExtractAuth<AV>>
     >,
   ) {
-    const nsid = 'com.atproto.admin.sendEmail' // @ts-ignore
-    return this._server.xrpc.method(nsid, cfg)
+    const nsid = 'com.atproto.admin.sendEmail'; // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg);
   }
 
   updateAccountEmail<AV extends AuthVerifier>(
@@ -308,8 +308,8 @@ export class ComAtprotoAdminNS {
       ComAtprotoAdminUpdateAccountEmail.HandlerReqCtx<ExtractAuth<AV>>
     >,
   ) {
-    const nsid = 'com.atproto.admin.updateAccountEmail' // @ts-ignore
-    return this._server.xrpc.method(nsid, cfg)
+    const nsid = 'com.atproto.admin.updateAccountEmail'; // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg);
   }
 
   updateAccountHandle<AV extends AuthVerifier>(
@@ -319,8 +319,8 @@ export class ComAtprotoAdminNS {
       ComAtprotoAdminUpdateAccountHandle.HandlerReqCtx<ExtractAuth<AV>>
     >,
   ) {
-    const nsid = 'com.atproto.admin.updateAccountHandle' // @ts-ignore
-    return this._server.xrpc.method(nsid, cfg)
+    const nsid = 'com.atproto.admin.updateAccountHandle'; // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg);
   }
 
   updateAccountPassword<AV extends AuthVerifier>(
@@ -330,8 +330,8 @@ export class ComAtprotoAdminNS {
       ComAtprotoAdminUpdateAccountPassword.HandlerReqCtx<ExtractAuth<AV>>
     >,
   ) {
-    const nsid = 'com.atproto.admin.updateAccountPassword' // @ts-ignore
-    return this._server.xrpc.method(nsid, cfg)
+    const nsid = 'com.atproto.admin.updateAccountPassword'; // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg);
   }
 
   updateSubjectStatus<AV extends AuthVerifier>(
@@ -341,16 +341,16 @@ export class ComAtprotoAdminNS {
       ComAtprotoAdminUpdateSubjectStatus.HandlerReqCtx<ExtractAuth<AV>>
     >,
   ) {
-    const nsid = 'com.atproto.admin.updateSubjectStatus' // @ts-ignore
-    return this._server.xrpc.method(nsid, cfg)
+    const nsid = 'com.atproto.admin.updateSubjectStatus'; // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg);
   }
 }
 
 export class ComAtprotoIdentityNS {
-  _server: Server
+  _server: Server;
 
   constructor(server: Server) {
-    this._server = server
+    this._server = server;
   }
 
   getRecommendedDidCredentials<AV extends AuthVerifier>(
@@ -362,8 +362,8 @@ export class ComAtprotoIdentityNS {
       >
     >,
   ) {
-    const nsid = 'com.atproto.identity.getRecommendedDidCredentials' // @ts-ignore
-    return this._server.xrpc.method(nsid, cfg)
+    const nsid = 'com.atproto.identity.getRecommendedDidCredentials'; // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg);
   }
 
   requestPlcOperationSignature<AV extends AuthVerifier>(
@@ -375,8 +375,8 @@ export class ComAtprotoIdentityNS {
       >
     >,
   ) {
-    const nsid = 'com.atproto.identity.requestPlcOperationSignature' // @ts-ignore
-    return this._server.xrpc.method(nsid, cfg)
+    const nsid = 'com.atproto.identity.requestPlcOperationSignature'; // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg);
   }
 
   resolveHandle<AV extends AuthVerifier>(
@@ -386,8 +386,8 @@ export class ComAtprotoIdentityNS {
       ComAtprotoIdentityResolveHandle.HandlerReqCtx<ExtractAuth<AV>>
     >,
   ) {
-    const nsid = 'com.atproto.identity.resolveHandle' // @ts-ignore
-    return this._server.xrpc.method(nsid, cfg)
+    const nsid = 'com.atproto.identity.resolveHandle'; // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg);
   }
 
   signPlcOperation<AV extends AuthVerifier>(
@@ -397,8 +397,8 @@ export class ComAtprotoIdentityNS {
       ComAtprotoIdentitySignPlcOperation.HandlerReqCtx<ExtractAuth<AV>>
     >,
   ) {
-    const nsid = 'com.atproto.identity.signPlcOperation' // @ts-ignore
-    return this._server.xrpc.method(nsid, cfg)
+    const nsid = 'com.atproto.identity.signPlcOperation'; // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg);
   }
 
   submitPlcOperation<AV extends AuthVerifier>(
@@ -408,8 +408,8 @@ export class ComAtprotoIdentityNS {
       ComAtprotoIdentitySubmitPlcOperation.HandlerReqCtx<ExtractAuth<AV>>
     >,
   ) {
-    const nsid = 'com.atproto.identity.submitPlcOperation' // @ts-ignore
-    return this._server.xrpc.method(nsid, cfg)
+    const nsid = 'com.atproto.identity.submitPlcOperation'; // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg);
   }
 
   updateHandle<AV extends AuthVerifier>(
@@ -419,16 +419,16 @@ export class ComAtprotoIdentityNS {
       ComAtprotoIdentityUpdateHandle.HandlerReqCtx<ExtractAuth<AV>>
     >,
   ) {
-    const nsid = 'com.atproto.identity.updateHandle' // @ts-ignore
-    return this._server.xrpc.method(nsid, cfg)
+    const nsid = 'com.atproto.identity.updateHandle'; // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg);
   }
 }
 
 export class ComAtprotoLabelNS {
-  _server: Server
+  _server: Server;
 
   constructor(server: Server) {
-    this._server = server
+    this._server = server;
   }
 
   queryLabels<AV extends AuthVerifier>(
@@ -438,8 +438,8 @@ export class ComAtprotoLabelNS {
       ComAtprotoLabelQueryLabels.HandlerReqCtx<ExtractAuth<AV>>
     >,
   ) {
-    const nsid = 'com.atproto.label.queryLabels' // @ts-ignore
-    return this._server.xrpc.method(nsid, cfg)
+    const nsid = 'com.atproto.label.queryLabels'; // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg);
   }
 
   subscribeLabels<AV extends StreamAuthVerifier>(
@@ -449,16 +449,16 @@ export class ComAtprotoLabelNS {
       ComAtprotoLabelSubscribeLabels.HandlerReqCtx<ExtractAuth<AV>>
     >,
   ) {
-    const nsid = 'com.atproto.label.subscribeLabels' // @ts-ignore
-    return this._server.xrpc.streamMethod(nsid, cfg)
+    const nsid = 'com.atproto.label.subscribeLabels'; // @ts-ignore
+    return this._server.xrpc.streamMethod(nsid, cfg);
   }
 }
 
 export class ComAtprotoModerationNS {
-  _server: Server
+  _server: Server;
 
   constructor(server: Server) {
-    this._server = server
+    this._server = server;
   }
 
   createReport<AV extends AuthVerifier>(
@@ -468,16 +468,16 @@ export class ComAtprotoModerationNS {
       ComAtprotoModerationCreateReport.HandlerReqCtx<ExtractAuth<AV>>
     >,
   ) {
-    const nsid = 'com.atproto.moderation.createReport' // @ts-ignore
-    return this._server.xrpc.method(nsid, cfg)
+    const nsid = 'com.atproto.moderation.createReport'; // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg);
   }
 }
 
 export class ComAtprotoRepoNS {
-  _server: Server
+  _server: Server;
 
   constructor(server: Server) {
-    this._server = server
+    this._server = server;
   }
 
   applyWrites<AV extends AuthVerifier>(
@@ -487,8 +487,8 @@ export class ComAtprotoRepoNS {
       ComAtprotoRepoApplyWrites.HandlerReqCtx<ExtractAuth<AV>>
     >,
   ) {
-    const nsid = 'com.atproto.repo.applyWrites' // @ts-ignore
-    return this._server.xrpc.method(nsid, cfg)
+    const nsid = 'com.atproto.repo.applyWrites'; // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg);
   }
 
   createRecord<AV extends AuthVerifier>(
@@ -498,8 +498,8 @@ export class ComAtprotoRepoNS {
       ComAtprotoRepoCreateRecord.HandlerReqCtx<ExtractAuth<AV>>
     >,
   ) {
-    const nsid = 'com.atproto.repo.createRecord' // @ts-ignore
-    return this._server.xrpc.method(nsid, cfg)
+    const nsid = 'com.atproto.repo.createRecord'; // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg);
   }
 
   deleteRecord<AV extends AuthVerifier>(
@@ -509,8 +509,8 @@ export class ComAtprotoRepoNS {
       ComAtprotoRepoDeleteRecord.HandlerReqCtx<ExtractAuth<AV>>
     >,
   ) {
-    const nsid = 'com.atproto.repo.deleteRecord' // @ts-ignore
-    return this._server.xrpc.method(nsid, cfg)
+    const nsid = 'com.atproto.repo.deleteRecord'; // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg);
   }
 
   describeRepo<AV extends AuthVerifier>(
@@ -520,8 +520,8 @@ export class ComAtprotoRepoNS {
       ComAtprotoRepoDescribeRepo.HandlerReqCtx<ExtractAuth<AV>>
     >,
   ) {
-    const nsid = 'com.atproto.repo.describeRepo' // @ts-ignore
-    return this._server.xrpc.method(nsid, cfg)
+    const nsid = 'com.atproto.repo.describeRepo'; // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg);
   }
 
   getRecord<AV extends AuthVerifier>(
@@ -531,8 +531,8 @@ export class ComAtprotoRepoNS {
       ComAtprotoRepoGetRecord.HandlerReqCtx<ExtractAuth<AV>>
     >,
   ) {
-    const nsid = 'com.atproto.repo.getRecord' // @ts-ignore
-    return this._server.xrpc.method(nsid, cfg)
+    const nsid = 'com.atproto.repo.getRecord'; // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg);
   }
 
   importRepo<AV extends AuthVerifier>(
@@ -542,8 +542,8 @@ export class ComAtprotoRepoNS {
       ComAtprotoRepoImportRepo.HandlerReqCtx<ExtractAuth<AV>>
     >,
   ) {
-    const nsid = 'com.atproto.repo.importRepo' // @ts-ignore
-    return this._server.xrpc.method(nsid, cfg)
+    const nsid = 'com.atproto.repo.importRepo'; // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg);
   }
 
   listMissingBlobs<AV extends AuthVerifier>(
@@ -553,8 +553,8 @@ export class ComAtprotoRepoNS {
       ComAtprotoRepoListMissingBlobs.HandlerReqCtx<ExtractAuth<AV>>
     >,
   ) {
-    const nsid = 'com.atproto.repo.listMissingBlobs' // @ts-ignore
-    return this._server.xrpc.method(nsid, cfg)
+    const nsid = 'com.atproto.repo.listMissingBlobs'; // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg);
   }
 
   listRecords<AV extends AuthVerifier>(
@@ -564,8 +564,8 @@ export class ComAtprotoRepoNS {
       ComAtprotoRepoListRecords.HandlerReqCtx<ExtractAuth<AV>>
     >,
   ) {
-    const nsid = 'com.atproto.repo.listRecords' // @ts-ignore
-    return this._server.xrpc.method(nsid, cfg)
+    const nsid = 'com.atproto.repo.listRecords'; // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg);
   }
 
   putRecord<AV extends AuthVerifier>(
@@ -575,8 +575,8 @@ export class ComAtprotoRepoNS {
       ComAtprotoRepoPutRecord.HandlerReqCtx<ExtractAuth<AV>>
     >,
   ) {
-    const nsid = 'com.atproto.repo.putRecord' // @ts-ignore
-    return this._server.xrpc.method(nsid, cfg)
+    const nsid = 'com.atproto.repo.putRecord'; // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg);
   }
 
   uploadBlob<AV extends AuthVerifier>(
@@ -586,16 +586,16 @@ export class ComAtprotoRepoNS {
       ComAtprotoRepoUploadBlob.HandlerReqCtx<ExtractAuth<AV>>
     >,
   ) {
-    const nsid = 'com.atproto.repo.uploadBlob' // @ts-ignore
-    return this._server.xrpc.method(nsid, cfg)
+    const nsid = 'com.atproto.repo.uploadBlob'; // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg);
   }
 }
 
 export class ComAtprotoServerNS {
-  _server: Server
+  _server: Server;
 
   constructor(server: Server) {
-    this._server = server
+    this._server = server;
   }
 
   activateAccount<AV extends AuthVerifier>(
@@ -605,8 +605,8 @@ export class ComAtprotoServerNS {
       ComAtprotoServerActivateAccount.HandlerReqCtx<ExtractAuth<AV>>
     >,
   ) {
-    const nsid = 'com.atproto.server.activateAccount' // @ts-ignore
-    return this._server.xrpc.method(nsid, cfg)
+    const nsid = 'com.atproto.server.activateAccount'; // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg);
   }
 
   checkAccountStatus<AV extends AuthVerifier>(
@@ -616,8 +616,8 @@ export class ComAtprotoServerNS {
       ComAtprotoServerCheckAccountStatus.HandlerReqCtx<ExtractAuth<AV>>
     >,
   ) {
-    const nsid = 'com.atproto.server.checkAccountStatus' // @ts-ignore
-    return this._server.xrpc.method(nsid, cfg)
+    const nsid = 'com.atproto.server.checkAccountStatus'; // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg);
   }
 
   confirmEmail<AV extends AuthVerifier>(
@@ -627,8 +627,8 @@ export class ComAtprotoServerNS {
       ComAtprotoServerConfirmEmail.HandlerReqCtx<ExtractAuth<AV>>
     >,
   ) {
-    const nsid = 'com.atproto.server.confirmEmail' // @ts-ignore
-    return this._server.xrpc.method(nsid, cfg)
+    const nsid = 'com.atproto.server.confirmEmail'; // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg);
   }
 
   createAccount<AV extends AuthVerifier>(
@@ -638,8 +638,8 @@ export class ComAtprotoServerNS {
       ComAtprotoServerCreateAccount.HandlerReqCtx<ExtractAuth<AV>>
     >,
   ) {
-    const nsid = 'com.atproto.server.createAccount' // @ts-ignore
-    return this._server.xrpc.method(nsid, cfg)
+    const nsid = 'com.atproto.server.createAccount'; // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg);
   }
 
   createAppPassword<AV extends AuthVerifier>(
@@ -649,8 +649,8 @@ export class ComAtprotoServerNS {
       ComAtprotoServerCreateAppPassword.HandlerReqCtx<ExtractAuth<AV>>
     >,
   ) {
-    const nsid = 'com.atproto.server.createAppPassword' // @ts-ignore
-    return this._server.xrpc.method(nsid, cfg)
+    const nsid = 'com.atproto.server.createAppPassword'; // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg);
   }
 
   createInviteCode<AV extends AuthVerifier>(
@@ -660,8 +660,8 @@ export class ComAtprotoServerNS {
       ComAtprotoServerCreateInviteCode.HandlerReqCtx<ExtractAuth<AV>>
     >,
   ) {
-    const nsid = 'com.atproto.server.createInviteCode' // @ts-ignore
-    return this._server.xrpc.method(nsid, cfg)
+    const nsid = 'com.atproto.server.createInviteCode'; // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg);
   }
 
   createInviteCodes<AV extends AuthVerifier>(
@@ -671,8 +671,8 @@ export class ComAtprotoServerNS {
       ComAtprotoServerCreateInviteCodes.HandlerReqCtx<ExtractAuth<AV>>
     >,
   ) {
-    const nsid = 'com.atproto.server.createInviteCodes' // @ts-ignore
-    return this._server.xrpc.method(nsid, cfg)
+    const nsid = 'com.atproto.server.createInviteCodes'; // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg);
   }
 
   createSession<AV extends AuthVerifier>(
@@ -682,8 +682,8 @@ export class ComAtprotoServerNS {
       ComAtprotoServerCreateSession.HandlerReqCtx<ExtractAuth<AV>>
     >,
   ) {
-    const nsid = 'com.atproto.server.createSession' // @ts-ignore
-    return this._server.xrpc.method(nsid, cfg)
+    const nsid = 'com.atproto.server.createSession'; // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg);
   }
 
   deactivateAccount<AV extends AuthVerifier>(
@@ -693,8 +693,8 @@ export class ComAtprotoServerNS {
       ComAtprotoServerDeactivateAccount.HandlerReqCtx<ExtractAuth<AV>>
     >,
   ) {
-    const nsid = 'com.atproto.server.deactivateAccount' // @ts-ignore
-    return this._server.xrpc.method(nsid, cfg)
+    const nsid = 'com.atproto.server.deactivateAccount'; // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg);
   }
 
   deleteAccount<AV extends AuthVerifier>(
@@ -704,8 +704,8 @@ export class ComAtprotoServerNS {
       ComAtprotoServerDeleteAccount.HandlerReqCtx<ExtractAuth<AV>>
     >,
   ) {
-    const nsid = 'com.atproto.server.deleteAccount' // @ts-ignore
-    return this._server.xrpc.method(nsid, cfg)
+    const nsid = 'com.atproto.server.deleteAccount'; // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg);
   }
 
   deleteSession<AV extends AuthVerifier>(
@@ -715,8 +715,8 @@ export class ComAtprotoServerNS {
       ComAtprotoServerDeleteSession.HandlerReqCtx<ExtractAuth<AV>>
     >,
   ) {
-    const nsid = 'com.atproto.server.deleteSession' // @ts-ignore
-    return this._server.xrpc.method(nsid, cfg)
+    const nsid = 'com.atproto.server.deleteSession'; // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg);
   }
 
   describeServer<AV extends AuthVerifier>(
@@ -726,8 +726,8 @@ export class ComAtprotoServerNS {
       ComAtprotoServerDescribeServer.HandlerReqCtx<ExtractAuth<AV>>
     >,
   ) {
-    const nsid = 'com.atproto.server.describeServer' // @ts-ignore
-    return this._server.xrpc.method(nsid, cfg)
+    const nsid = 'com.atproto.server.describeServer'; // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg);
   }
 
   getAccountInviteCodes<AV extends AuthVerifier>(
@@ -737,8 +737,8 @@ export class ComAtprotoServerNS {
       ComAtprotoServerGetAccountInviteCodes.HandlerReqCtx<ExtractAuth<AV>>
     >,
   ) {
-    const nsid = 'com.atproto.server.getAccountInviteCodes' // @ts-ignore
-    return this._server.xrpc.method(nsid, cfg)
+    const nsid = 'com.atproto.server.getAccountInviteCodes'; // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg);
   }
 
   getServiceAuth<AV extends AuthVerifier>(
@@ -748,8 +748,8 @@ export class ComAtprotoServerNS {
       ComAtprotoServerGetServiceAuth.HandlerReqCtx<ExtractAuth<AV>>
     >,
   ) {
-    const nsid = 'com.atproto.server.getServiceAuth' // @ts-ignore
-    return this._server.xrpc.method(nsid, cfg)
+    const nsid = 'com.atproto.server.getServiceAuth'; // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg);
   }
 
   getSession<AV extends AuthVerifier>(
@@ -759,8 +759,8 @@ export class ComAtprotoServerNS {
       ComAtprotoServerGetSession.HandlerReqCtx<ExtractAuth<AV>>
     >,
   ) {
-    const nsid = 'com.atproto.server.getSession' // @ts-ignore
-    return this._server.xrpc.method(nsid, cfg)
+    const nsid = 'com.atproto.server.getSession'; // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg);
   }
 
   listAppPasswords<AV extends AuthVerifier>(
@@ -770,8 +770,8 @@ export class ComAtprotoServerNS {
       ComAtprotoServerListAppPasswords.HandlerReqCtx<ExtractAuth<AV>>
     >,
   ) {
-    const nsid = 'com.atproto.server.listAppPasswords' // @ts-ignore
-    return this._server.xrpc.method(nsid, cfg)
+    const nsid = 'com.atproto.server.listAppPasswords'; // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg);
   }
 
   refreshSession<AV extends AuthVerifier>(
@@ -781,8 +781,8 @@ export class ComAtprotoServerNS {
       ComAtprotoServerRefreshSession.HandlerReqCtx<ExtractAuth<AV>>
     >,
   ) {
-    const nsid = 'com.atproto.server.refreshSession' // @ts-ignore
-    return this._server.xrpc.method(nsid, cfg)
+    const nsid = 'com.atproto.server.refreshSession'; // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg);
   }
 
   requestAccountDelete<AV extends AuthVerifier>(
@@ -792,8 +792,8 @@ export class ComAtprotoServerNS {
       ComAtprotoServerRequestAccountDelete.HandlerReqCtx<ExtractAuth<AV>>
     >,
   ) {
-    const nsid = 'com.atproto.server.requestAccountDelete' // @ts-ignore
-    return this._server.xrpc.method(nsid, cfg)
+    const nsid = 'com.atproto.server.requestAccountDelete'; // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg);
   }
 
   requestEmailConfirmation<AV extends AuthVerifier>(
@@ -803,8 +803,8 @@ export class ComAtprotoServerNS {
       ComAtprotoServerRequestEmailConfirmation.HandlerReqCtx<ExtractAuth<AV>>
     >,
   ) {
-    const nsid = 'com.atproto.server.requestEmailConfirmation' // @ts-ignore
-    return this._server.xrpc.method(nsid, cfg)
+    const nsid = 'com.atproto.server.requestEmailConfirmation'; // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg);
   }
 
   requestEmailUpdate<AV extends AuthVerifier>(
@@ -814,8 +814,8 @@ export class ComAtprotoServerNS {
       ComAtprotoServerRequestEmailUpdate.HandlerReqCtx<ExtractAuth<AV>>
     >,
   ) {
-    const nsid = 'com.atproto.server.requestEmailUpdate' // @ts-ignore
-    return this._server.xrpc.method(nsid, cfg)
+    const nsid = 'com.atproto.server.requestEmailUpdate'; // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg);
   }
 
   requestPasswordReset<AV extends AuthVerifier>(
@@ -825,8 +825,8 @@ export class ComAtprotoServerNS {
       ComAtprotoServerRequestPasswordReset.HandlerReqCtx<ExtractAuth<AV>>
     >,
   ) {
-    const nsid = 'com.atproto.server.requestPasswordReset' // @ts-ignore
-    return this._server.xrpc.method(nsid, cfg)
+    const nsid = 'com.atproto.server.requestPasswordReset'; // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg);
   }
 
   reserveSigningKey<AV extends AuthVerifier>(
@@ -836,8 +836,8 @@ export class ComAtprotoServerNS {
       ComAtprotoServerReserveSigningKey.HandlerReqCtx<ExtractAuth<AV>>
     >,
   ) {
-    const nsid = 'com.atproto.server.reserveSigningKey' // @ts-ignore
-    return this._server.xrpc.method(nsid, cfg)
+    const nsid = 'com.atproto.server.reserveSigningKey'; // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg);
   }
 
   resetPassword<AV extends AuthVerifier>(
@@ -847,8 +847,8 @@ export class ComAtprotoServerNS {
       ComAtprotoServerResetPassword.HandlerReqCtx<ExtractAuth<AV>>
     >,
   ) {
-    const nsid = 'com.atproto.server.resetPassword' // @ts-ignore
-    return this._server.xrpc.method(nsid, cfg)
+    const nsid = 'com.atproto.server.resetPassword'; // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg);
   }
 
   revokeAppPassword<AV extends AuthVerifier>(
@@ -858,8 +858,8 @@ export class ComAtprotoServerNS {
       ComAtprotoServerRevokeAppPassword.HandlerReqCtx<ExtractAuth<AV>>
     >,
   ) {
-    const nsid = 'com.atproto.server.revokeAppPassword' // @ts-ignore
-    return this._server.xrpc.method(nsid, cfg)
+    const nsid = 'com.atproto.server.revokeAppPassword'; // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg);
   }
 
   updateEmail<AV extends AuthVerifier>(
@@ -869,16 +869,16 @@ export class ComAtprotoServerNS {
       ComAtprotoServerUpdateEmail.HandlerReqCtx<ExtractAuth<AV>>
     >,
   ) {
-    const nsid = 'com.atproto.server.updateEmail' // @ts-ignore
-    return this._server.xrpc.method(nsid, cfg)
+    const nsid = 'com.atproto.server.updateEmail'; // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg);
   }
 }
 
 export class ComAtprotoSyncNS {
-  _server: Server
+  _server: Server;
 
   constructor(server: Server) {
-    this._server = server
+    this._server = server;
   }
 
   getBlob<AV extends AuthVerifier>(
@@ -888,8 +888,8 @@ export class ComAtprotoSyncNS {
       ComAtprotoSyncGetBlob.HandlerReqCtx<ExtractAuth<AV>>
     >,
   ) {
-    const nsid = 'com.atproto.sync.getBlob' // @ts-ignore
-    return this._server.xrpc.method(nsid, cfg)
+    const nsid = 'com.atproto.sync.getBlob'; // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg);
   }
 
   getBlocks<AV extends AuthVerifier>(
@@ -899,8 +899,8 @@ export class ComAtprotoSyncNS {
       ComAtprotoSyncGetBlocks.HandlerReqCtx<ExtractAuth<AV>>
     >,
   ) {
-    const nsid = 'com.atproto.sync.getBlocks' // @ts-ignore
-    return this._server.xrpc.method(nsid, cfg)
+    const nsid = 'com.atproto.sync.getBlocks'; // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg);
   }
 
   getCheckout<AV extends AuthVerifier>(
@@ -910,8 +910,8 @@ export class ComAtprotoSyncNS {
       ComAtprotoSyncGetCheckout.HandlerReqCtx<ExtractAuth<AV>>
     >,
   ) {
-    const nsid = 'com.atproto.sync.getCheckout' // @ts-ignore
-    return this._server.xrpc.method(nsid, cfg)
+    const nsid = 'com.atproto.sync.getCheckout'; // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg);
   }
 
   getHead<AV extends AuthVerifier>(
@@ -921,8 +921,8 @@ export class ComAtprotoSyncNS {
       ComAtprotoSyncGetHead.HandlerReqCtx<ExtractAuth<AV>>
     >,
   ) {
-    const nsid = 'com.atproto.sync.getHead' // @ts-ignore
-    return this._server.xrpc.method(nsid, cfg)
+    const nsid = 'com.atproto.sync.getHead'; // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg);
   }
 
   getLatestCommit<AV extends AuthVerifier>(
@@ -932,8 +932,8 @@ export class ComAtprotoSyncNS {
       ComAtprotoSyncGetLatestCommit.HandlerReqCtx<ExtractAuth<AV>>
     >,
   ) {
-    const nsid = 'com.atproto.sync.getLatestCommit' // @ts-ignore
-    return this._server.xrpc.method(nsid, cfg)
+    const nsid = 'com.atproto.sync.getLatestCommit'; // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg);
   }
 
   getRecord<AV extends AuthVerifier>(
@@ -943,8 +943,8 @@ export class ComAtprotoSyncNS {
       ComAtprotoSyncGetRecord.HandlerReqCtx<ExtractAuth<AV>>
     >,
   ) {
-    const nsid = 'com.atproto.sync.getRecord' // @ts-ignore
-    return this._server.xrpc.method(nsid, cfg)
+    const nsid = 'com.atproto.sync.getRecord'; // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg);
   }
 
   getRepo<AV extends AuthVerifier>(
@@ -954,8 +954,8 @@ export class ComAtprotoSyncNS {
       ComAtprotoSyncGetRepo.HandlerReqCtx<ExtractAuth<AV>>
     >,
   ) {
-    const nsid = 'com.atproto.sync.getRepo' // @ts-ignore
-    return this._server.xrpc.method(nsid, cfg)
+    const nsid = 'com.atproto.sync.getRepo'; // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg);
   }
 
   listBlobs<AV extends AuthVerifier>(
@@ -965,8 +965,8 @@ export class ComAtprotoSyncNS {
       ComAtprotoSyncListBlobs.HandlerReqCtx<ExtractAuth<AV>>
     >,
   ) {
-    const nsid = 'com.atproto.sync.listBlobs' // @ts-ignore
-    return this._server.xrpc.method(nsid, cfg)
+    const nsid = 'com.atproto.sync.listBlobs'; // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg);
   }
 
   listRepos<AV extends AuthVerifier>(
@@ -976,8 +976,8 @@ export class ComAtprotoSyncNS {
       ComAtprotoSyncListRepos.HandlerReqCtx<ExtractAuth<AV>>
     >,
   ) {
-    const nsid = 'com.atproto.sync.listRepos' // @ts-ignore
-    return this._server.xrpc.method(nsid, cfg)
+    const nsid = 'com.atproto.sync.listRepos'; // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg);
   }
 
   notifyOfUpdate<AV extends AuthVerifier>(
@@ -987,8 +987,8 @@ export class ComAtprotoSyncNS {
       ComAtprotoSyncNotifyOfUpdate.HandlerReqCtx<ExtractAuth<AV>>
     >,
   ) {
-    const nsid = 'com.atproto.sync.notifyOfUpdate' // @ts-ignore
-    return this._server.xrpc.method(nsid, cfg)
+    const nsid = 'com.atproto.sync.notifyOfUpdate'; // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg);
   }
 
   requestCrawl<AV extends AuthVerifier>(
@@ -998,8 +998,8 @@ export class ComAtprotoSyncNS {
       ComAtprotoSyncRequestCrawl.HandlerReqCtx<ExtractAuth<AV>>
     >,
   ) {
-    const nsid = 'com.atproto.sync.requestCrawl' // @ts-ignore
-    return this._server.xrpc.method(nsid, cfg)
+    const nsid = 'com.atproto.sync.requestCrawl'; // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg);
   }
 
   subscribeRepos<AV extends StreamAuthVerifier>(
@@ -1009,16 +1009,16 @@ export class ComAtprotoSyncNS {
       ComAtprotoSyncSubscribeRepos.HandlerReqCtx<ExtractAuth<AV>>
     >,
   ) {
-    const nsid = 'com.atproto.sync.subscribeRepos' // @ts-ignore
-    return this._server.xrpc.streamMethod(nsid, cfg)
+    const nsid = 'com.atproto.sync.subscribeRepos'; // @ts-ignore
+    return this._server.xrpc.streamMethod(nsid, cfg);
   }
 }
 
 export class ComAtprotoTempNS {
-  _server: Server
+  _server: Server;
 
   constructor(server: Server) {
-    this._server = server
+    this._server = server;
   }
 
   checkSignupQueue<AV extends AuthVerifier>(
@@ -1028,8 +1028,8 @@ export class ComAtprotoTempNS {
       ComAtprotoTempCheckSignupQueue.HandlerReqCtx<ExtractAuth<AV>>
     >,
   ) {
-    const nsid = 'com.atproto.temp.checkSignupQueue' // @ts-ignore
-    return this._server.xrpc.method(nsid, cfg)
+    const nsid = 'com.atproto.temp.checkSignupQueue'; // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg);
   }
 
   fetchLabels<AV extends AuthVerifier>(
@@ -1039,8 +1039,8 @@ export class ComAtprotoTempNS {
       ComAtprotoTempFetchLabels.HandlerReqCtx<ExtractAuth<AV>>
     >,
   ) {
-    const nsid = 'com.atproto.temp.fetchLabels' // @ts-ignore
-    return this._server.xrpc.method(nsid, cfg)
+    const nsid = 'com.atproto.temp.fetchLabels'; // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg);
   }
 
   requestPhoneVerification<AV extends AuthVerifier>(
@@ -1050,33 +1050,33 @@ export class ComAtprotoTempNS {
       ComAtprotoTempRequestPhoneVerification.HandlerReqCtx<ExtractAuth<AV>>
     >,
   ) {
-    const nsid = 'com.atproto.temp.requestPhoneVerification' // @ts-ignore
-    return this._server.xrpc.method(nsid, cfg)
+    const nsid = 'com.atproto.temp.requestPhoneVerification'; // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg);
   }
 }
 
 type SharedRateLimitOpts<T> = {
-  name: string
-  calcKey?: (ctx: T) => string
-  calcPoints?: (ctx: T) => number
-}
+  name: string;
+  calcKey?: (ctx: T) => string;
+  calcPoints?: (ctx: T) => number;
+};
 type RouteRateLimitOpts<T> = {
-  durationMs: number
-  points: number
-  calcKey?: (ctx: T) => string
-  calcPoints?: (ctx: T) => number
-}
-type HandlerOpts = { blobLimit?: number }
-type HandlerRateLimitOpts<T> = SharedRateLimitOpts<T> | RouteRateLimitOpts<T>
+  durationMs: number;
+  points: number;
+  calcKey?: (ctx: T) => string;
+  calcPoints?: (ctx: T) => number;
+};
+type HandlerOpts = { blobLimit?: number };
+type HandlerRateLimitOpts<T> = SharedRateLimitOpts<T> | RouteRateLimitOpts<T>;
 type ConfigOf<Auth, Handler, ReqCtx> =
   | Handler
   | {
-    auth?: Auth
-    opts?: HandlerOpts
-    rateLimit?: HandlerRateLimitOpts<ReqCtx> | HandlerRateLimitOpts<ReqCtx>[]
-    handler: Handler
-  }
+      auth?: Auth;
+      opts?: HandlerOpts;
+      rateLimit?: HandlerRateLimitOpts<ReqCtx> | HandlerRateLimitOpts<ReqCtx>[];
+      handler: Handler;
+    };
 type ExtractAuth<AV extends AuthVerifier | StreamAuthVerifier> = Extract<
   Awaited<ReturnType<AV>>,
   { credentials: unknown }
->
+>;

@@ -1,15 +1,15 @@
-import { InvalidRequestError } from '@atproto/xrpc-server'
-import { MINUTE, lessThanAgoMs } from '@atproto/common'
-import { getRandomToken } from '../../api/com/atproto/server/util'
-import { AccountDb, EmailTokenPurpose } from '../db'
+import { InvalidRequestError } from '@atproto/xrpc-server';
+import { MINUTE, lessThanAgoMs } from '@atproto/common';
+import { getRandomToken } from '../../api/com/atproto/server/util';
+import { AccountDb, EmailTokenPurpose } from '../db';
 
 export const createEmailToken = async (
   db: AccountDb,
   did: string,
   purpose: EmailTokenPurpose,
 ): Promise<string> => {
-  const token = getRandomToken().toUpperCase()
-  const now = new Date().toISOString()
+  const token = getRandomToken().toUpperCase();
+  const now = new Date().toISOString();
   await db.executeWithRetry(
     db.db
       .insertInto('email_token')
@@ -17,9 +17,9 @@ export const createEmailToken = async (
       .onConflict((oc) =>
         oc.columns(['purpose', 'did']).doUpdateSet({ token, requestedAt: now }),
       ),
-  )
-  return token
-}
+  );
+  return token;
+};
 
 export const deleteEmailToken = async (
   db: AccountDb,
@@ -31,14 +31,14 @@ export const deleteEmailToken = async (
       .deleteFrom('email_token')
       .where('did', '=', did)
       .where('purpose', '=', purpose),
-  )
-}
+  );
+};
 
 export const deleteAllEmailTokens = async (db: AccountDb, did: string) => {
   await db.executeWithRetry(
     db.db.deleteFrom('email_token').where('did', '=', did),
-  )
-}
+  );
+};
 
 export const assertValidToken = async (
   db: AccountDb,
@@ -53,15 +53,15 @@ export const assertValidToken = async (
     .where('purpose', '=', purpose)
     .where('did', '=', did)
     .where('token', '=', token.toUpperCase())
-    .executeTakeFirst()
+    .executeTakeFirst();
   if (!res) {
-    throw new InvalidRequestError('Token is invalid', 'InvalidToken')
+    throw new InvalidRequestError('Token is invalid', 'InvalidToken');
   }
-  const expired = !lessThanAgoMs(new Date(res.requestedAt), expirationLen)
+  const expired = !lessThanAgoMs(new Date(res.requestedAt), expirationLen);
   if (expired) {
-    throw new InvalidRequestError('Token is expired', 'ExpiredToken')
+    throw new InvalidRequestError('Token is expired', 'ExpiredToken');
   }
-}
+};
 
 export const assertValidTokenAndFindDid = async (
   db: AccountDb,
@@ -74,13 +74,13 @@ export const assertValidTokenAndFindDid = async (
     .selectAll()
     .where('purpose', '=', purpose)
     .where('token', '=', token.toUpperCase())
-    .executeTakeFirst()
+    .executeTakeFirst();
   if (!res) {
-    throw new InvalidRequestError('Token is invalid', 'InvalidToken')
+    throw new InvalidRequestError('Token is invalid', 'InvalidToken');
   }
-  const expired = !lessThanAgoMs(new Date(res.requestedAt), expirationLen)
+  const expired = !lessThanAgoMs(new Date(res.requestedAt), expirationLen);
   if (expired) {
-    throw new InvalidRequestError('Token is expired', 'ExpiredToken')
+    throw new InvalidRequestError('Token is expired', 'ExpiredToken');
   }
-  return res.did
-}
+  return res.did;
+};

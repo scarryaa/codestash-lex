@@ -1,4 +1,4 @@
-import { ModerationDecision } from '../decision'
+import { ModerationDecision } from '../decision';
 import {
   AppBskyFeedPost,
   AppBskyEmbedImages,
@@ -6,50 +6,50 @@ import {
   AppBskyEmbedRecordWithMedia,
   AppBskyEmbedExternal,
   AppBskyActorDefs,
-} from '../../client'
-import { ModerationSubjectPost, ModerationOpts } from '../types'
-import { hasMutedWord } from '../mutewords'
-import { decideAccount } from './account'
-import { decideProfile } from './profile'
+} from '../../client';
+import { ModerationSubjectPost, ModerationOpts } from '../types';
+import { hasMutedWord } from '../mutewords';
+import { decideAccount } from './account';
+import { decideProfile } from './profile';
 
 export function decidePost(
   subject: ModerationSubjectPost,
   opts: ModerationOpts,
 ): ModerationDecision {
-  const acc = new ModerationDecision()
+  const acc = new ModerationDecision();
 
-  acc.setDid(subject.author.did)
-  acc.setIsMe(subject.author.did === opts.userDid)
+  acc.setDid(subject.author.did);
+  acc.setIsMe(subject.author.did === opts.userDid);
   if (subject.labels?.length) {
     for (const label of subject.labels) {
-      acc.addLabel('content', label, opts)
+      acc.addLabel('content', label, opts);
     }
   }
-  acc.addHidden(checkHiddenPost(subject, opts.prefs.hiddenPosts))
+  acc.addHidden(checkHiddenPost(subject, opts.prefs.hiddenPosts));
   if (!acc.isMe) {
-    acc.addMutedWord(checkMutedWords(subject, opts.prefs.mutedWords))
+    acc.addMutedWord(checkMutedWords(subject, opts.prefs.mutedWords));
   }
 
-  let embedAcc
+  let embedAcc;
   if (subject.embed) {
     if (AppBskyEmbedRecord.isViewRecord(subject.embed.record)) {
       // quote post
-      embedAcc = decideQuotedPost(subject.embed.record, opts)
+      embedAcc = decideQuotedPost(subject.embed.record, opts);
     } else if (
       AppBskyEmbedRecordWithMedia.isView(subject.embed) &&
       AppBskyEmbedRecord.isViewRecord(subject.embed.record.record)
     ) {
       // quoted post with media
-      embedAcc = decideQuotedPost(subject.embed.record.record, opts)
+      embedAcc = decideQuotedPost(subject.embed.record.record, opts);
     } else if (AppBskyEmbedRecord.isViewBlocked(subject.embed.record)) {
       // blocked quote post
-      embedAcc = decideBlockedQuotedPost(subject.embed.record, opts)
+      embedAcc = decideBlockedQuotedPost(subject.embed.record, opts);
     } else if (
       AppBskyEmbedRecordWithMedia.isView(subject.embed) &&
       AppBskyEmbedRecord.isViewBlocked(subject.embed.record.record)
     ) {
       // blocked quoted post with media
-      embedAcc = decideBlockedQuotedPost(subject.embed.record.record, opts)
+      embedAcc = decideBlockedQuotedPost(subject.embed.record.record, opts);
     }
   }
 
@@ -58,51 +58,51 @@ export function decidePost(
     embedAcc?.downgrade(),
     decideAccount(subject.author, opts),
     decideProfile(subject.author, opts),
-  )
+  );
 }
 
 function decideQuotedPost(
   subject: AppBskyEmbedRecord.ViewRecord,
   opts: ModerationOpts,
 ) {
-  const acc = new ModerationDecision()
-  acc.setDid(subject.author.did)
-  acc.setIsMe(subject.author.did === opts.userDid)
+  const acc = new ModerationDecision();
+  acc.setDid(subject.author.did);
+  acc.setIsMe(subject.author.did === opts.userDid);
   if (subject.labels?.length) {
     for (const label of subject.labels) {
-      acc.addLabel('content', label, opts)
+      acc.addLabel('content', label, opts);
     }
   }
   return ModerationDecision.merge(
     acc,
     decideAccount(subject.author, opts),
     decideProfile(subject.author, opts),
-  )
+  );
 }
 
 function decideBlockedQuotedPost(
   subject: AppBskyEmbedRecord.ViewBlocked,
   opts: ModerationOpts,
 ) {
-  const acc = new ModerationDecision()
-  acc.setDid(subject.author.did)
-  acc.setIsMe(subject.author.did === opts.userDid)
+  const acc = new ModerationDecision();
+  acc.setDid(subject.author.did);
+  acc.setIsMe(subject.author.did === opts.userDid);
   if (subject.author.viewer?.muted) {
     if (subject.author.viewer?.mutedByList) {
-      acc.addMutedByList(subject.author.viewer?.mutedByList)
+      acc.addMutedByList(subject.author.viewer?.mutedByList);
     } else {
-      acc.addMuted(subject.author.viewer?.muted)
+      acc.addMuted(subject.author.viewer?.muted);
     }
   }
   if (subject.author.viewer?.blocking) {
     if (subject.author.viewer?.blockingByList) {
-      acc.addBlockingByList(subject.author.viewer?.blockingByList)
+      acc.addBlockingByList(subject.author.viewer?.blockingByList);
     } else {
-      acc.addBlocking(subject.author.viewer?.blocking)
+      acc.addBlocking(subject.author.viewer?.blocking);
     }
   }
-  acc.addBlockedBy(subject.author.viewer?.blockedBy)
-  return acc
+  acc.addBlockedBy(subject.author.viewer?.blockedBy);
+  return acc;
 }
 
 function checkHiddenPost(
@@ -110,27 +110,27 @@ function checkHiddenPost(
   hiddenPosts: string[] | undefined,
 ) {
   if (!hiddenPosts?.length) {
-    return false
+    return false;
   }
   if (hiddenPosts.includes(subject.uri)) {
-    return true
+    return true;
   }
   if (subject.embed) {
     if (
       AppBskyEmbedRecord.isViewRecord(subject.embed.record) &&
       hiddenPosts.includes(subject.embed.record.uri)
     ) {
-      return true
+      return true;
     }
     if (
       AppBskyEmbedRecordWithMedia.isView(subject.embed) &&
       AppBskyEmbedRecord.isViewRecord(subject.embed.record.record) &&
       hiddenPosts.includes(subject.embed.record.record.uri)
     ) {
-      return true
+      return true;
     }
   }
-  return false
+  return false;
 }
 
 function checkMutedWords(
@@ -138,7 +138,7 @@ function checkMutedWords(
   mutedWords: AppBskyActorDefs.MutedWord[] | undefined,
 ) {
   if (!mutedWords?.length) {
-    return false
+    return false;
   }
 
   if (AppBskyFeedPost.isRecord(subject.record)) {
@@ -152,7 +152,7 @@ function checkMutedWords(
         languages: subject.record.langs,
       })
     ) {
-      return true
+      return true;
     }
 
     if (
@@ -168,7 +168,7 @@ function checkMutedWords(
             languages: subject.record.langs,
           })
         ) {
-          return true
+          return true;
         }
       }
     }
@@ -178,7 +178,7 @@ function checkMutedWords(
     // quote post
     if (AppBskyEmbedRecord.isViewRecord(subject.embed.record)) {
       if (AppBskyFeedPost.isRecord(subject.embed.record.value)) {
-        const embeddedPost = subject.embed.record.value
+        const embeddedPost = subject.embed.record.value;
 
         // quoted post text
         if (
@@ -190,7 +190,7 @@ function checkMutedWords(
             languages: embeddedPost.langs,
           })
         ) {
-          return true
+          return true;
         }
 
         // quoted post's images
@@ -203,14 +203,14 @@ function checkMutedWords(
                 languages: embeddedPost.langs,
               })
             ) {
-              return true
+              return true;
             }
           }
         }
 
         // quoted post's link card
         if (AppBskyEmbedExternal.isMain(embeddedPost.embed)) {
-          const { external } = embeddedPost.embed
+          const { external } = embeddedPost.embed;
           if (
             hasMutedWord({
               mutedWords,
@@ -218,14 +218,14 @@ function checkMutedWords(
               languages: [],
             })
           ) {
-            return true
+            return true;
           }
         }
 
         if (AppBskyEmbedRecordWithMedia.isMain(embeddedPost.embed)) {
           // quoted post's link card when it did a quote + media
           if (AppBskyEmbedExternal.isMain(embeddedPost.embed.media)) {
-            const { external } = embeddedPost.embed.media
+            const { external } = embeddedPost.embed.media;
             if (
               hasMutedWord({
                 mutedWords,
@@ -233,7 +233,7 @@ function checkMutedWords(
                 languages: [],
               })
             ) {
-              return true
+              return true;
             }
           }
 
@@ -249,7 +249,7 @@ function checkMutedWords(
                     : [],
                 })
               ) {
-                return true
+                return true;
               }
             }
           }
@@ -258,7 +258,7 @@ function checkMutedWords(
     }
     // link card
     else if (AppBskyEmbedExternal.isView(subject.embed)) {
-      const { external } = subject.embed
+      const { external } = subject.embed;
       if (
         hasMutedWord({
           mutedWords,
@@ -266,7 +266,7 @@ function checkMutedWords(
           languages: [],
         })
       ) {
-        return true
+        return true;
       }
     }
     // quote post with media
@@ -276,7 +276,7 @@ function checkMutedWords(
     ) {
       // quoted post text
       if (AppBskyFeedPost.isRecord(subject.embed.record.record.value)) {
-        const post = subject.embed.record.record.value
+        const post = subject.embed.record.record.value;
         if (
           hasMutedWord({
             mutedWords,
@@ -286,7 +286,7 @@ function checkMutedWords(
             languages: post.langs,
           })
         ) {
-          return true
+          return true;
         }
       }
 
@@ -302,11 +302,11 @@ function checkMutedWords(
                 : [],
             })
           ) {
-            return true
+            return true;
           }
         }
       }
     }
   }
-  return false
+  return false;
 }

@@ -1,10 +1,10 @@
 import { Database } from '../db';
-import { CID } from 'multiformats/cid'
+import { CID } from 'multiformats/cid';
 import DatabaseSchema from '../db/database-schema';
 import { BackgroundQueue } from '../background';
 import { lexicons } from '../../../lexicon/lexicons';
 import { jsonStringToLex, stringifyLex } from '@atproto/lexicon';
-import { AtUri } from '@atproto/syntax'
+import { AtUri } from '@atproto/syntax';
 
 type RecordProcessorParams<T, S> = {
   lexId: string;
@@ -14,13 +14,13 @@ type RecordProcessorParams<T, S> = {
     cid: CID,
     obj: T,
     timestamp: string,
-  ) => Promise<S | null>
+  ) => Promise<S | null>;
   findDuplicate: (
     db: DatabaseSchema,
     uri: AtUri,
     obj: T,
-  ) => Promise<AtUri | null>
-  deleteFn: (db: DatabaseSchema, uri: AtUri) => Promise<S | null>
+  ) => Promise<AtUri | null>;
+  deleteFn: (db: DatabaseSchema, uri: AtUri) => Promise<S | null>;
   updateAggregates?: (db: DatabaseSchema, obj: S) => Promise<void>;
 };
 
@@ -46,7 +46,7 @@ export class RecordProcessor<T, S> {
   }
 
   assertValidRecord(obj: unknown): asserts obj is T {
-    lexicons.assertValidRecord(this.params.lexId, obj)
+    lexicons.assertValidRecord(this.params.lexId, obj);
   }
 
   async insertRecord(

@@ -3,11 +3,11 @@ import {
   Project,
   SourceFile,
   VariableDeclarationKind,
-} from 'ts-morph'
-import { Lexicons, LexiconDoc } from '@atproto/lexicon'
-import { NSID } from '@atproto/syntax'
-import { gen, lexiconsTs, utilTs } from './common'
-import { GeneratedAPI } from '../types'
+} from 'ts-morph';
+import { Lexicons, LexiconDoc } from '@atproto/lexicon';
+import { NSID } from '@atproto/syntax';
+import { gen, lexiconsTs, utilTs } from './common';
+import { GeneratedAPI } from '../types';
 import {
   genImports,
   genUserType,
@@ -16,7 +16,7 @@ import {
   genXrpcInput,
   genXrpcOutput,
   genObjHelpers,
-} from './lex-gen'
+} from './lex-gen';
 import {
   lexiconsToDefTree,
   DefTreeNode,
@@ -24,7 +24,7 @@ import {
   toCamelCase,
   toTitleCase,
   toScreamingSnakeCase,
-} from './util'
+} from './util';
 
 export async function genServerApi(
   lexiconDocs: LexiconDoc[],
@@ -32,18 +32,18 @@ export async function genServerApi(
   const project = new Project({
     useInMemoryFileSystem: true,
     manipulationSettings: { indentationText: IndentationText.TwoSpaces },
-  })
-  const api: GeneratedAPI = { files: [] }
-  const lexicons = new Lexicons(lexiconDocs)
-  const nsidTree = lexiconsToDefTree(lexiconDocs)
-  const nsidTokens = schemasToNsidTokens(lexiconDocs)
+  });
+  const api: GeneratedAPI = { files: [] };
+  const lexicons = new Lexicons(lexiconDocs);
+  const nsidTree = lexiconsToDefTree(lexiconDocs);
+  const nsidTokens = schemasToNsidTokens(lexiconDocs);
   for (const lexiconDoc of lexiconDocs) {
-    api.files.push(await lexiconTs(project, lexicons, lexiconDoc))
+    api.files.push(await lexiconTs(project, lexicons, lexiconDoc));
   }
-  api.files.push(await utilTs(project))
-  api.files.push(await lexiconsTs(project, lexiconDocs))
-  api.files.push(await indexTs(project, lexiconDocs, nsidTree, nsidTokens))
-  return api
+  api.files.push(await utilTs(project));
+  api.files.push(await lexiconsTs(project, lexiconDocs));
+  api.files.push(await indexTs(project, lexiconDocs, nsidTree, nsidTokens));
+  return api;
 }
 
 const indexTs = (
@@ -72,7 +72,7 @@ const indexTs = (
         { name: 'AuthVerifier' },
         { name: 'StreamAuthVerifier' },
       ],
-    })
+    });
     //= import {schemas} from './lexicons'
     file
       .addImportDeclaration({
@@ -80,7 +80,7 @@ const indexTs = (
       })
       .addNamedImport({
         name: 'schemas',
-      })
+      });
 
     // generate type imports
     for (const lexiconDoc of lexiconDocs) {
@@ -89,13 +89,13 @@ const indexTs = (
         lexiconDoc.defs.main?.type !== 'subscription' &&
         lexiconDoc.defs.main?.type !== 'procedure'
       ) {
-        continue
+        continue;
       }
       file
         .addImportDeclaration({
           moduleSpecifier: `./types/${lexiconDoc.id.split('.').join('/')}`,
         })
-        .setNamespaceImport(toTitleCase(lexiconDoc.id))
+        .setNamespaceImport(toTitleCase(lexiconDoc.id));
     }
 
     // generate token enums
@@ -119,7 +119,7 @@ const indexTs = (
             ].join('\n'),
           },
         ],
-      })
+      });
     }
 
     //= export function createServer(options?: XrpcOptions) { ... }
@@ -130,19 +130,19 @@ const indexTs = (
         { name: 'options', type: 'XrpcOptions', hasQuestionToken: true },
       ],
       isExported: true,
-    })
-    createServerFn.setBodyText(`return new Server(options)`)
+    });
+    createServerFn.setBodyText(`return new Server(options)`);
 
     //= export class Server {...}
     const serverCls = file.addClass({
       name: 'Server',
       isExported: true,
-    })
+    });
     //= xrpc: XrpcServer = createXrpcServer(methodSchemas)
     serverCls.addProperty({
       name: 'xrpc',
       type: 'XrpcServer',
-    })
+    });
 
     // generate classes for the schemas
     for (const ns of nsidTree) {
@@ -150,10 +150,10 @@ const indexTs = (
       serverCls.addProperty({
         name: ns.propName,
         type: ns.className,
-      })
+      });
 
       // class...
-      genNamespaceCls(file, ns)
+      genNamespaceCls(file, ns);
     }
 
     //= constructor (options?: XrpcOptions) {
@@ -173,7 +173,7 @@ const indexTs = (
             (ns) => `this.${ns.propName} = new ${ns.className}(this)`,
           ),
         ].join('\n'),
-      )
+      );
 
     file.addTypeAlias({
       name: 'SharedRateLimitOpts',
@@ -183,7 +183,7 @@ const indexTs = (
         calcKey?: (ctx: T) => string
         calcPoints?: (ctx: T) => number
       }`,
-    })
+    });
 
     file.addTypeAlias({
       name: 'RouteRateLimitOpts',
@@ -194,18 +194,18 @@ const indexTs = (
         calcKey?: (ctx: T) => string
         calcPoints?: (ctx: T) => number
       }`,
-    })
+    });
 
     file.addTypeAlias({
       name: 'HandlerOpts',
       type: `{ blobLimit?: number }`,
-    })
+    });
 
     file.addTypeAlias({
       name: 'HandlerRateLimitOpts',
       typeParameters: [{ name: 'T' }],
       type: `SharedRateLimitOpts<T> | RouteRateLimitOpts<T>`,
-    })
+    });
 
     file.addTypeAlias({
       name: 'ConfigOf',
@@ -222,7 +222,7 @@ const indexTs = (
           rateLimit?: HandlerRateLimitOpts<ReqCtx> | HandlerRateLimitOpts<ReqCtx>[]
           handler: Handler
         }`,
-    })
+    });
 
     file.addTypeAlias({
       name: 'ExtractAuth',
@@ -233,41 +233,41 @@ const indexTs = (
         Awaited<ReturnType<AV>>,
         { credentials: unknown }
       >`,
-    })
-  })
+    });
+  });
 
 function genNamespaceCls(file: SourceFile, ns: DefTreeNode) {
   //= export class {ns}NS {...}
   const cls = file.addClass({
     name: ns.className,
     isExported: true,
-  })
+  });
   //= _server: Server
   cls.addProperty({
     name: '_server',
     type: 'Server',
-  })
+  });
 
   for (const child of ns.children) {
     //= child: ChildNS
     cls.addProperty({
       name: child.propName,
       type: child.className,
-    })
+    });
 
     // recurse
-    genNamespaceCls(file, child)
+    genNamespaceCls(file, child);
   }
 
   //= constructor(server: Server) {
   //=  this._server = server
   //=  {child namespace declarations}
   //= }
-  const cons = cls.addConstructor()
+  const cons = cls.addConstructor();
   cons.addParameter({
     name: 'server',
     type: 'Server',
-  })
+  });
   cons.setBodyText(
     [
       `this._server = server`,
@@ -275,7 +275,7 @@ function genNamespaceCls(file: SourceFile, ns: DefTreeNode) {
         (ns) => `this.${ns.propName} = new ${ns.className}(server)`,
       ),
     ].join('\n'),
-  )
+  );
 
   // methods
   for (const userType of ns.userTypes) {
@@ -284,11 +284,11 @@ function genNamespaceCls(file: SourceFile, ns: DefTreeNode) {
       userType.def.type !== 'subscription' &&
       userType.def.type !== 'procedure'
     ) {
-      continue
+      continue;
     }
-    const moduleName = toTitleCase(userType.nsid)
-    const name = toCamelCase(NSID.parse(userType.nsid).name || '')
-    const isSubscription = userType.def.type === 'subscription'
+    const moduleName = toTitleCase(userType.nsid);
+    const name = toCamelCase(NSID.parse(userType.nsid).name || '');
+    const isSubscription = userType.def.type === 'subscription';
     const method = cls.addMethod({
       name,
       typeParameters: [
@@ -297,12 +297,12 @@ function genNamespaceCls(file: SourceFile, ns: DefTreeNode) {
           constraint: isSubscription ? 'StreamAuthVerifier' : 'AuthVerifier',
         },
       ],
-    })
+    });
     method.addParameter({
       name: 'cfg',
       type: `ConfigOf<AV, ${moduleName}.Handler<ExtractAuth<AV>>, ${moduleName}.HandlerReqCtx<ExtractAuth<AV>>>`,
-    })
-    const methodType = isSubscription ? 'streamMethod' : 'method'
+    });
+    const methodType = isSubscription ? 'streamMethod' : 'method';
     method.setBodyText(
       [
         // Placing schema on separate line, since the following one was being formatted
@@ -310,7 +310,7 @@ function genNamespaceCls(file: SourceFile, ns: DefTreeNode) {
         `const nsid = '${userType.nsid}' // @ts-ignore`,
         `return this._server.xrpc.${methodType}(nsid, cfg)`,
       ].join('\n'),
-    )
+    );
   }
 }
 
@@ -319,27 +319,27 @@ const lexiconTs = (project, lexicons: Lexicons, lexiconDoc: LexiconDoc) =>
     project,
     `/types/${lexiconDoc.id.split('.').join('/')}.ts`,
     async (file) => {
-      const imports: Set<string> = new Set()
+      const imports: Set<string> = new Set();
 
-      const main = lexiconDoc.defs.main
+      const main = lexiconDoc.defs.main;
       if (main?.type === 'query' || main?.type === 'procedure') {
         //= import express from 'express'
         file.addImportDeclaration({
           moduleSpecifier: 'express',
           defaultImport: 'express',
-        })
+        });
 
         const streamingInput =
           main?.type === 'procedure' &&
           main.input?.encoding &&
-          !main.input.schema
-        const streamingOutput = main.output?.encoding && !main.output.schema
+          !main.input.schema;
+        const streamingOutput = main.output?.encoding && !main.output.schema;
         if (streamingInput || streamingOutput) {
           //= import stream from 'stream'
           file.addImportDeclaration({
             moduleSpecifier: 'stream',
             defaultImport: 'stream',
-          })
+          });
         }
       }
       //= import {ValidationResult, BlobRef} from '@atproto/lexicon'
@@ -347,7 +347,7 @@ const lexiconTs = (project, lexicons: Lexicons, lexiconDoc: LexiconDoc) =>
         .addImportDeclaration({
           moduleSpecifier: '@atproto/lexicon',
         })
-        .addNamedImports([{ name: 'ValidationResult' }, { name: 'BlobRef' }])
+        .addNamedImports([{ name: 'ValidationResult' }, { name: 'BlobRef' }]);
       //= import {lexicons} from '../../lexicons.ts'
       file
         .addImportDeclaration({
@@ -356,7 +356,7 @@ const lexiconTs = (project, lexicons: Lexicons, lexiconDoc: LexiconDoc) =>
             .map((_str) => '..')
             .join('/')}/lexicons`,
         })
-        .addNamedImports([{ name: 'lexicons' }])
+        .addNamedImports([{ name: 'lexicons' }]);
       //= import {isObj, hasProp} from '../../util.ts'
       file
         .addImportDeclaration({
@@ -365,57 +365,57 @@ const lexiconTs = (project, lexicons: Lexicons, lexiconDoc: LexiconDoc) =>
             .map((_str) => '..')
             .join('/')}/util`,
         })
-        .addNamedImports([{ name: 'isObj' }, { name: 'hasProp' }])
+        .addNamedImports([{ name: 'isObj' }, { name: 'hasProp' }]);
       //= import {CID} from 'multiformats/cid'
       file
         .addImportDeclaration({
           moduleSpecifier: 'multiformats/cid',
         })
-        .addNamedImports([{ name: 'CID' }])
+        .addNamedImports([{ name: 'CID' }]);
 
       for (const defId in lexiconDoc.defs) {
-        const def = lexiconDoc.defs[defId]
-        const lexUri = `${lexiconDoc.id}#${defId}`
+        const def = lexiconDoc.defs[defId];
+        const lexUri = `${lexiconDoc.id}#${defId}`;
         if (defId === 'main') {
           if (def.type === 'query' || def.type === 'procedure') {
-            genXrpcParams(file, lexicons, lexUri)
-            genXrpcInput(file, imports, lexicons, lexUri)
-            genXrpcOutput(file, imports, lexicons, lexUri, false)
-            genServerXrpcMethod(file, lexicons, lexUri)
+            genXrpcParams(file, lexicons, lexUri);
+            genXrpcInput(file, imports, lexicons, lexUri);
+            genXrpcOutput(file, imports, lexicons, lexUri, false);
+            genServerXrpcMethod(file, lexicons, lexUri);
           } else if (def.type === 'subscription') {
-            genXrpcParams(file, lexicons, lexUri)
-            genXrpcOutput(file, imports, lexicons, lexUri, false)
-            genServerXrpcStreaming(file, lexicons, lexUri)
+            genXrpcParams(file, lexicons, lexUri);
+            genXrpcOutput(file, imports, lexicons, lexUri, false);
+            genServerXrpcStreaming(file, lexicons, lexUri);
           } else if (def.type === 'record') {
-            genServerRecord(file, imports, lexicons, lexUri)
+            genServerRecord(file, imports, lexicons, lexUri);
           } else {
-            genUserType(file, imports, lexicons, lexUri)
+            genUserType(file, imports, lexicons, lexUri);
           }
         } else {
-          genUserType(file, imports, lexicons, lexUri)
+          genUserType(file, imports, lexicons, lexUri);
         }
       }
-      genImports(file, imports, lexiconDoc.id)
+      genImports(file, imports, lexiconDoc.id);
     },
-  )
+  );
 
 function genServerXrpcMethod(
   file: SourceFile,
   lexicons: Lexicons,
   lexUri: string,
 ) {
-  const def = lexicons.getDefOrThrow(lexUri, ['query', 'procedure'])
+  const def = lexicons.getDefOrThrow(lexUri, ['query', 'procedure']);
 
   file.addImportDeclaration({
     moduleSpecifier: '@atproto/xrpc-server',
     namedImports: [{ name: 'HandlerAuth' }, { name: 'HandlerPipeThrough' }],
-  })
+  });
   //= export interface HandlerInput {...}
   if (def.type === 'procedure' && def.input?.encoding) {
     const handlerInput = file.addInterface({
       name: 'HandlerInput',
       isExported: true,
-    })
+    });
 
     handlerInput.addProperty({
       name: 'encoding',
@@ -423,35 +423,35 @@ function genServerXrpcMethod(
         .split(',')
         .map((v) => `'${v.trim()}'`)
         .join(' | '),
-    })
+    });
     if (def.input.schema) {
       if (def.input.encoding.includes(',')) {
         handlerInput.addProperty({
           name: 'body',
           type: 'InputSchema | stream.Readable',
-        })
+        });
       } else {
-        handlerInput.addProperty({ name: 'body', type: 'InputSchema' })
+        handlerInput.addProperty({ name: 'body', type: 'InputSchema' });
       }
     } else if (def.input.encoding) {
-      handlerInput.addProperty({ name: 'body', type: 'stream.Readable' })
+      handlerInput.addProperty({ name: 'body', type: 'stream.Readable' });
     }
   } else {
     file.addTypeAlias({
       isExported: true,
       name: 'HandlerInput',
       type: 'undefined',
-    })
+    });
   }
 
   // export interface HandlerSuccess {...}
-  let hasHandlerSuccess = false
+  let hasHandlerSuccess = false;
   if (def.output?.schema || def.output?.encoding) {
-    hasHandlerSuccess = true
+    hasHandlerSuccess = true;
     const handlerSuccess = file.addInterface({
       name: 'HandlerSuccess',
       isExported: true,
-    })
+    });
 
     if (def.output.encoding) {
       handlerSuccess.addProperty({
@@ -460,43 +460,43 @@ function genServerXrpcMethod(
           .split(',')
           .map((v) => `'${v.trim()}'`)
           .join(' | '),
-      })
+      });
     }
     if (def.output?.schema) {
       if (def.output.encoding.includes(',')) {
         handlerSuccess.addProperty({
           name: 'body',
           type: 'OutputSchema | Uint8Array | stream.Readable',
-        })
+        });
       } else {
-        handlerSuccess.addProperty({ name: 'body', type: 'OutputSchema' })
+        handlerSuccess.addProperty({ name: 'body', type: 'OutputSchema' });
       }
     } else if (def.output?.encoding) {
       handlerSuccess.addProperty({
         name: 'body',
         type: 'Uint8Array | stream.Readable',
-      })
+      });
     }
     handlerSuccess.addProperty({
       name: 'headers?',
       type: '{ [key: string]: string }',
-    })
+    });
   }
 
   // export interface HandlerError {...}
   const handlerError = file.addInterface({
     name: 'HandlerError',
     isExported: true,
-  })
+  });
   handlerError.addProperties([
     { name: 'status', type: 'number' },
     { name: 'message?', type: 'string' },
-  ])
+  ]);
   if (def.errors?.length) {
     handlerError.addProperty({
       name: 'error?',
       type: def.errors.map((err) => `'${err.name}'`).join(' | '),
-    })
+    });
   }
 
   // export type HandlerOutput = ...
@@ -506,7 +506,7 @@ function genServerXrpcMethod(
     type: `HandlerError | ${
       hasHandlerSuccess ? 'HandlerSuccess | HandlerPipeThrough' : 'void'
     }`,
-  })
+  });
 
   file.addTypeAlias({
     name: 'HandlerReqCtx',
@@ -521,7 +521,7 @@ function genServerXrpcMethod(
         req: express.Request
         res: express.Response
       }`,
-  })
+  });
 
   file.addTypeAlias({
     name: 'Handler',
@@ -530,7 +530,7 @@ function genServerXrpcMethod(
       { name: 'HA', constraint: 'HandlerAuth', default: 'never' },
     ],
     type: `(ctx: HandlerReqCtx<HA>) => Promise<HandlerOutput> | HandlerOutput`,
-  })
+  });
 }
 
 function genServerXrpcStreaming(
@@ -538,31 +538,31 @@ function genServerXrpcStreaming(
   lexicons: Lexicons,
   lexUri: string,
 ) {
-  const def = lexicons.getDefOrThrow(lexUri, ['subscription'])
+  const def = lexicons.getDefOrThrow(lexUri, ['subscription']);
 
   file.addImportDeclaration({
     moduleSpecifier: '@atproto/xrpc-server',
     namedImports: [{ name: 'HandlerAuth' }, { name: 'ErrorFrame' }],
-  })
+  });
 
   file.addImportDeclaration({
     moduleSpecifier: 'http',
     namedImports: [{ name: 'IncomingMessage' }],
-  })
+  });
 
   // export type HandlerError = ...
   file.addTypeAlias({
     name: 'HandlerError',
     isExported: true,
     type: `ErrorFrame<${arrayToUnion(def.errors?.map((e) => e.name))}>`,
-  })
+  });
 
   // export type HandlerOutput = ...
   file.addTypeAlias({
     isExported: true,
     name: 'HandlerOutput',
     type: `HandlerError | ${def.message?.schema ? 'OutputSchema' : 'void'}`,
-  })
+  });
 
   file.addTypeAlias({
     name: 'HandlerReqCtx',
@@ -576,7 +576,7 @@ function genServerXrpcStreaming(
         req: IncomingMessage
         signal: AbortSignal
       }`,
-  })
+  });
 
   file.addTypeAlias({
     name: 'Handler',
@@ -585,7 +585,7 @@ function genServerXrpcStreaming(
       { name: 'HA', constraint: 'HandlerAuth', default: 'never' },
     ],
     type: `(ctx: HandlerReqCtx<HA>) => AsyncIterable<HandlerOutput>`,
-  })
+  });
 }
 
 function genServerRecord(
@@ -594,17 +594,17 @@ function genServerRecord(
   lexicons: Lexicons,
   lexUri: string,
 ) {
-  const def = lexicons.getDefOrThrow(lexUri, ['record'])
+  const def = lexicons.getDefOrThrow(lexUri, ['record']);
 
   //= export interface Record {...}
-  genObject(file, imports, lexUri, def.record, 'Record')
+  genObject(file, imports, lexUri, def.record, 'Record');
   //= export function isRecord(v: unknown): v is Record {...}
-  genObjHelpers(file, lexUri, 'Record')
+  genObjHelpers(file, lexUri, 'Record');
 }
 
 function arrayToUnion(arr?: string[]) {
   if (!arr?.length) {
-    return 'never'
+    return 'never';
   }
-  return arr.map((item) => `'${item}'`).join(' | ')
+  return arr.map((item) => `'${item}'`).join(' | ');
 }

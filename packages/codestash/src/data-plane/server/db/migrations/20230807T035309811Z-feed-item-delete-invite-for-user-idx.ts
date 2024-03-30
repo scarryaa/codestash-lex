@@ -1,4 +1,4 @@
-import { Kysely } from 'kysely'
+import { Kysely } from 'kysely';
 
 export async function up(db: Kysely<unknown>): Promise<void> {
   // supports post deletion
@@ -6,9 +6,9 @@ export async function up(db: Kysely<unknown>): Promise<void> {
     .createIndex('feed_item_post_uri_idx')
     .on('feed_item')
     .column('postUri')
-    .execute()
+    .execute();
 }
 
 export async function down(db: Kysely<unknown>): Promise<void> {
-  await db.schema.dropIndex('feed_item_post_uri_idx').execute()
+  await db.schema.dropIndex('feed_item_post_uri_idx').execute();
 }

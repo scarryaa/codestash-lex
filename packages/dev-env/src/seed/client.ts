@@ -1,42 +1,42 @@
-import fs from 'fs/promises'
-import { CID } from 'multiformats/cid'
-import AtpAgent from '@codestash-lex/api'
-import { AtUri } from '@atproto/syntax'
-import { BlobRef } from '@atproto/lexicon'
-import { TestNetworkNoAppView } from '../network-no-appview'
+import fs from 'fs/promises';
+import { CID } from 'multiformats/cid';
+import AtpAgent from '@codestash-lex/api';
+import { AtUri } from '@atproto/syntax';
+import { BlobRef } from '@atproto/lexicon';
+import { TestNetworkNoAppView } from '../network-no-appview';
 
 // Makes it simple to create data via the XRPC client,
 // and keeps track of all created data in memory for convenience.
 
-let AVATAR_IMG: Uint8Array | undefined
+let AVATAR_IMG: Uint8Array | undefined;
 
 export type ImageRef = {
-  image: BlobRef
-  alt: string
-}
+  image: BlobRef;
+  alt: string;
+};
 
 export class RecordRef {
-  uri: AtUri
-  cid: CID
+  uri: AtUri;
+  cid: CID;
 
   constructor(uri: AtUri | string, cid: CID | string) {
-    this.uri = new AtUri(uri.toString())
-    this.cid = CID.parse(cid.toString())
+    this.uri = new AtUri(uri.toString());
+    this.cid = CID.parse(cid.toString());
   }
 
   get raw(): { uri: string; cid: string } {
     return {
       uri: this.uri.toString(),
       cid: this.cid.toString(),
-    }
+    };
   }
 
   get uriStr(): string {
-    return this.uri.toString()
+    return this.uri.toString();
   }
 
   get cidStr(): string {
-    return this.cid.toString()
+    return this.cid.toString();
   }
 }
 
@@ -46,81 +46,84 @@ export class SeedClient<
   accounts: Record<
     string,
     {
-      did: string
-      accessJwt: string
-      refreshJwt: string
-      handle: string
-      email: string
-      password: string
+      did: string;
+      accessJwt: string;
+      refreshJwt: string;
+      handle: string;
+      email: string;
+      password: string;
     }
-  >
+  >;
   profiles: Record<
     string,
     {
-      displayName: string
-      description: string
-      avatar: { cid: string; mimeType: string }
-      ref: RecordRef
+      displayName: string;
+      description: string;
+      avatar: { cid: string; mimeType: string };
+      ref: RecordRef;
     }
-  >
-  follows: Record<string, Record<string, RecordRef>>
-  blocks: Record<string, Record<string, RecordRef>>
+  >;
+  follows: Record<string, Record<string, RecordRef>>;
+  blocks: Record<string, Record<string, RecordRef>>;
   posts: Record<
     string,
     { text: string; ref: RecordRef; images: ImageRef[]; quote?: RecordRef }[]
-  >
-  likes: Record<string, Record<string, AtUri>>
-  replies: Record<string, { text: string; ref: RecordRef }[]>
-  reposts: Record<string, RecordRef[]>
+  >;
+  likes: Record<string, Record<string, AtUri>>;
+  replies: Record<string, { text: string; ref: RecordRef }[]>;
+  reposts: Record<string, RecordRef[]>;
   lists: Record<
     string,
     Record<string, { ref: RecordRef; items: Record<string, RecordRef> }>
-  >
+  >;
   feedgens: Record<
     string,
     Record<string, { ref: RecordRef; items: Record<string, RecordRef> }>
-  >
-  dids: Record<string, string>
+  >;
+  dids: Record<string, string>;
 
-  constructor(public network: Network, public agent: AtpAgent) {
-    this.accounts = {}
-    this.profiles = {}
-    this.follows = {}
-    this.blocks = {}
-    this.posts = {}
-    this.likes = {}
-    this.replies = {}
-    this.reposts = {}
-    this.lists = {}
-    this.feedgens = {}
-    this.dids = {}
+  constructor(
+    public network: Network,
+    public agent: AtpAgent,
+  ) {
+    this.accounts = {};
+    this.profiles = {};
+    this.follows = {};
+    this.blocks = {};
+    this.posts = {};
+    this.likes = {};
+    this.replies = {};
+    this.reposts = {};
+    this.lists = {};
+    this.feedgens = {};
+    this.dids = {};
   }
 
   async createAccount(
     shortName: string,
     params: {
-      handle: string
-      email: string
-      password: string
-      inviteCode?: string
+      handle: string;
+      email: string;
+      password: string;
+      inviteCode?: string;
     },
   ) {
     const { data: account } =
-      await this.agent.api.com.atproto.server.createAccount(params)
-    this.dids[shortName] = account.did
+      await this.agent.api.com.atproto.server.createAccount(params);
+    this.dids[shortName] = account.did;
     this.accounts[account.did] = {
       ...account,
       email: params.email,
       password: params.password,
-    }
-    return this.accounts[account.did]
+    };
+    return this.accounts[account.did];
   }
 
   async updateHandle(by: string, handle: string) {
     await this.agent.api.com.atproto.identity.updateHandle(
       { handle },
       { encoding: 'application/json', headers: this.getHeaders(by) },
-    )
+    );
   }
 
   async createProfile(
@@ -131,15 +134,15 @@ export class SeedClient<
   ) {
     AVATAR_IMG ??= await fs.readFile(
       '../dev-env/src/seed/img/key-portrait-small.jpg',
-    )
+    );
 
-    let avatarBlob
+    let avatarBlob;
     {
       const res = await this.agent.api.com.atproto.repo.uploadBlob(AVATAR_IMG, {
         encoding: 'image/jpeg',
         headers: this.getHeaders(by),
-      } as any)
-      avatarBlob = res.data.blob
+      } as any);
+      avatarBlob = res.data.blob;
     }
 
     {
@@ -151,21 +154,21 @@ export class SeedClient<
           avatar: avatarBlob,
           labels: selfLabels
             ? {
-              $type: 'com.atproto.label.defs#selfLabels',
-              values: selfLabels.map((val) => ({ val })),
-            }
+                $type: 'com.atproto.label.defs#selfLabels',
+                values: selfLabels.map((val) => ({ val })),
+              }
             : undefined,
         },
         this.getHeaders(by),
-      )
+      );
       this.profiles[by] = {
         displayName,
         description,
         avatar: avatarBlob,
         ref: new RecordRef(res.uri, res.cid),
-      }
+      };
     }
-    return this.profiles[by]
+    return this.profiles[by];
   }
 
   async updateProfile(by: string, record: Record<string, unknown>) {
@@ -177,13 +180,13 @@ export class SeedClient<
         record,
       },
       { headers: this.getHeaders(by), encoding: 'application/json' },
-    )
+    );
     this.profiles[by] = {
       ...(this.profiles[by] ?? {}),
       ...record,
       ref: new RecordRef(res.data.uri, res.data.cid),
-    }
-    return this.profiles[by]
+    };
+    return this.profiles[by];
   }
 
   // async follow(
@@ -310,12 +313,12 @@ export class SeedClient<
     filePath: string,
     encoding: string,
   ): Promise<ImageRef> {
-    const file = await fs.readFile(filePath)
+    const file = await fs.readFile(filePath);
     const res = await this.agent.api.com.atproto.repo.uploadBlob(file, {
       headers: this.getHeaders(by),
       encoding,
-    } as any)
-    return { image: res.data.blob, alt: filePath }
+    } as any);
+    return { image: res.data.blob, alt: filePath };
   }
 
   // async like(
@@ -471,10 +474,10 @@ export class SeedClient<
   // }
 
   getHeaders(did: string) {
-    return SeedClient.getHeaders(this.accounts[did].accessJwt)
+    return SeedClient.getHeaders(this.accounts[did].accessJwt);
   }
 
   static getHeaders(jwt: string) {
-    return { authorization: `Bearer ${jwt}` }
+    return { authorization: `Bearer ${jwt}` };
   }
 }

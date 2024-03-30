@@ -4,172 +4,172 @@
 import {
   Client as XrpcClient,
   ServiceClient as XrpcServiceClient,
-} from '@atproto/xrpc'
-import { schemas } from './lexicons'
-import { CID } from 'multiformats/cid'
-import * as OrgCodestashActorDefs from './types/org/codestash/actor/defs'
-import * as OrgCodestashActorGetProfile from './types/org/codestash/actor/getProfile'
-import * as OrgCodestashActorProfile from './types/org/codestash/actor/profile'
-import * as OrgCodestashPing from './types/org/codestash/ping'
-import * as ComAtprotoAdminDefs from './types/com/atproto/admin/defs'
-import * as ComAtprotoAdminDeleteAccount from './types/com/atproto/admin/deleteAccount'
-import * as ComAtprotoAdminDisableAccountInvites from './types/com/atproto/admin/disableAccountInvites'
-import * as ComAtprotoAdminDisableInviteCodes from './types/com/atproto/admin/disableInviteCodes'
-import * as ComAtprotoAdminEnableAccountInvites from './types/com/atproto/admin/enableAccountInvites'
-import * as ComAtprotoAdminGetAccountInfo from './types/com/atproto/admin/getAccountInfo'
-import * as ComAtprotoAdminGetAccountInfos from './types/com/atproto/admin/getAccountInfos'
-import * as ComAtprotoAdminGetInviteCodes from './types/com/atproto/admin/getInviteCodes'
-import * as ComAtprotoAdminGetSubjectStatus from './types/com/atproto/admin/getSubjectStatus'
-import * as ComAtprotoAdminSendEmail from './types/com/atproto/admin/sendEmail'
-import * as ComAtprotoAdminUpdateAccountEmail from './types/com/atproto/admin/updateAccountEmail'
-import * as ComAtprotoAdminUpdateAccountHandle from './types/com/atproto/admin/updateAccountHandle'
-import * as ComAtprotoAdminUpdateAccountPassword from './types/com/atproto/admin/updateAccountPassword'
-import * as ComAtprotoAdminUpdateSubjectStatus from './types/com/atproto/admin/updateSubjectStatus'
-import * as ComAtprotoIdentityGetRecommendedDidCredentials from './types/com/atproto/identity/getRecommendedDidCredentials'
-import * as ComAtprotoIdentityRequestPlcOperationSignature from './types/com/atproto/identity/requestPlcOperationSignature'
-import * as ComAtprotoIdentityResolveHandle from './types/com/atproto/identity/resolveHandle'
-import * as ComAtprotoIdentitySignPlcOperation from './types/com/atproto/identity/signPlcOperation'
-import * as ComAtprotoIdentitySubmitPlcOperation from './types/com/atproto/identity/submitPlcOperation'
-import * as ComAtprotoIdentityUpdateHandle from './types/com/atproto/identity/updateHandle'
-import * as ComAtprotoLabelDefs from './types/com/atproto/label/defs'
-import * as ComAtprotoLabelQueryLabels from './types/com/atproto/label/queryLabels'
-import * as ComAtprotoLabelSubscribeLabels from './types/com/atproto/label/subscribeLabels'
-import * as ComAtprotoModerationCreateReport from './types/com/atproto/moderation/createReport'
-import * as ComAtprotoModerationDefs from './types/com/atproto/moderation/defs'
-import * as ComAtprotoRepoApplyWrites from './types/com/atproto/repo/applyWrites'
-import * as ComAtprotoRepoCreateRecord from './types/com/atproto/repo/createRecord'
-import * as ComAtprotoRepoDeleteRecord from './types/com/atproto/repo/deleteRecord'
-import * as ComAtprotoRepoDescribeRepo from './types/com/atproto/repo/describeRepo'
-import * as ComAtprotoRepoGetRecord from './types/com/atproto/repo/getRecord'
-import * as ComAtprotoRepoImportRepo from './types/com/atproto/repo/importRepo'
-import * as ComAtprotoRepoListMissingBlobs from './types/com/atproto/repo/listMissingBlobs'
-import * as ComAtprotoRepoListRecords from './types/com/atproto/repo/listRecords'
-import * as ComAtprotoRepoPutRecord from './types/com/atproto/repo/putRecord'
-import * as ComAtprotoRepoStrongRef from './types/com/atproto/repo/strongRef'
-import * as ComAtprotoRepoUploadBlob from './types/com/atproto/repo/uploadBlob'
-import * as ComAtprotoServerActivateAccount from './types/com/atproto/server/activateAccount'
-import * as ComAtprotoServerCheckAccountStatus from './types/com/atproto/server/checkAccountStatus'
-import * as ComAtprotoServerConfirmEmail from './types/com/atproto/server/confirmEmail'
-import * as ComAtprotoServerCreateAccount from './types/com/atproto/server/createAccount'
-import * as ComAtprotoServerCreateAppPassword from './types/com/atproto/server/createAppPassword'
-import * as ComAtprotoServerCreateInviteCode from './types/com/atproto/server/createInviteCode'
-import * as ComAtprotoServerCreateInviteCodes from './types/com/atproto/server/createInviteCodes'
-import * as ComAtprotoServerCreateSession from './types/com/atproto/server/createSession'
-import * as ComAtprotoServerDeactivateAccount from './types/com/atproto/server/deactivateAccount'
-import * as ComAtprotoServerDefs from './types/com/atproto/server/defs'
-import * as ComAtprotoServerDeleteAccount from './types/com/atproto/server/deleteAccount'
-import * as ComAtprotoServerDeleteSession from './types/com/atproto/server/deleteSession'
-import * as ComAtprotoServerDescribeServer from './types/com/atproto/server/describeServer'
-import * as ComAtprotoServerGetAccountInviteCodes from './types/com/atproto/server/getAccountInviteCodes'
-import * as ComAtprotoServerGetServiceAuth from './types/com/atproto/server/getServiceAuth'
-import * as ComAtprotoServerGetSession from './types/com/atproto/server/getSession'
-import * as ComAtprotoServerListAppPasswords from './types/com/atproto/server/listAppPasswords'
-import * as ComAtprotoServerRefreshSession from './types/com/atproto/server/refreshSession'
-import * as ComAtprotoServerRequestAccountDelete from './types/com/atproto/server/requestAccountDelete'
-import * as ComAtprotoServerRequestEmailConfirmation from './types/com/atproto/server/requestEmailConfirmation'
-import * as ComAtprotoServerRequestEmailUpdate from './types/com/atproto/server/requestEmailUpdate'
-import * as ComAtprotoServerRequestPasswordReset from './types/com/atproto/server/requestPasswordReset'
-import * as ComAtprotoServerReserveSigningKey from './types/com/atproto/server/reserveSigningKey'
-import * as ComAtprotoServerResetPassword from './types/com/atproto/server/resetPassword'
-import * as ComAtprotoServerRevokeAppPassword from './types/com/atproto/server/revokeAppPassword'
-import * as ComAtprotoServerUpdateEmail from './types/com/atproto/server/updateEmail'
-import * as ComAtprotoSyncGetBlob from './types/com/atproto/sync/getBlob'
-import * as ComAtprotoSyncGetBlocks from './types/com/atproto/sync/getBlocks'
-import * as ComAtprotoSyncGetCheckout from './types/com/atproto/sync/getCheckout'
-import * as ComAtprotoSyncGetHead from './types/com/atproto/sync/getHead'
-import * as ComAtprotoSyncGetLatestCommit from './types/com/atproto/sync/getLatestCommit'
-import * as ComAtprotoSyncGetRecord from './types/com/atproto/sync/getRecord'
-import * as ComAtprotoSyncGetRepo from './types/com/atproto/sync/getRepo'
-import * as ComAtprotoSyncListBlobs from './types/com/atproto/sync/listBlobs'
-import * as ComAtprotoSyncListRepos from './types/com/atproto/sync/listRepos'
-import * as ComAtprotoSyncNotifyOfUpdate from './types/com/atproto/sync/notifyOfUpdate'
-import * as ComAtprotoSyncRequestCrawl from './types/com/atproto/sync/requestCrawl'
-import * as ComAtprotoSyncSubscribeRepos from './types/com/atproto/sync/subscribeRepos'
-import * as ComAtprotoTempCheckSignupQueue from './types/com/atproto/temp/checkSignupQueue'
-import * as ComAtprotoTempFetchLabels from './types/com/atproto/temp/fetchLabels'
-import * as ComAtprotoTempRequestPhoneVerification from './types/com/atproto/temp/requestPhoneVerification'
+} from '@atproto/xrpc';
+import { schemas } from './lexicons';
+import { CID } from 'multiformats/cid';
+import * as OrgCodestashActorDefs from './types/org/codestash/actor/defs';
+import * as OrgCodestashActorGetProfile from './types/org/codestash/actor/getProfile';
+import * as OrgCodestashActorProfile from './types/org/codestash/actor/profile';
+import * as OrgCodestashPing from './types/org/codestash/ping';
+import * as ComAtprotoAdminDefs from './types/com/atproto/admin/defs';
+import * as ComAtprotoAdminDeleteAccount from './types/com/atproto/admin/deleteAccount';
+import * as ComAtprotoAdminDisableAccountInvites from './types/com/atproto/admin/disableAccountInvites';
+import * as ComAtprotoAdminDisableInviteCodes from './types/com/atproto/admin/disableInviteCodes';
+import * as ComAtprotoAdminEnableAccountInvites from './types/com/atproto/admin/enableAccountInvites';
+import * as ComAtprotoAdminGetAccountInfo from './types/com/atproto/admin/getAccountInfo';
+import * as ComAtprotoAdminGetAccountInfos from './types/com/atproto/admin/getAccountInfos';
+import * as ComAtprotoAdminGetInviteCodes from './types/com/atproto/admin/getInviteCodes';
+import * as ComAtprotoAdminGetSubjectStatus from './types/com/atproto/admin/getSubjectStatus';
+import * as ComAtprotoAdminSendEmail from './types/com/atproto/admin/sendEmail';
+import * as ComAtprotoAdminUpdateAccountEmail from './types/com/atproto/admin/updateAccountEmail';
+import * as ComAtprotoAdminUpdateAccountHandle from './types/com/atproto/admin/updateAccountHandle';
+import * as ComAtprotoAdminUpdateAccountPassword from './types/com/atproto/admin/updateAccountPassword';
+import * as ComAtprotoAdminUpdateSubjectStatus from './types/com/atproto/admin/updateSubjectStatus';
+import * as ComAtprotoIdentityGetRecommendedDidCredentials from './types/com/atproto/identity/getRecommendedDidCredentials';
+import * as ComAtprotoIdentityRequestPlcOperationSignature from './types/com/atproto/identity/requestPlcOperationSignature';
+import * as ComAtprotoIdentityResolveHandle from './types/com/atproto/identity/resolveHandle';
+import * as ComAtprotoIdentitySignPlcOperation from './types/com/atproto/identity/signPlcOperation';
+import * as ComAtprotoIdentitySubmitPlcOperation from './types/com/atproto/identity/submitPlcOperation';
+import * as ComAtprotoIdentityUpdateHandle from './types/com/atproto/identity/updateHandle';
+import * as ComAtprotoLabelDefs from './types/com/atproto/label/defs';
+import * as ComAtprotoLabelQueryLabels from './types/com/atproto/label/queryLabels';
+import * as ComAtprotoLabelSubscribeLabels from './types/com/atproto/label/subscribeLabels';
+import * as ComAtprotoModerationCreateReport from './types/com/atproto/moderation/createReport';
+import * as ComAtprotoModerationDefs from './types/com/atproto/moderation/defs';
+import * as ComAtprotoRepoApplyWrites from './types/com/atproto/repo/applyWrites';
+import * as ComAtprotoRepoCreateRecord from './types/com/atproto/repo/createRecord';
+import * as ComAtprotoRepoDeleteRecord from './types/com/atproto/repo/deleteRecord';
+import * as ComAtprotoRepoDescribeRepo from './types/com/atproto/repo/describeRepo';
+import * as ComAtprotoRepoGetRecord from './types/com/atproto/repo/getRecord';
+import * as ComAtprotoRepoImportRepo from './types/com/atproto/repo/importRepo';
+import * as ComAtprotoRepoListMissingBlobs from './types/com/atproto/repo/listMissingBlobs';
+import * as ComAtprotoRepoListRecords from './types/com/atproto/repo/listRecords';
+import * as ComAtprotoRepoPutRecord from './types/com/atproto/repo/putRecord';
+import * as ComAtprotoRepoStrongRef from './types/com/atproto/repo/strongRef';
+import * as ComAtprotoRepoUploadBlob from './types/com/atproto/repo/uploadBlob';
+import * as ComAtprotoServerActivateAccount from './types/com/atproto/server/activateAccount';
+import * as ComAtprotoServerCheckAccountStatus from './types/com/atproto/server/checkAccountStatus';
+import * as ComAtprotoServerConfirmEmail from './types/com/atproto/server/confirmEmail';
+import * as ComAtprotoServerCreateAccount from './types/com/atproto/server/createAccount';
+import * as ComAtprotoServerCreateAppPassword from './types/com/atproto/server/createAppPassword';
+import * as ComAtprotoServerCreateInviteCode from './types/com/atproto/server/createInviteCode';
+import * as ComAtprotoServerCreateInviteCodes from './types/com/atproto/server/createInviteCodes';
+import * as ComAtprotoServerCreateSession from './types/com/atproto/server/createSession';
+import * as ComAtprotoServerDeactivateAccount from './types/com/atproto/server/deactivateAccount';
+import * as ComAtprotoServerDefs from './types/com/atproto/server/defs';
+import * as ComAtprotoServerDeleteAccount from './types/com/atproto/server/deleteAccount';
+import * as ComAtprotoServerDeleteSession from './types/com/atproto/server/deleteSession';
+import * as ComAtprotoServerDescribeServer from './types/com/atproto/server/describeServer';
+import * as ComAtprotoServerGetAccountInviteCodes from './types/com/atproto/server/getAccountInviteCodes';
+import * as ComAtprotoServerGetServiceAuth from './types/com/atproto/server/getServiceAuth';
+import * as ComAtprotoServerGetSession from './types/com/atproto/server/getSession';
+import * as ComAtprotoServerListAppPasswords from './types/com/atproto/server/listAppPasswords';
+import * as ComAtprotoServerRefreshSession from './types/com/atproto/server/refreshSession';
+import * as ComAtprotoServerRequestAccountDelete from './types/com/atproto/server/requestAccountDelete';
+import * as ComAtprotoServerRequestEmailConfirmation from './types/com/atproto/server/requestEmailConfirmation';
+import * as ComAtprotoServerRequestEmailUpdate from './types/com/atproto/server/requestEmailUpdate';
+import * as ComAtprotoServerRequestPasswordReset from './types/com/atproto/server/requestPasswordReset';
+import * as ComAtprotoServerReserveSigningKey from './types/com/atproto/server/reserveSigningKey';
+import * as ComAtprotoServerResetPassword from './types/com/atproto/server/resetPassword';
+import * as ComAtprotoServerRevokeAppPassword from './types/com/atproto/server/revokeAppPassword';
+import * as ComAtprotoServerUpdateEmail from './types/com/atproto/server/updateEmail';
+import * as ComAtprotoSyncGetBlob from './types/com/atproto/sync/getBlob';
+import * as ComAtprotoSyncGetBlocks from './types/com/atproto/sync/getBlocks';
+import * as ComAtprotoSyncGetCheckout from './types/com/atproto/sync/getCheckout';
+import * as ComAtprotoSyncGetHead from './types/com/atproto/sync/getHead';
+import * as ComAtprotoSyncGetLatestCommit from './types/com/atproto/sync/getLatestCommit';
+import * as ComAtprotoSyncGetRecord from './types/com/atproto/sync/getRecord';
+import * as ComAtprotoSyncGetRepo from './types/com/atproto/sync/getRepo';
+import * as ComAtprotoSyncListBlobs from './types/com/atproto/sync/listBlobs';
+import * as ComAtprotoSyncListRepos from './types/com/atproto/sync/listRepos';
+import * as ComAtprotoSyncNotifyOfUpdate from './types/com/atproto/sync/notifyOfUpdate';
+import * as ComAtprotoSyncRequestCrawl from './types/com/atproto/sync/requestCrawl';
+import * as ComAtprotoSyncSubscribeRepos from './types/com/atproto/sync/subscribeRepos';
+import * as ComAtprotoTempCheckSignupQueue from './types/com/atproto/temp/checkSignupQueue';
+import * as ComAtprotoTempFetchLabels from './types/com/atproto/temp/fetchLabels';
+import * as ComAtprotoTempRequestPhoneVerification from './types/com/atproto/temp/requestPhoneVerification';
 
-export * as OrgCodestashActorDefs from './types/org/codestash/actor/defs'
-export * as OrgCodestashActorGetProfile from './types/org/codestash/actor/getProfile'
-export * as OrgCodestashActorProfile from './types/org/codestash/actor/profile'
-export * as OrgCodestashPing from './types/org/codestash/ping'
-export * as ComAtprotoAdminDefs from './types/com/atproto/admin/defs'
-export * as ComAtprotoAdminDeleteAccount from './types/com/atproto/admin/deleteAccount'
-export * as ComAtprotoAdminDisableAccountInvites from './types/com/atproto/admin/disableAccountInvites'
-export * as ComAtprotoAdminDisableInviteCodes from './types/com/atproto/admin/disableInviteCodes'
-export * as ComAtprotoAdminEnableAccountInvites from './types/com/atproto/admin/enableAccountInvites'
-export * as ComAtprotoAdminGetAccountInfo from './types/com/atproto/admin/getAccountInfo'
-export * as ComAtprotoAdminGetAccountInfos from './types/com/atproto/admin/getAccountInfos'
-export * as ComAtprotoAdminGetInviteCodes from './types/com/atproto/admin/getInviteCodes'
-export * as ComAtprotoAdminGetSubjectStatus from './types/com/atproto/admin/getSubjectStatus'
-export * as ComAtprotoAdminSendEmail from './types/com/atproto/admin/sendEmail'
-export * as ComAtprotoAdminUpdateAccountEmail from './types/com/atproto/admin/updateAccountEmail'
-export * as ComAtprotoAdminUpdateAccountHandle from './types/com/atproto/admin/updateAccountHandle'
-export * as ComAtprotoAdminUpdateAccountPassword from './types/com/atproto/admin/updateAccountPassword'
-export * as ComAtprotoAdminUpdateSubjectStatus from './types/com/atproto/admin/updateSubjectStatus'
-export * as ComAtprotoIdentityGetRecommendedDidCredentials from './types/com/atproto/identity/getRecommendedDidCredentials'
-export * as ComAtprotoIdentityRequestPlcOperationSignature from './types/com/atproto/identity/requestPlcOperationSignature'
-export * as ComAtprotoIdentityResolveHandle from './types/com/atproto/identity/resolveHandle'
-export * as ComAtprotoIdentitySignPlcOperation from './types/com/atproto/identity/signPlcOperation'
-export * as ComAtprotoIdentitySubmitPlcOperation from './types/com/atproto/identity/submitPlcOperation'
-export * as ComAtprotoIdentityUpdateHandle from './types/com/atproto/identity/updateHandle'
-export * as ComAtprotoLabelDefs from './types/com/atproto/label/defs'
-export * as ComAtprotoLabelQueryLabels from './types/com/atproto/label/queryLabels'
-export * as ComAtprotoLabelSubscribeLabels from './types/com/atproto/label/subscribeLabels'
-export * as ComAtprotoModerationCreateReport from './types/com/atproto/moderation/createReport'
-export * as ComAtprotoModerationDefs from './types/com/atproto/moderation/defs'
-export * as ComAtprotoRepoApplyWrites from './types/com/atproto/repo/applyWrites'
-export * as ComAtprotoRepoCreateRecord from './types/com/atproto/repo/createRecord'
-export * as ComAtprotoRepoDeleteRecord from './types/com/atproto/repo/deleteRecord'
-export * as ComAtprotoRepoDescribeRepo from './types/com/atproto/repo/describeRepo'
-export * as ComAtprotoRepoGetRecord from './types/com/atproto/repo/getRecord'
-export * as ComAtprotoRepoImportRepo from './types/com/atproto/repo/importRepo'
-export * as ComAtprotoRepoListMissingBlobs from './types/com/atproto/repo/listMissingBlobs'
-export * as ComAtprotoRepoListRecords from './types/com/atproto/repo/listRecords'
-export * as ComAtprotoRepoPutRecord from './types/com/atproto/repo/putRecord'
-export * as ComAtprotoRepoStrongRef from './types/com/atproto/repo/strongRef'
-export * as ComAtprotoRepoUploadBlob from './types/com/atproto/repo/uploadBlob'
-export * as ComAtprotoServerActivateAccount from './types/com/atproto/server/activateAccount'
-export * as ComAtprotoServerCheckAccountStatus from './types/com/atproto/server/checkAccountStatus'
-export * as ComAtprotoServerConfirmEmail from './types/com/atproto/server/confirmEmail'
-export * as ComAtprotoServerCreateAccount from './types/com/atproto/server/createAccount'
-export * as ComAtprotoServerCreateAppPassword from './types/com/atproto/server/createAppPassword'
-export * as ComAtprotoServerCreateInviteCode from './types/com/atproto/server/createInviteCode'
-export * as ComAtprotoServerCreateInviteCodes from './types/com/atproto/server/createInviteCodes'
-export * as ComAtprotoServerCreateSession from './types/com/atproto/server/createSession'
-export * as ComAtprotoServerDeactivateAccount from './types/com/atproto/server/deactivateAccount'
-export * as ComAtprotoServerDefs from './types/com/atproto/server/defs'
-export * as ComAtprotoServerDeleteAccount from './types/com/atproto/server/deleteAccount'
-export * as ComAtprotoServerDeleteSession from './types/com/atproto/server/deleteSession'
-export * as ComAtprotoServerDescribeServer from './types/com/atproto/server/describeServer'
-export * as ComAtprotoServerGetAccountInviteCodes from './types/com/atproto/server/getAccountInviteCodes'
-export * as ComAtprotoServerGetServiceAuth from './types/com/atproto/server/getServiceAuth'
-export * as ComAtprotoServerGetSession from './types/com/atproto/server/getSession'
-export * as ComAtprotoServerListAppPasswords from './types/com/atproto/server/listAppPasswords'
-export * as ComAtprotoServerRefreshSession from './types/com/atproto/server/refreshSession'
-export * as ComAtprotoServerRequestAccountDelete from './types/com/atproto/server/requestAccountDelete'
-export * as ComAtprotoServerRequestEmailConfirmation from './types/com/atproto/server/requestEmailConfirmation'
-export * as ComAtprotoServerRequestEmailUpdate from './types/com/atproto/server/requestEmailUpdate'
-export * as ComAtprotoServerRequestPasswordReset from './types/com/atproto/server/requestPasswordReset'
-export * as ComAtprotoServerReserveSigningKey from './types/com/atproto/server/reserveSigningKey'
-export * as ComAtprotoServerResetPassword from './types/com/atproto/server/resetPassword'
-export * as ComAtprotoServerRevokeAppPassword from './types/com/atproto/server/revokeAppPassword'
-export * as ComAtprotoServerUpdateEmail from './types/com/atproto/server/updateEmail'
-export * as ComAtprotoSyncGetBlob from './types/com/atproto/sync/getBlob'
-export * as ComAtprotoSyncGetBlocks from './types/com/atproto/sync/getBlocks'
-export * as ComAtprotoSyncGetCheckout from './types/com/atproto/sync/getCheckout'
-export * as ComAtprotoSyncGetHead from './types/com/atproto/sync/getHead'
-export * as ComAtprotoSyncGetLatestCommit from './types/com/atproto/sync/getLatestCommit'
-export * as ComAtprotoSyncGetRecord from './types/com/atproto/sync/getRecord'
-export * as ComAtprotoSyncGetRepo from './types/com/atproto/sync/getRepo'
-export * as ComAtprotoSyncListBlobs from './types/com/atproto/sync/listBlobs'
-export * as ComAtprotoSyncListRepos from './types/com/atproto/sync/listRepos'
-export * as ComAtprotoSyncNotifyOfUpdate from './types/com/atproto/sync/notifyOfUpdate'
-export * as ComAtprotoSyncRequestCrawl from './types/com/atproto/sync/requestCrawl'
-export * as ComAtprotoSyncSubscribeRepos from './types/com/atproto/sync/subscribeRepos'
-export * as ComAtprotoTempCheckSignupQueue from './types/com/atproto/temp/checkSignupQueue'
-export * as ComAtprotoTempFetchLabels from './types/com/atproto/temp/fetchLabels'
-export * as ComAtprotoTempRequestPhoneVerification from './types/com/atproto/temp/requestPhoneVerification'
+export * as OrgCodestashActorDefs from './types/org/codestash/actor/defs';
+export * as OrgCodestashActorGetProfile from './types/org/codestash/actor/getProfile';
+export * as OrgCodestashActorProfile from './types/org/codestash/actor/profile';
+export * as OrgCodestashPing from './types/org/codestash/ping';
+export * as ComAtprotoAdminDefs from './types/com/atproto/admin/defs';
+export * as ComAtprotoAdminDeleteAccount from './types/com/atproto/admin/deleteAccount';
+export * as ComAtprotoAdminDisableAccountInvites from './types/com/atproto/admin/disableAccountInvites';
+export * as ComAtprotoAdminDisableInviteCodes from './types/com/atproto/admin/disableInviteCodes';
+export * as ComAtprotoAdminEnableAccountInvites from './types/com/atproto/admin/enableAccountInvites';
+export * as ComAtprotoAdminGetAccountInfo from './types/com/atproto/admin/getAccountInfo';
+export * as ComAtprotoAdminGetAccountInfos from './types/com/atproto/admin/getAccountInfos';
+export * as ComAtprotoAdminGetInviteCodes from './types/com/atproto/admin/getInviteCodes';
+export * as ComAtprotoAdminGetSubjectStatus from './types/com/atproto/admin/getSubjectStatus';
+export * as ComAtprotoAdminSendEmail from './types/com/atproto/admin/sendEmail';
+export * as ComAtprotoAdminUpdateAccountEmail from './types/com/atproto/admin/updateAccountEmail';
+export * as ComAtprotoAdminUpdateAccountHandle from './types/com/atproto/admin/updateAccountHandle';
+export * as ComAtprotoAdminUpdateAccountPassword from './types/com/atproto/admin/updateAccountPassword';
+export * as ComAtprotoAdminUpdateSubjectStatus from './types/com/atproto/admin/updateSubjectStatus';
+export * as ComAtprotoIdentityGetRecommendedDidCredentials from './types/com/atproto/identity/getRecommendedDidCredentials';
+export * as ComAtprotoIdentityRequestPlcOperationSignature from './types/com/atproto/identity/requestPlcOperationSignature';
+export * as ComAtprotoIdentityResolveHandle from './types/com/atproto/identity/resolveHandle';
+export * as ComAtprotoIdentitySignPlcOperation from './types/com/atproto/identity/signPlcOperation';
+export * as ComAtprotoIdentitySubmitPlcOperation from './types/com/atproto/identity/submitPlcOperation';
+export * as ComAtprotoIdentityUpdateHandle from './types/com/atproto/identity/updateHandle';
+export * as ComAtprotoLabelDefs from './types/com/atproto/label/defs';
+export * as ComAtprotoLabelQueryLabels from './types/com/atproto/label/queryLabels';
+export * as ComAtprotoLabelSubscribeLabels from './types/com/atproto/label/subscribeLabels';
+export * as ComAtprotoModerationCreateReport from './types/com/atproto/moderation/createReport';
+export * as ComAtprotoModerationDefs from './types/com/atproto/moderation/defs';
+export * as ComAtprotoRepoApplyWrites from './types/com/atproto/repo/applyWrites';
+export * as ComAtprotoRepoCreateRecord from './types/com/atproto/repo/createRecord';
+export * as ComAtprotoRepoDeleteRecord from './types/com/atproto/repo/deleteRecord';
+export * as ComAtprotoRepoDescribeRepo from './types/com/atproto/repo/describeRepo';
+export * as ComAtprotoRepoGetRecord from './types/com/atproto/repo/getRecord';
+export * as ComAtprotoRepoImportRepo from './types/com/atproto/repo/importRepo';
+export * as ComAtprotoRepoListMissingBlobs from './types/com/atproto/repo/listMissingBlobs';
+export * as ComAtprotoRepoListRecords from './types/com/atproto/repo/listRecords';
+export * as ComAtprotoRepoPutRecord from './types/com/atproto/repo/putRecord';
+export * as ComAtprotoRepoStrongRef from './types/com/atproto/repo/strongRef';
+export * as ComAtprotoRepoUploadBlob from './types/com/atproto/repo/uploadBlob';
+export * as ComAtprotoServerActivateAccount from './types/com/atproto/server/activateAccount';
+export * as ComAtprotoServerCheckAccountStatus from './types/com/atproto/server/checkAccountStatus';
+export * as ComAtprotoServerConfirmEmail from './types/com/atproto/server/confirmEmail';
+export * as ComAtprotoServerCreateAccount from './types/com/atproto/server/createAccount';
+export * as ComAtprotoServerCreateAppPassword from './types/com/atproto/server/createAppPassword';
+export * as ComAtprotoServerCreateInviteCode from './types/com/atproto/server/createInviteCode';
+export * as ComAtprotoServerCreateInviteCodes from './types/com/atproto/server/createInviteCodes';
+export * as ComAtprotoServerCreateSession from './types/com/atproto/server/createSession';
+export * as ComAtprotoServerDeactivateAccount from './types/com/atproto/server/deactivateAccount';
+export * as ComAtprotoServerDefs from './types/com/atproto/server/defs';
+export * as ComAtprotoServerDeleteAccount from './types/com/atproto/server/deleteAccount';
+export * as ComAtprotoServerDeleteSession from './types/com/atproto/server/deleteSession';
+export * as ComAtprotoServerDescribeServer from './types/com/atproto/server/describeServer';
+export * as ComAtprotoServerGetAccountInviteCodes from './types/com/atproto/server/getAccountInviteCodes';
+export * as ComAtprotoServerGetServiceAuth from './types/com/atproto/server/getServiceAuth';
+export * as ComAtprotoServerGetSession from './types/com/atproto/server/getSession';
+export * as ComAtprotoServerListAppPasswords from './types/com/atproto/server/listAppPasswords';
+export * as ComAtprotoServerRefreshSession from './types/com/atproto/server/refreshSession';
+export * as ComAtprotoServerRequestAccountDelete from './types/com/atproto/server/requestAccountDelete';
+export * as ComAtprotoServerRequestEmailConfirmation from './types/com/atproto/server/requestEmailConfirmation';
+export * as ComAtprotoServerRequestEmailUpdate from './types/com/atproto/server/requestEmailUpdate';
+export * as ComAtprotoServerRequestPasswordReset from './types/com/atproto/server/requestPasswordReset';
+export * as ComAtprotoServerReserveSigningKey from './types/com/atproto/server/reserveSigningKey';
+export * as ComAtprotoServerResetPassword from './types/com/atproto/server/resetPassword';
+export * as ComAtprotoServerRevokeAppPassword from './types/com/atproto/server/revokeAppPassword';
+export * as ComAtprotoServerUpdateEmail from './types/com/atproto/server/updateEmail';
+export * as ComAtprotoSyncGetBlob from './types/com/atproto/sync/getBlob';
+export * as ComAtprotoSyncGetBlocks from './types/com/atproto/sync/getBlocks';
+export * as ComAtprotoSyncGetCheckout from './types/com/atproto/sync/getCheckout';
+export * as ComAtprotoSyncGetHead from './types/com/atproto/sync/getHead';
+export * as ComAtprotoSyncGetLatestCommit from './types/com/atproto/sync/getLatestCommit';
+export * as ComAtprotoSyncGetRecord from './types/com/atproto/sync/getRecord';
+export * as ComAtprotoSyncGetRepo from './types/com/atproto/sync/getRepo';
+export * as ComAtprotoSyncListBlobs from './types/com/atproto/sync/listBlobs';
+export * as ComAtprotoSyncListRepos from './types/com/atproto/sync/listRepos';
+export * as ComAtprotoSyncNotifyOfUpdate from './types/com/atproto/sync/notifyOfUpdate';
+export * as ComAtprotoSyncRequestCrawl from './types/com/atproto/sync/requestCrawl';
+export * as ComAtprotoSyncSubscribeRepos from './types/com/atproto/sync/subscribeRepos';
+export * as ComAtprotoTempCheckSignupQueue from './types/com/atproto/temp/checkSignupQueue';
+export * as ComAtprotoTempFetchLabels from './types/com/atproto/temp/fetchLabels';
+export * as ComAtprotoTempRequestPhoneVerification from './types/com/atproto/temp/requestPhoneVerification';
 
 export const COM_ATPROTO_MODERATION = {
   DefsReasonSpam: 'com.atproto.moderation.defs#reasonSpam',
@@ -179,55 +179,55 @@ export const COM_ATPROTO_MODERATION = {
   DefsReasonRude: 'com.atproto.moderation.defs#reasonRude',
   DefsReasonOther: 'com.atproto.moderation.defs#reasonOther',
   DefsReasonAppeal: 'com.atproto.moderation.defs#reasonAppeal',
-}
+};
 
 export class AtpBaseClient {
-  xrpc: XrpcClient = new XrpcClient()
+  xrpc: XrpcClient = new XrpcClient();
 
   constructor() {
-    this.xrpc.addLexicons(schemas)
+    this.xrpc.addLexicons(schemas);
   }
 
   service(serviceUri: string | URL): AtpServiceClient {
-    return new AtpServiceClient(this, this.xrpc.service(serviceUri))
+    return new AtpServiceClient(this, this.xrpc.service(serviceUri));
   }
 }
 
 export class AtpServiceClient {
-  _baseClient: AtpBaseClient
-  xrpc: XrpcServiceClient
-  org: OrgNS
-  com: ComNS
+  _baseClient: AtpBaseClient;
+  xrpc: XrpcServiceClient;
+  org: OrgNS;
+  com: ComNS;
 
   constructor(baseClient: AtpBaseClient, xrpcService: XrpcServiceClient) {
-    this._baseClient = baseClient
-    this.xrpc = xrpcService
-    this.org = new OrgNS(this)
-    this.com = new ComNS(this)
+    this._baseClient = baseClient;
+    this.xrpc = xrpcService;
+    this.org = new OrgNS(this);
+    this.com = new ComNS(this);
   }
 
   setHeader(key: string, value: string): void {
-    this.xrpc.setHeader(key, value)
+    this.xrpc.setHeader(key, value);
   }
 }
 
 export class OrgNS {
-  _service: AtpServiceClient
-  codestash: OrgCodestashNS
+  _service: AtpServiceClient;
+  codestash: OrgCodestashNS;
 
   constructor(service: AtpServiceClient) {
-    this._service = service
-    this.codestash = new OrgCodestashNS(service)
+    this._service = service;
+    this.codestash = new OrgCodestashNS(service);
   }
 }
 
 export class OrgCodestashNS {
-  _service: AtpServiceClient
-  actor: OrgCodestashActorNS
+  _service: AtpServiceClient;
+  actor: OrgCodestashActorNS;
 
   constructor(service: AtpServiceClient) {
-    this._service = service
-    this.actor = new OrgCodestashActorNS(service)
+    this._service = service;
+    this.actor = new OrgCodestashActorNS(service);
   }
 
   ping(
@@ -237,18 +237,18 @@ export class OrgCodestashNS {
     return this._service.xrpc
       .call('org.codestash.ping', params, undefined, opts)
       .catch((e) => {
-        throw OrgCodestashPing.toKnownErr(e)
-      })
+        throw OrgCodestashPing.toKnownErr(e);
+      });
   }
 }
 
 export class OrgCodestashActorNS {
-  _service: AtpServiceClient
-  profile: ProfileRecord
+  _service: AtpServiceClient;
+  profile: ProfileRecord;
 
   constructor(service: AtpServiceClient) {
-    this._service = service
-    this.profile = new ProfileRecord(service)
+    this._service = service;
+    this.profile = new ProfileRecord(service);
   }
 
   getProfile(
@@ -258,43 +258,43 @@ export class OrgCodestashActorNS {
     return this._service.xrpc
       .call('org.codestash.actor.getProfile', params, undefined, opts)
       .catch((e) => {
-        throw OrgCodestashActorGetProfile.toKnownErr(e)
-      })
+        throw OrgCodestashActorGetProfile.toKnownErr(e);
+      });
   }
 }
 
 export class ProfileRecord {
-  _service: AtpServiceClient
+  _service: AtpServiceClient;
 
   constructor(service: AtpServiceClient) {
-    this._service = service
+    this._service = service;
   }
 
   async list(
     params: Omit<ComAtprotoRepoListRecords.QueryParams, 'collection'>,
   ): Promise<{
-    cursor?: string
-    records: { uri: string; value: OrgCodestashActorProfile.Record }[]
+    cursor?: string;
+    records: { uri: string; value: OrgCodestashActorProfile.Record }[];
   }> {
     const res = await this._service.xrpc.call('com.atproto.repo.listRecords', {
       collection: 'org.codestash.actor.profile',
       ...params,
-    })
-    return res.data
+    });
+    return res.data;
   }
 
   async get(
     params: Omit<ComAtprotoRepoGetRecord.QueryParams, 'collection'>,
   ): Promise<{
-    uri: string
-    cid: string
-    value: OrgCodestashActorProfile.Record
+    uri: string;
+    cid: string;
+    value: OrgCodestashActorProfile.Record;
   }> {
     const res = await this._service.xrpc.call('com.atproto.repo.getRecord', {
       collection: 'org.codestash.actor.profile',
       ...params,
-    })
-    return res.data
+    });
+    return res.data;
   }
 
   async create(
@@ -305,7 +305,7 @@ export class ProfileRecord {
     record: OrgCodestashActorProfile.Record,
     headers?: Record<string, string>,
   ): Promise<{ uri: string; cid: string }> {
-    record.$type = 'org.codestash.actor.profile'
+    record.$type = 'org.codestash.actor.profile';
     const res = await this._service.xrpc.call(
       'com.atproto.repo.createRecord',
       undefined,
@@ -316,8 +316,8 @@ export class ProfileRecord {
         record,
       },
       { encoding: 'application/json', headers },
-    )
-    return res.data
+    );
+    return res.data;
   }
 
   async delete(
@@ -329,49 +329,49 @@ export class ProfileRecord {
       undefined,
       { collection: 'org.codestash.actor.profile', ...params },
       { headers },
-    )
+    );
   }
 }
 
 export class ComNS {
-  _service: AtpServiceClient
-  atproto: ComAtprotoNS
+  _service: AtpServiceClient;
+  atproto: ComAtprotoNS;
 
   constructor(service: AtpServiceClient) {
-    this._service = service
-    this.atproto = new ComAtprotoNS(service)
+    this._service = service;
+    this.atproto = new ComAtprotoNS(service);
   }
 }
 
 export class ComAtprotoNS {
-  _service: AtpServiceClient
-  admin: ComAtprotoAdminNS
-  identity: ComAtprotoIdentityNS
-  label: ComAtprotoLabelNS
-  moderation: ComAtprotoModerationNS
-  repo: ComAtprotoRepoNS
-  server: ComAtprotoServerNS
-  sync: ComAtprotoSyncNS
-  temp: ComAtprotoTempNS
+  _service: AtpServiceClient;
+  admin: ComAtprotoAdminNS;
+  identity: ComAtprotoIdentityNS;
+  label: ComAtprotoLabelNS;
+  moderation: ComAtprotoModerationNS;
+  repo: ComAtprotoRepoNS;
+  server: ComAtprotoServerNS;
+  sync: ComAtprotoSyncNS;
+  temp: ComAtprotoTempNS;
 
   constructor(service: AtpServiceClient) {
-    this._service = service
-    this.admin = new ComAtprotoAdminNS(service)
-    this.identity = new ComAtprotoIdentityNS(service)
-    this.label = new ComAtprotoLabelNS(service)
-    this.moderation = new ComAtprotoModerationNS(service)
-    this.repo = new ComAtprotoRepoNS(service)
-    this.server = new ComAtprotoServerNS(service)
-    this.sync = new ComAtprotoSyncNS(service)
-    this.temp = new ComAtprotoTempNS(service)
+    this._service = service;
+    this.admin = new ComAtprotoAdminNS(service);
+    this.identity = new ComAtprotoIdentityNS(service);
+    this.label = new ComAtprotoLabelNS(service);
+    this.moderation = new ComAtprotoModerationNS(service);
+    this.repo = new ComAtprotoRepoNS(service);
+    this.server = new ComAtprotoServerNS(service);
+    this.sync = new ComAtprotoSyncNS(service);
+    this.temp = new ComAtprotoTempNS(service);
   }
 }
 
 export class ComAtprotoAdminNS {
-  _service: AtpServiceClient
+  _service: AtpServiceClient;
 
   constructor(service: AtpServiceClient) {
-    this._service = service
+    this._service = service;
   }
 
   deleteAccount(
@@ -381,8 +381,8 @@ export class ComAtprotoAdminNS {
     return this._service.xrpc
       .call('com.atproto.admin.deleteAccount', opts?.qp, data, opts)
       .catch((e) => {
-        throw ComAtprotoAdminDeleteAccount.toKnownErr(e)
-      })
+        throw ComAtprotoAdminDeleteAccount.toKnownErr(e);
+      });
   }
 
   disableAccountInvites(
@@ -392,8 +392,8 @@ export class ComAtprotoAdminNS {
     return this._service.xrpc
       .call('com.atproto.admin.disableAccountInvites', opts?.qp, data, opts)
       .catch((e) => {
-        throw ComAtprotoAdminDisableAccountInvites.toKnownErr(e)
-      })
+        throw ComAtprotoAdminDisableAccountInvites.toKnownErr(e);
+      });
   }
 
   disableInviteCodes(
@@ -403,8 +403,8 @@ export class ComAtprotoAdminNS {
     return this._service.xrpc
       .call('com.atproto.admin.disableInviteCodes', opts?.qp, data, opts)
       .catch((e) => {
-        throw ComAtprotoAdminDisableInviteCodes.toKnownErr(e)
-      })
+        throw ComAtprotoAdminDisableInviteCodes.toKnownErr(e);
+      });
   }
 
   enableAccountInvites(
@@ -414,8 +414,8 @@ export class ComAtprotoAdminNS {
     return this._service.xrpc
       .call('com.atproto.admin.enableAccountInvites', opts?.qp, data, opts)
       .catch((e) => {
-        throw ComAtprotoAdminEnableAccountInvites.toKnownErr(e)
-      })
+        throw ComAtprotoAdminEnableAccountInvites.toKnownErr(e);
+      });
   }
 
   getAccountInfo(
@@ -425,8 +425,8 @@ export class ComAtprotoAdminNS {
     return this._service.xrpc
       .call('com.atproto.admin.getAccountInfo', params, undefined, opts)
       .catch((e) => {
-        throw ComAtprotoAdminGetAccountInfo.toKnownErr(e)
-      })
+        throw ComAtprotoAdminGetAccountInfo.toKnownErr(e);
+      });
   }
 
   getAccountInfos(
@@ -436,8 +436,8 @@ export class ComAtprotoAdminNS {
     return this._service.xrpc
       .call('com.atproto.admin.getAccountInfos', params, undefined, opts)
       .catch((e) => {
-        throw ComAtprotoAdminGetAccountInfos.toKnownErr(e)
-      })
+        throw ComAtprotoAdminGetAccountInfos.toKnownErr(e);
+      });
   }
 
   getInviteCodes(
@@ -447,8 +447,8 @@ export class ComAtprotoAdminNS {
     return this._service.xrpc
       .call('com.atproto.admin.getInviteCodes', params, undefined, opts)
       .catch((e) => {
-        throw ComAtprotoAdminGetInviteCodes.toKnownErr(e)
-      })
+        throw ComAtprotoAdminGetInviteCodes.toKnownErr(e);
+      });
   }
 
   getSubjectStatus(
@@ -458,8 +458,8 @@ export class ComAtprotoAdminNS {
     return this._service.xrpc
       .call('com.atproto.admin.getSubjectStatus', params, undefined, opts)
       .catch((e) => {
-        throw ComAtprotoAdminGetSubjectStatus.toKnownErr(e)
-      })
+        throw ComAtprotoAdminGetSubjectStatus.toKnownErr(e);
+      });
   }
 
   sendEmail(
@@ -469,8 +469,8 @@ export class ComAtprotoAdminNS {
     return this._service.xrpc
       .call('com.atproto.admin.sendEmail', opts?.qp, data, opts)
       .catch((e) => {
-        throw ComAtprotoAdminSendEmail.toKnownErr(e)
-      })
+        throw ComAtprotoAdminSendEmail.toKnownErr(e);
+      });
   }
 
   updateAccountEmail(
@@ -480,8 +480,8 @@ export class ComAtprotoAdminNS {
     return this._service.xrpc
       .call('com.atproto.admin.updateAccountEmail', opts?.qp, data, opts)
       .catch((e) => {
-        throw ComAtprotoAdminUpdateAccountEmail.toKnownErr(e)
-      })
+        throw ComAtprotoAdminUpdateAccountEmail.toKnownErr(e);
+      });
   }
 
   updateAccountHandle(
@@ -491,8 +491,8 @@ export class ComAtprotoAdminNS {
     return this._service.xrpc
       .call('com.atproto.admin.updateAccountHandle', opts?.qp, data, opts)
       .catch((e) => {
-        throw ComAtprotoAdminUpdateAccountHandle.toKnownErr(e)
-      })
+        throw ComAtprotoAdminUpdateAccountHandle.toKnownErr(e);
+      });
   }
 
   updateAccountPassword(
@@ -502,8 +502,8 @@ export class ComAtprotoAdminNS {
     return this._service.xrpc
       .call('com.atproto.admin.updateAccountPassword', opts?.qp, data, opts)
       .catch((e) => {
-        throw ComAtprotoAdminUpdateAccountPassword.toKnownErr(e)
-      })
+        throw ComAtprotoAdminUpdateAccountPassword.toKnownErr(e);
+      });
   }
 
   updateSubjectStatus(
@@ -513,16 +513,16 @@ export class ComAtprotoAdminNS {
     return this._service.xrpc
       .call('com.atproto.admin.updateSubjectStatus', opts?.qp, data, opts)
       .catch((e) => {
-        throw ComAtprotoAdminUpdateSubjectStatus.toKnownErr(e)
-      })
+        throw ComAtprotoAdminUpdateSubjectStatus.toKnownErr(e);
+      });
   }
 }
 
 export class ComAtprotoIdentityNS {
-  _service: AtpServiceClient
+  _service: AtpServiceClient;
 
   constructor(service: AtpServiceClient) {
-    this._service = service
+    this._service = service;
   }
 
   getRecommendedDidCredentials(
@@ -537,8 +537,8 @@ export class ComAtprotoIdentityNS {
         opts,
       )
       .catch((e) => {
-        throw ComAtprotoIdentityGetRecommendedDidCredentials.toKnownErr(e)
-      })
+        throw ComAtprotoIdentityGetRecommendedDidCredentials.toKnownErr(e);
+      });
   }
 
   requestPlcOperationSignature(
@@ -553,8 +553,8 @@ export class ComAtprotoIdentityNS {
         opts,
       )
       .catch((e) => {
-        throw ComAtprotoIdentityRequestPlcOperationSignature.toKnownErr(e)
-      })
+        throw ComAtprotoIdentityRequestPlcOperationSignature.toKnownErr(e);
+      });
   }
 
   resolveHandle(
@@ -564,8 +564,8 @@ export class ComAtprotoIdentityNS {
     return this._service.xrpc
       .call('com.atproto.identity.resolveHandle', params, undefined, opts)
       .catch((e) => {
-        throw ComAtprotoIdentityResolveHandle.toKnownErr(e)
-      })
+        throw ComAtprotoIdentityResolveHandle.toKnownErr(e);
+      });
   }
 
   signPlcOperation(
@@ -575,8 +575,8 @@ export class ComAtprotoIdentityNS {
     return this._service.xrpc
       .call('com.atproto.identity.signPlcOperation', opts?.qp, data, opts)
       .catch((e) => {
-        throw ComAtprotoIdentitySignPlcOperation.toKnownErr(e)
-      })
+        throw ComAtprotoIdentitySignPlcOperation.toKnownErr(e);
+      });
   }
 
   submitPlcOperation(
@@ -586,8 +586,8 @@ export class ComAtprotoIdentityNS {
     return this._service.xrpc
       .call('com.atproto.identity.submitPlcOperation', opts?.qp, data, opts)
       .catch((e) => {
-        throw ComAtprotoIdentitySubmitPlcOperation.toKnownErr(e)
-      })
+        throw ComAtprotoIdentitySubmitPlcOperation.toKnownErr(e);
+      });
   }
 
   updateHandle(
@@ -597,16 +597,16 @@ export class ComAtprotoIdentityNS {
     return this._service.xrpc
       .call('com.atproto.identity.updateHandle', opts?.qp, data, opts)
       .catch((e) => {
-        throw ComAtprotoIdentityUpdateHandle.toKnownErr(e)
-      })
+        throw ComAtprotoIdentityUpdateHandle.toKnownErr(e);
+      });
   }
 }
 
 export class ComAtprotoLabelNS {
-  _service: AtpServiceClient
+  _service: AtpServiceClient;
 
   constructor(service: AtpServiceClient) {
-    this._service = service
+    this._service = service;
   }
 
   queryLabels(
@@ -616,16 +616,16 @@ export class ComAtprotoLabelNS {
     return this._service.xrpc
       .call('com.atproto.label.queryLabels', params, undefined, opts)
       .catch((e) => {
-        throw ComAtprotoLabelQueryLabels.toKnownErr(e)
-      })
+        throw ComAtprotoLabelQueryLabels.toKnownErr(e);
+      });
   }
 }
 
 export class ComAtprotoModerationNS {
-  _service: AtpServiceClient
+  _service: AtpServiceClient;
 
   constructor(service: AtpServiceClient) {
-    this._service = service
+    this._service = service;
   }
 
   createReport(
@@ -635,16 +635,16 @@ export class ComAtprotoModerationNS {
     return this._service.xrpc
       .call('com.atproto.moderation.createReport', opts?.qp, data, opts)
       .catch((e) => {
-        throw ComAtprotoModerationCreateReport.toKnownErr(e)
-      })
+        throw ComAtprotoModerationCreateReport.toKnownErr(e);
+      });
   }
 }
 
 export class ComAtprotoRepoNS {
-  _service: AtpServiceClient
+  _service: AtpServiceClient;
 
   constructor(service: AtpServiceClient) {
-    this._service = service
+    this._service = service;
   }
 
   applyWrites(
@@ -654,8 +654,8 @@ export class ComAtprotoRepoNS {
     return this._service.xrpc
       .call('com.atproto.repo.applyWrites', opts?.qp, data, opts)
       .catch((e) => {
-        throw ComAtprotoRepoApplyWrites.toKnownErr(e)
-      })
+        throw ComAtprotoRepoApplyWrites.toKnownErr(e);
+      });
   }
 
   createRecord(
@@ -665,8 +665,8 @@ export class ComAtprotoRepoNS {
     return this._service.xrpc
       .call('com.atproto.repo.createRecord', opts?.qp, data, opts)
       .catch((e) => {
-        throw ComAtprotoRepoCreateRecord.toKnownErr(e)
-      })
+        throw ComAtprotoRepoCreateRecord.toKnownErr(e);
+      });
   }
 
   deleteRecord(
@@ -676,8 +676,8 @@ export class ComAtprotoRepoNS {
     return this._service.xrpc
       .call('com.atproto.repo.deleteRecord', opts?.qp, data, opts)
       .catch((e) => {
-        throw ComAtprotoRepoDeleteRecord.toKnownErr(e)
-      })
+        throw ComAtprotoRepoDeleteRecord.toKnownErr(e);
+      });
   }
 
   describeRepo(
@@ -687,8 +687,8 @@ export class ComAtprotoRepoNS {
     return this._service.xrpc
       .call('com.atproto.repo.describeRepo', params, undefined, opts)
       .catch((e) => {
-        throw ComAtprotoRepoDescribeRepo.toKnownErr(e)
-      })
+        throw ComAtprotoRepoDescribeRepo.toKnownErr(e);
+      });
   }
 
   getRecord(
@@ -698,8 +698,8 @@ export class ComAtprotoRepoNS {
     return this._service.xrpc
       .call('com.atproto.repo.getRecord', params, undefined, opts)
       .catch((e) => {
-        throw ComAtprotoRepoGetRecord.toKnownErr(e)
-      })
+        throw ComAtprotoRepoGetRecord.toKnownErr(e);
+      });
   }
 
   importRepo(
@@ -709,8 +709,8 @@ export class ComAtprotoRepoNS {
     return this._service.xrpc
       .call('com.atproto.repo.importRepo', opts?.qp, data, opts)
       .catch((e) => {
-        throw ComAtprotoRepoImportRepo.toKnownErr(e)
-      })
+        throw ComAtprotoRepoImportRepo.toKnownErr(e);
+      });
   }
 
   listMissingBlobs(
@@ -720,8 +720,8 @@ export class ComAtprotoRepoNS {
     return this._service.xrpc
       .call('com.atproto.repo.listMissingBlobs', params, undefined, opts)
       .catch((e) => {
-        throw ComAtprotoRepoListMissingBlobs.toKnownErr(e)
-      })
+        throw ComAtprotoRepoListMissingBlobs.toKnownErr(e);
+      });
   }
 
   listRecords(
@@ -731,8 +731,8 @@ export class ComAtprotoRepoNS {
     return this._service.xrpc
       .call('com.atproto.repo.listRecords', params, undefined, opts)
       .catch((e) => {
-        throw ComAtprotoRepoListRecords.toKnownErr(e)
-      })
+        throw ComAtprotoRepoListRecords.toKnownErr(e);
+      });
   }
 
   putRecord(
@@ -742,8 +742,8 @@ export class ComAtprotoRepoNS {
     return this._service.xrpc
       .call('com.atproto.repo.putRecord', opts?.qp, data, opts)
       .catch((e) => {
-        throw ComAtprotoRepoPutRecord.toKnownErr(e)
-      })
+        throw ComAtprotoRepoPutRecord.toKnownErr(e);
+      });
   }
 
   uploadBlob(
@@ -753,16 +753,16 @@ export class ComAtprotoRepoNS {
     return this._service.xrpc
       .call('com.atproto.repo.uploadBlob', opts?.qp, data, opts)
       .catch((e) => {
-        throw ComAtprotoRepoUploadBlob.toKnownErr(e)
-      })
+        throw ComAtprotoRepoUploadBlob.toKnownErr(e);
+      });
   }
 }
 
 export class ComAtprotoServerNS {
-  _service: AtpServiceClient
+  _service: AtpServiceClient;
 
   constructor(service: AtpServiceClient) {
-    this._service = service
+    this._service = service;
   }
 
   activateAccount(
@@ -772,8 +772,8 @@ export class ComAtprotoServerNS {
     return this._service.xrpc
       .call('com.atproto.server.activateAccount', opts?.qp, data, opts)
       .catch((e) => {
-        throw ComAtprotoServerActivateAccount.toKnownErr(e)
-      })
+        throw ComAtprotoServerActivateAccount.toKnownErr(e);
+      });
   }
 
   checkAccountStatus(
@@ -783,8 +783,8 @@ export class ComAtprotoServerNS {
     return this._service.xrpc
       .call('com.atproto.server.checkAccountStatus', params, undefined, opts)
       .catch((e) => {
-        throw ComAtprotoServerCheckAccountStatus.toKnownErr(e)
-      })
+        throw ComAtprotoServerCheckAccountStatus.toKnownErr(e);
+      });
   }
 
   confirmEmail(
@@ -794,8 +794,8 @@ export class ComAtprotoServerNS {
     return this._service.xrpc
       .call('com.atproto.server.confirmEmail', opts?.qp, data, opts)
       .catch((e) => {
-        throw ComAtprotoServerConfirmEmail.toKnownErr(e)
-      })
+        throw ComAtprotoServerConfirmEmail.toKnownErr(e);
+      });
   }
 
   createAccount(
@@ -805,8 +805,8 @@ export class ComAtprotoServerNS {
     return this._service.xrpc
       .call('com.atproto.server.createAccount', opts?.qp, data, opts)
       .catch((e) => {
-        throw ComAtprotoServerCreateAccount.toKnownErr(e)
-      })
+        throw ComAtprotoServerCreateAccount.toKnownErr(e);
+      });
   }
 
   createAppPassword(
@@ -816,8 +816,8 @@ export class ComAtprotoServerNS {
     return this._service.xrpc
       .call('com.atproto.server.createAppPassword', opts?.qp, data, opts)
       .catch((e) => {
-        throw ComAtprotoServerCreateAppPassword.toKnownErr(e)
-      })
+        throw ComAtprotoServerCreateAppPassword.toKnownErr(e);
+      });
   }
 
   createInviteCode(
@@ -827,8 +827,8 @@ export class ComAtprotoServerNS {
     return this._service.xrpc
       .call('com.atproto.server.createInviteCode', opts?.qp, data, opts)
       .catch((e) => {
-        throw ComAtprotoServerCreateInviteCode.toKnownErr(e)
-      })
+        throw ComAtprotoServerCreateInviteCode.toKnownErr(e);
+      });
   }
 
   createInviteCodes(
@@ -838,8 +838,8 @@ export class ComAtprotoServerNS {
     return this._service.xrpc
       .call('com.atproto.server.createInviteCodes', opts?.qp, data, opts)
       .catch((e) => {
-        throw ComAtprotoServerCreateInviteCodes.toKnownErr(e)
-      })
+        throw ComAtprotoServerCreateInviteCodes.toKnownErr(e);
+      });
   }
 
   createSession(
@@ -849,8 +849,8 @@ export class ComAtprotoServerNS {
     return this._service.xrpc
       .call('com.atproto.server.createSession', opts?.qp, data, opts)
       .catch((e) => {
-        throw ComAtprotoServerCreateSession.toKnownErr(e)
-      })
+        throw ComAtprotoServerCreateSession.toKnownErr(e);
+      });
   }
 
   deactivateAccount(
@@ -860,8 +860,8 @@ export class ComAtprotoServerNS {
     return this._service.xrpc
       .call('com.atproto.server.deactivateAccount', opts?.qp, data, opts)
       .catch((e) => {
-        throw ComAtprotoServerDeactivateAccount.toKnownErr(e)
-      })
+        throw ComAtprotoServerDeactivateAccount.toKnownErr(e);
+      });
   }
 
   deleteAccount(
@@ -871,8 +871,8 @@ export class ComAtprotoServerNS {
     return this._service.xrpc
       .call('com.atproto.server.deleteAccount', opts?.qp, data, opts)
       .catch((e) => {
-        throw ComAtprotoServerDeleteAccount.toKnownErr(e)
-      })
+        throw ComAtprotoServerDeleteAccount.toKnownErr(e);
+      });
   }
 
   deleteSession(
@@ -882,8 +882,8 @@ export class ComAtprotoServerNS {
     return this._service.xrpc
       .call('com.atproto.server.deleteSession', opts?.qp, data, opts)
       .catch((e) => {
-        throw ComAtprotoServerDeleteSession.toKnownErr(e)
-      })
+        throw ComAtprotoServerDeleteSession.toKnownErr(e);
+      });
   }
 
   describeServer(
@@ -893,8 +893,8 @@ export class ComAtprotoServerNS {
     return this._service.xrpc
       .call('com.atproto.server.describeServer', params, undefined, opts)
       .catch((e) => {
-        throw ComAtprotoServerDescribeServer.toKnownErr(e)
-      })
+        throw ComAtprotoServerDescribeServer.toKnownErr(e);
+      });
   }
 
   getAccountInviteCodes(
@@ -904,8 +904,8 @@ export class ComAtprotoServerNS {
     return this._service.xrpc
       .call('com.atproto.server.getAccountInviteCodes', params, undefined, opts)
       .catch((e) => {
-        throw ComAtprotoServerGetAccountInviteCodes.toKnownErr(e)
-      })
+        throw ComAtprotoServerGetAccountInviteCodes.toKnownErr(e);
+      });
   }
 
   getServiceAuth(
@@ -915,8 +915,8 @@ export class ComAtprotoServerNS {
     return this._service.xrpc
       .call('com.atproto.server.getServiceAuth', params, undefined, opts)
       .catch((e) => {
-        throw ComAtprotoServerGetServiceAuth.toKnownErr(e)
-      })
+        throw ComAtprotoServerGetServiceAuth.toKnownErr(e);
+      });
   }
 
   getSession(
@@ -926,8 +926,8 @@ export class ComAtprotoServerNS {
     return this._service.xrpc
       .call('com.atproto.server.getSession', params, undefined, opts)
       .catch((e) => {
-        throw ComAtprotoServerGetSession.toKnownErr(e)
-      })
+        throw ComAtprotoServerGetSession.toKnownErr(e);
+      });
   }
 
   listAppPasswords(
@@ -937,8 +937,8 @@ export class ComAtprotoServerNS {
     return this._service.xrpc
       .call('com.atproto.server.listAppPasswords', params, undefined, opts)
       .catch((e) => {
-        throw ComAtprotoServerListAppPasswords.toKnownErr(e)
-      })
+        throw ComAtprotoServerListAppPasswords.toKnownErr(e);
+      });
   }
 
   refreshSession(
@@ -948,8 +948,8 @@ export class ComAtprotoServerNS {
     return this._service.xrpc
       .call('com.atproto.server.refreshSession', opts?.qp, data, opts)
       .catch((e) => {
-        throw ComAtprotoServerRefreshSession.toKnownErr(e)
-      })
+        throw ComAtprotoServerRefreshSession.toKnownErr(e);
+      });
   }
 
   requestAccountDelete(
@@ -959,8 +959,8 @@ export class ComAtprotoServerNS {
     return this._service.xrpc
       .call('com.atproto.server.requestAccountDelete', opts?.qp, data, opts)
       .catch((e) => {
-        throw ComAtprotoServerRequestAccountDelete.toKnownErr(e)
-      })
+        throw ComAtprotoServerRequestAccountDelete.toKnownErr(e);
+      });
   }
 
   requestEmailConfirmation(
@@ -970,8 +970,8 @@ export class ComAtprotoServerNS {
     return this._service.xrpc
       .call('com.atproto.server.requestEmailConfirmation', opts?.qp, data, opts)
       .catch((e) => {
-        throw ComAtprotoServerRequestEmailConfirmation.toKnownErr(e)
-      })
+        throw ComAtprotoServerRequestEmailConfirmation.toKnownErr(e);
+      });
   }
 
   requestEmailUpdate(
@@ -981,8 +981,8 @@ export class ComAtprotoServerNS {
     return this._service.xrpc
       .call('com.atproto.server.requestEmailUpdate', opts?.qp, data, opts)
       .catch((e) => {
-        throw ComAtprotoServerRequestEmailUpdate.toKnownErr(e)
-      })
+        throw ComAtprotoServerRequestEmailUpdate.toKnownErr(e);
+      });
   }
 
   requestPasswordReset(
@@ -992,8 +992,8 @@ export class ComAtprotoServerNS {
     return this._service.xrpc
       .call('com.atproto.server.requestPasswordReset', opts?.qp, data, opts)
       .catch((e) => {
-        throw ComAtprotoServerRequestPasswordReset.toKnownErr(e)
-      })
+        throw ComAtprotoServerRequestPasswordReset.toKnownErr(e);
+      });
   }
 
   reserveSigningKey(
@@ -1003,8 +1003,8 @@ export class ComAtprotoServerNS {
     return this._service.xrpc
       .call('com.atproto.server.reserveSigningKey', opts?.qp, data, opts)
       .catch((e) => {
-        throw ComAtprotoServerReserveSigningKey.toKnownErr(e)
-      })
+        throw ComAtprotoServerReserveSigningKey.toKnownErr(e);
+      });
   }
 
   resetPassword(
@@ -1014,8 +1014,8 @@ export class ComAtprotoServerNS {
     return this._service.xrpc
       .call('com.atproto.server.resetPassword', opts?.qp, data, opts)
       .catch((e) => {
-        throw ComAtprotoServerResetPassword.toKnownErr(e)
-      })
+        throw ComAtprotoServerResetPassword.toKnownErr(e);
+      });
   }
 
   revokeAppPassword(
@@ -1025,8 +1025,8 @@ export class ComAtprotoServerNS {
     return this._service.xrpc
       .call('com.atproto.server.revokeAppPassword', opts?.qp, data, opts)
       .catch((e) => {
-        throw ComAtprotoServerRevokeAppPassword.toKnownErr(e)
-      })
+        throw ComAtprotoServerRevokeAppPassword.toKnownErr(e);
+      });
   }
 
   updateEmail(
@@ -1036,16 +1036,16 @@ export class ComAtprotoServerNS {
     return this._service.xrpc
       .call('com.atproto.server.updateEmail', opts?.qp, data, opts)
       .catch((e) => {
-        throw ComAtprotoServerUpdateEmail.toKnownErr(e)
-      })
+        throw ComAtprotoServerUpdateEmail.toKnownErr(e);
+      });
   }
 }
 
 export class ComAtprotoSyncNS {
-  _service: AtpServiceClient
+  _service: AtpServiceClient;
 
   constructor(service: AtpServiceClient) {
-    this._service = service
+    this._service = service;
   }
 
   getBlob(
@@ -1055,8 +1055,8 @@ export class ComAtprotoSyncNS {
     return this._service.xrpc
       .call('com.atproto.sync.getBlob', params, undefined, opts)
       .catch((e) => {
-        throw ComAtprotoSyncGetBlob.toKnownErr(e)
-      })
+        throw ComAtprotoSyncGetBlob.toKnownErr(e);
+      });
   }
 
   getBlocks(
@@ -1066,8 +1066,8 @@ export class ComAtprotoSyncNS {
     return this._service.xrpc
       .call('com.atproto.sync.getBlocks', params, undefined, opts)
       .catch((e) => {
-        throw ComAtprotoSyncGetBlocks.toKnownErr(e)
-      })
+        throw ComAtprotoSyncGetBlocks.toKnownErr(e);
+      });
   }
 
   getCheckout(
@@ -1077,8 +1077,8 @@ export class ComAtprotoSyncNS {
     return this._service.xrpc
       .call('com.atproto.sync.getCheckout', params, undefined, opts)
       .catch((e) => {
-        throw ComAtprotoSyncGetCheckout.toKnownErr(e)
-      })
+        throw ComAtprotoSyncGetCheckout.toKnownErr(e);
+      });
   }
 
   getHead(
@@ -1088,8 +1088,8 @@ export class ComAtprotoSyncNS {
     return this._service.xrpc
       .call('com.atproto.sync.getHead', params, undefined, opts)
       .catch((e) => {
-        throw ComAtprotoSyncGetHead.toKnownErr(e)
-      })
+        throw ComAtprotoSyncGetHead.toKnownErr(e);
+      });
   }
 
   getLatestCommit(
@@ -1099,8 +1099,8 @@ export class ComAtprotoSyncNS {
     return this._service.xrpc
       .call('com.atproto.sync.getLatestCommit', params, undefined, opts)
       .catch((e) => {
-        throw ComAtprotoSyncGetLatestCommit.toKnownErr(e)
-      })
+        throw ComAtprotoSyncGetLatestCommit.toKnownErr(e);
+      });
   }
 
   getRecord(
@@ -1110,8 +1110,8 @@ export class ComAtprotoSyncNS {
     return this._service.xrpc
       .call('com.atproto.sync.getRecord', params, undefined, opts)
       .catch((e) => {
-        throw ComAtprotoSyncGetRecord.toKnownErr(e)
-      })
+        throw ComAtprotoSyncGetRecord.toKnownErr(e);
+      });
   }
 
   getRepo(
@@ -1121,8 +1121,8 @@ export class ComAtprotoSyncNS {
     return this._service.xrpc
       .call('com.atproto.sync.getRepo', params, undefined, opts)
       .catch((e) => {
-        throw ComAtprotoSyncGetRepo.toKnownErr(e)
-      })
+        throw ComAtprotoSyncGetRepo.toKnownErr(e);
+      });
   }
 
   listBlobs(
@@ -1132,8 +1132,8 @@ export class ComAtprotoSyncNS {
     return this._service.xrpc
       .call('com.atproto.sync.listBlobs', params, undefined, opts)
       .catch((e) => {
-        throw ComAtprotoSyncListBlobs.toKnownErr(e)
-      })
+        throw ComAtprotoSyncListBlobs.toKnownErr(e);
+      });
   }
 
   listRepos(
@@ -1143,8 +1143,8 @@ export class ComAtprotoSyncNS {
     return this._service.xrpc
       .call('com.atproto.sync.listRepos', params, undefined, opts)
       .catch((e) => {
-        throw ComAtprotoSyncListRepos.toKnownErr(e)
-      })
+        throw ComAtprotoSyncListRepos.toKnownErr(e);
+      });
   }
 
   notifyOfUpdate(
@@ -1154,8 +1154,8 @@ export class ComAtprotoSyncNS {
     return this._service.xrpc
       .call('com.atproto.sync.notifyOfUpdate', opts?.qp, data, opts)
       .catch((e) => {
-        throw ComAtprotoSyncNotifyOfUpdate.toKnownErr(e)
-      })
+        throw ComAtprotoSyncNotifyOfUpdate.toKnownErr(e);
+      });
   }
 
   requestCrawl(
@@ -1165,16 +1165,16 @@ export class ComAtprotoSyncNS {
     return this._service.xrpc
       .call('com.atproto.sync.requestCrawl', opts?.qp, data, opts)
       .catch((e) => {
-        throw ComAtprotoSyncRequestCrawl.toKnownErr(e)
-      })
+        throw ComAtprotoSyncRequestCrawl.toKnownErr(e);
+      });
   }
 }
 
 export class ComAtprotoTempNS {
-  _service: AtpServiceClient
+  _service: AtpServiceClient;
 
   constructor(service: AtpServiceClient) {
-    this._service = service
+    this._service = service;
   }
 
   checkSignupQueue(
@@ -1184,8 +1184,8 @@ export class ComAtprotoTempNS {
     return this._service.xrpc
       .call('com.atproto.temp.checkSignupQueue', params, undefined, opts)
       .catch((e) => {
-        throw ComAtprotoTempCheckSignupQueue.toKnownErr(e)
-      })
+        throw ComAtprotoTempCheckSignupQueue.toKnownErr(e);
+      });
   }
 
   fetchLabels(
@@ -1195,8 +1195,8 @@ export class ComAtprotoTempNS {
     return this._service.xrpc
       .call('com.atproto.temp.fetchLabels', params, undefined, opts)
       .catch((e) => {
-        throw ComAtprotoTempFetchLabels.toKnownErr(e)
-      })
+        throw ComAtprotoTempFetchLabels.toKnownErr(e);
+      });
   }
 
   requestPhoneVerification(
@@ -1206,7 +1206,7 @@ export class ComAtprotoTempNS {
     return this._service.xrpc
       .call('com.atproto.temp.requestPhoneVerification', opts?.qp, data, opts)
       .catch((e) => {
-        throw ComAtprotoTempRequestPhoneVerification.toKnownErr(e)
-      })
+        throw ComAtprotoTempRequestPhoneVerification.toKnownErr(e);
+      });
   }
 }

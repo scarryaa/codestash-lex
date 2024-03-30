@@ -1,18 +1,18 @@
-import { SeedClient } from './client'
-import basicSeed from './basic'
+import { SeedClient } from './client';
+import basicSeed from './basic';
 
 export default async (sc: SeedClient) => {
-  await basicSeed(sc)
+  await basicSeed(sc);
   await sc.createAccount('eve', {
     email: 'eve@test.com',
     handle: 'eve.test',
     password: 'eve-pass',
-  })
+  });
   await sc.createAccount('fred', {
     email: 'fred@test.com',
     handle: 'fred.test',
     password: 'fred-pass',
-  })
+  });
 
   // const alice = sc.dids.alice
   // const eve = sc.dids.eve
@@ -84,8 +84,8 @@ export default async (sc: SeedClient) => {
   // // a repost for eve's feed
   // await sc.repost(eve, fredReply.ref)
 
-  return sc
-}
+  return sc;
+};
 
 // const evePosts = ['eve own thread', 'eve detached thread']
 // const eveOwnThreadReplies = [

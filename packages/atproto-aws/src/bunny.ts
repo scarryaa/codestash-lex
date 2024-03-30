@@ -1,12 +1,12 @@
-import { handleAllSettledErrors } from '@atproto/common'
-import { ImageInvalidator } from './types'
+import { handleAllSettledErrors } from '@atproto/common';
+import { ImageInvalidator } from './types';
 
 export type BunnyConfig = {
-  accessKey: string
-  urlPrefix: string
-}
+  accessKey: string;
+  urlPrefix: string;
+};
 
-const API_PURGE_URL = 'https://api.bunny.net/purge'
+const API_PURGE_URL = 'https://api.bunny.net/purge';
 
 export class BunnyInvalidator implements ImageInvalidator {
   constructor(public cfg: BunnyConfig) {}
@@ -18,19 +18,19 @@ export class BunnyInvalidator implements ImageInvalidator {
           accessKey: this.cfg.accessKey,
         }),
       ),
-    )
-    handleAllSettledErrors(results)
+    );
+    handleAllSettledErrors(results);
   }
 }
 
-export default BunnyInvalidator
+export default BunnyInvalidator;
 
 async function purgeUrl(opts: { accessKey: string; url: string }) {
-  const search = new URLSearchParams()
-  search.set('async', 'true')
-  search.set('url', opts.url)
+  const search = new URLSearchParams();
+  search.set('async', 'true');
+  search.set('url', opts.url);
   await fetch(API_PURGE_URL + '?' + search.toString(), {
     method: 'post',
     headers: { AccessKey: opts.accessKey },
-  })
+  });
 }
