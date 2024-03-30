@@ -8,7 +8,7 @@ import { Client as PlcClient } from '@did-plc/lib'
 import { CodestashConfig } from './types'
 import { ADMIN_PASSWORD, EXAMPLE_LABELER } from './const'
 
-export * from '@atproto/bsky'
+export * from '@codestash-lex/codestash'
 
 export class TestCodestash {
     constructor(
@@ -48,6 +48,7 @@ export class TestCodestash {
             dataplanePort,
             cfg.plcUrl,
         )
+        console.log(dataplane);
 
         const bsyncPort = await getPort()
         const bsync = await codestash.MockCsync.create(db, bsyncPort)

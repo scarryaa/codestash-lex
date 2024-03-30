@@ -7,13 +7,13 @@ export interface ServerConfigValues {
     port?: number
     publicUrl?: string
     serverDid: string
-    csyncHttpVersion?: '1.1' | '2'
     // external services
     dataplaneUrls: string[]
-    dataplaneHttpVersion: ('1.1' | '2');
-    dataplaneIgnoreBadTls?: boolean;
+    dataplaneHttpVersion?: '1.1' | '2'
+    dataplaneIgnoreBadTls?: boolean
     csyncUrl: string
     csyncApiKey?: string
+    csyncHttpVersion?: '1.1' | '2'
     csyncIgnoreBadTls?: boolean
     courierUrl: string
     courierApiKey?: string
@@ -35,73 +35,65 @@ export interface ServerConfigValues {
 }
 
 export class ServerConfig {
-    private assignedPort?: number;
+    private assignedPort?: number
     constructor(private cfg: ServerConfigValues) { }
 
-    assignPort(port: number) {
-        assert(
-            !this.cfg.port || this.cfg.port === port,
-            'Conflicting port in config',
-        )
-        this.assignedPort = port;
-    }
-
     static readEnv(overrides?: Partial<ServerConfigValues>) {
-        const version = process.env.BSKY_VERSION || undefined
+        const version = process.env.CODESTASH_VERSION || undefined
         const debugMode = process.env.NODE_ENV !== 'production'
         const publicUrl = process.env.CODESTASH_PUBLIC_URL || undefined
-        const serverDid = process.env.BSKY_SERVER_DID || 'did:example:test'
+        const serverDid = process.env.CODESTASH_SERVER_DID || 'did:example:test'
         const envPort = parseInt(process.env.CODESTASH_PORT || '', 10)
         const port = isNaN(envPort) ? 2584 : envPort
-        const didPlcUrl = process.env.BSKY_DID_PLC_URL || 'http://localhost:2582'
-        const handleResolveNameservers = process.env.BSKY_HANDLE_RESOLVE_NAMESERVERS
-            ? process.env.BSKY_HANDLE_RESOLVE_NAMESERVERS.split(',')
+        const didPlcUrl = process.env.CODESTASH_DID_PLC_URL || 'http://localhost:2582'
+        const handleResolveNameservers = process.env.CODESTASH_HANDLE_RESOLVE_NAMESERVERS
+            ? process.env.CODESTASH_HANDLE_RESOLVE_NAMESERVERS.split(',')
             : []
-        const cdnUrl = process.env.BSKY_CDN_URL || process.env.BSKY_IMG_URI_ENDPOINT
-        const blobCacheLocation = process.env.BSKY_BLOB_CACHE_LOC
+        const cdnUrl = process.env.CODESTASH_CDN_URL || process.env.CODESTASH_IMG_URI_ENDPOINT
+        const blobCacheLocation = process.env.CODESTASH_BLOB_CACHE_LOC
         const searchUrl =
-            process.env.BSKY_SEARCH_URL ||
-            process.env.BSKY_SEARCH_ENDPOINT ||
+            process.env.CODESTASH_SEARCH_URL ||
+            process.env.CODESTASH_SEARCH_ENDPOINT ||
             undefined
         let dataplaneUrls = overrides?.dataplaneUrls
-        dataplaneUrls ??= process.env.BSKY_DATAPLANE_URLS
-            ? process.env.BSKY_DATAPLANE_URLS.split(',')
+        dataplaneUrls ??= process.env.CODESTASH_DATAPLANE_URLS
+            ? process.env.CODESTASH_DATAPLANE_URLS.split(',')
             : []
-        const dataplaneHttpVersion = process.env.BSKY_DATAPLANE_HTTP_VERSION || '2' as ("1.1" | "2")
+        const dataplaneHttpVersion = process.env.CODESTASH_DATAPLANE_HTTP_VERSION || '2'
         const dataplaneIgnoreBadTls =
-            process.env.BSKY_DATAPLANE_IGNORE_BAD_TLS === 'true'
-        const labelsFromIssuerDids = process.env.BSKY_LABELS_FROM_ISSUER_DIDS
-            ? process.env.BSKY_LABELS_FROM_ISSUER_DIDS.split(',')
+            process.env.CODESTASH_DATAPLANE_IGNORE_BAD_TLS === 'true'
+        const labelsFromIssuerDids = process.env.CODESTASH_LABELS_FROM_ISSUER_DIDS
+            ? process.env.CODESTASH_LABELS_FROM_ISSUER_DIDS.split(',')
             : []
-        const csyncUrl = process.env.BSKY_CSYNC_URL || undefined
+        const csyncUrl = process.env.CODESTASH_CSYNC_URL || undefined
         assert(csyncUrl)
-        const csyncApiKey = process.env.BSKY_CSYNC_API_KEY || undefined
-        const csyncHttpVersion = process.env.BSKY_CSYNC_HTTP_VERSION || '2'
-        const csyncIgnoreBadTls = process.env.BSKY_CSYNC_IGNORE_BAD_TLS === 'true'
+        const csyncApiKey = process.env.CODESTASH_CSYNC_API_KEY || undefined
+        const csyncHttpVersion = process.env.CODESTASH_CSYNC_HTTP_VERSION || '2'
+        const csyncIgnoreBadTls = process.env.CODESTASH_CSYNC_IGNORE_BAD_TLS === 'true'
         assert(csyncHttpVersion === '1.1' || csyncHttpVersion === '2')
-        const courierUrl = process.env.BSKY_COURIER_URL || undefined
+        const courierUrl = process.env.CODESTASH_COURIER_URL || undefined
         assert(courierUrl)
-        const courierApiKey = process.env.BSKY_COURIER_API_KEY || undefined
-        const courierHttpVersion = process.env.BSKY_COURIER_HTTP_VERSION || '2'
+        const courierApiKey = process.env.CODESTASH_COURIER_API_KEY || undefined
+        const courierHttpVersion = process.env.CODESTASH_COURIER_HTTP_VERSION || '2'
         const courierIgnoreBadTls =
-            process.env.BSKY_COURIER_IGNORE_BAD_TLS === 'true'
+            process.env.CODESTASH_COURIER_IGNORE_BAD_TLS === 'true'
         assert(courierHttpVersion === '1.1' || courierHttpVersion === '2')
         const blobRateLimitBypassKey =
-            process.env.BSKY_BLOB_RATE_LIMIT_BYPASS_KEY || undefined
+            process.env.CODESTASH_BLOB_RATE_LIMIT_BYPASS_KEY || undefined
         // single domain would be e.g. "mypds.com", subdomains are supported with a leading dot e.g. ".mypds.com"
         const blobRateLimitBypassHostname =
-            process.env.BSKY_BLOB_RATE_LIMIT_BYPASS_HOSTNAME || undefined
+            process.env.CODESTASH_BLOB_RATE_LIMIT_BYPASS_HOSTNAME || undefined
         assert(
             !blobRateLimitBypassKey || blobRateLimitBypassHostname,
             'must specify a hostname when using a blob rate limit bypass key',
         )
         const adminPasswords = envList(
-            process.env.BSKY_ADMIN_PASSWORDS || process.env.BSKY_ADMIN_PASSWORD,
+            process.env.CODESTASH_ADMIN_PASSWORDS || process.env.CODESTASH_ADMIN_PASSWORD,
         )
-        // const modServiceDid = process.env.MOD_SERVICE_DID
-        // assert(modServiceDid)
-        // assert(dataplaneUrls.length)
-        // assert(dataplaneHttpVersion === '1.1' || dataplaneHttpVersion === '2')
+        const modServiceDid = process.env.MOD_SERVICE_DID
+        assert(modServiceDid)
+        assert(dataplaneUrls.length)
+        assert(dataplaneHttpVersion === '1.1' || dataplaneHttpVersion === '2')
         return new ServerConfig({
             version,
             debugMode,
@@ -109,7 +101,6 @@ export class ServerConfig {
             publicUrl,
             serverDid,
             dataplaneUrls,
-            // @ts-ignore ignore string is not assignable to 1.1 or 2
             dataplaneHttpVersion,
             dataplaneIgnoreBadTls,
             searchUrl,
@@ -129,37 +120,110 @@ export class ServerConfig {
             blobRateLimitBypassKey,
             blobRateLimitBypassHostname,
             adminPasswords,
-            // modServiceDid,
+            modServiceDid,
             ...stripUndefineds(overrides ?? {}),
         })
     }
 
-    get serverDid() {
-        return this.cfg.serverDid || 'did:example:test';
-    }
-
-    get dataplaneUrls() {
-        return this.cfg.dataplaneUrls || [];
+    assignPort(port: number) {
+        assert(
+            !this.cfg.port || this.cfg.port === port,
+            'Conflicting port in config',
+        )
+        this.assignedPort = port
     }
 
     get version() {
-        return this.cfg.version;
-    }
-
-    get port() {
-        return this.assignedPort || this.cfg.port;
+        return this.cfg.version
     }
 
     get debugMode() {
-        return !!this.cfg.debugMode;
+        return !!this.cfg.debugMode
     }
 
-    get dataplaneHttpVersion(): '1.1' | '2' | undefined {
-        return this.cfg.dataplaneHttpVersion;
+    get port() {
+        return this.assignedPort || this.cfg.port
+    }
+
+    get localUrl() {
+        assert(this.port, 'No port assigned')
+        return `http://localhost:${this.port}`
+    }
+
+    get publicUrl() {
+        return this.cfg.publicUrl
+    }
+
+    get serverDid() {
+        return this.cfg.serverDid
+    }
+
+    get dataplaneUrls() {
+        return this.cfg.dataplaneUrls
+    }
+
+    get dataplaneHttpVersion() {
+        return this.cfg.dataplaneHttpVersion
     }
 
     get dataplaneIgnoreBadTls() {
         return this.cfg.dataplaneIgnoreBadTls
+    }
+
+    get csyncUrl() {
+        return this.cfg.csyncUrl
+    }
+
+    get csyncApiKey() {
+        return this.cfg.csyncApiKey
+    }
+
+    get csyncHttpVersion() {
+        return this.cfg.csyncHttpVersion
+    }
+
+    get csyncIgnoreBadTls() {
+        return this.cfg.csyncIgnoreBadTls
+    }
+
+    get courierUrl() {
+        return this.cfg.courierUrl
+    }
+
+    get courierApiKey() {
+        return this.cfg.courierApiKey
+    }
+
+    get courierHttpVersion() {
+        return this.cfg.courierHttpVersion
+    }
+
+    get courierIgnoreBadTls() {
+        return this.cfg.courierIgnoreBadTls
+    }
+
+    get searchUrl() {
+        return this.cfg.searchUrl
+    }
+
+    get cdnUrl() {
+        return this.cfg.cdnUrl
+    }
+
+    get blobRateLimitBypassKey() {
+        return this.cfg.blobRateLimitBypassKey
+    }
+
+    get blobRateLimitBypassHostname() {
+        return this.cfg.blobRateLimitBypassHostname
+    }
+
+    get didPlcUrl() {
+        return this.cfg.didPlcUrl
+    }
+
+    get handleResolveNameservers() {
+        return this.cfg.handleResolveNameservers
     }
 
     get adminPasswords() {
@@ -170,28 +234,12 @@ export class ServerConfig {
         return this.cfg.modServiceDid
     }
 
-    get publicUrl() {
-        return this.cfg.publicUrl
+    get labelsFromIssuerDids() {
+        return this.cfg.labelsFromIssuerDids ?? []
     }
 
-    get cdnUrl() {
-        return this.cfg.cdnUrl
-    }
-
-    get csyncUrl() {
-        return this.cfg.csyncUrl;
-    }
-
-    get csyncHttpVersion() {
-        return this.cfg.csyncHttpVersion;
-    }
-
-    get csyncIgnoreBadTls() {
-        return this.cfg.csyncIgnoreBadTls;
-    }
-
-    get csyncApiKey() {
-        return this.cfg.csyncApiKey;
+    get blobCacheLocation() {
+        return this.cfg.blobCacheLocation
     }
 }
 

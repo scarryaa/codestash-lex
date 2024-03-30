@@ -23,7 +23,8 @@
   "devDependencies": {
     "@bufbuild/buf": "^1.30.0",
     "@bufbuild/protoc-gen-es": "^1.8.0",
-    "@connectrpc/protoc-gen-connect-es": "^1.4.0"
+    "@connectrpc/protoc-gen-connect-es": "^1.4.0",
+    "@types/express-serve-static-core": "4.17.36"
   },
   "private": false,
   "author": "scarryaa",
@@ -45,6 +46,7 @@
     "@connectrpc/connect": "^1.4.0",
     "@connectrpc/connect-express": "^1.4.0",
     "@connectrpc/connect-node": "^1.4.0",
+    "@did-plc/lib": "^0.0.4",
     "axios": "^0.27.2",
     "cors": "^2.8.5",
     "express": "^4.19.2",
@@ -52,11 +54,12 @@
     "ioredis": "^5.3.2",
     "jose": "^5.2.3",
     "kysely": "^0.22.0",
+    "optional": "^0.1.4",
     "p-queue": "^6.6.2",
     "pg": "^8.10.0",
     "pino": "^8.19.0",
     "pino-http": "^8.2.1",
-    "sharp": "^0.33.3",
+    "sharp": "^0.32.6",
     "simple-git": "^3.24.0",
     "typed-emitter": "^2.1.0"
   }

@@ -337,6 +337,316 @@ export class GetProfileRecordsResponse extends Message<GetProfileRecordsResponse
 }
 
 /**
+ * @generated from message codestash.GetBlobTakedownRequest
+ */
+export class GetBlobTakedownRequest extends Message<GetBlobTakedownRequest> {
+  /**
+   * @generated from field: string did = 1;
+   */
+  did = "";
+
+  /**
+   * @generated from field: string cid = 2;
+   */
+  cid = "";
+
+  constructor(data?: PartialMessage<GetBlobTakedownRequest>) {
+    super();
+    proto3.util.initPartial(data, this);
+  }
+
+  static readonly runtime: typeof proto3 = proto3;
+  static readonly typeName = "codestash.GetBlobTakedownRequest";
+  static readonly fields: FieldList = proto3.util.newFieldList(() => [
+    { no: 1, name: "did", kind: "scalar", T: 9 /* ScalarType.STRING */ },
+    { no: 2, name: "cid", kind: "scalar", T: 9 /* ScalarType.STRING */ },
+  ]);
+
+  static fromBinary(bytes: Uint8Array, options?: Partial<BinaryReadOptions>): GetBlobTakedownRequest {
+    return new GetBlobTakedownRequest().fromBinary(bytes, options);
+  }
+
+  static fromJson(jsonValue: JsonValue, options?: Partial<JsonReadOptions>): GetBlobTakedownRequest {
+    return new GetBlobTakedownRequest().fromJson(jsonValue, options);
+  }
+
+  static fromJsonString(jsonString: string, options?: Partial<JsonReadOptions>): GetBlobTakedownRequest {
+    return new GetBlobTakedownRequest().fromJsonString(jsonString, options);
+  }
+
+  static equals(a: GetBlobTakedownRequest | PlainMessage<GetBlobTakedownRequest> | undefined, b: GetBlobTakedownRequest | PlainMessage<GetBlobTakedownRequest> | undefined): boolean {
+    return proto3.util.equals(GetBlobTakedownRequest, a, b);
+  }
+}
+
+/**
+ * @generated from message codestash.GetBlobTakedownResponse
+ */
+export class GetBlobTakedownResponse extends Message<GetBlobTakedownResponse> {
+  /**
+   * @generated from field: bool taken_down = 1;
+   */
+  takenDown = false;
+
+  /**
+   * @generated from field: string takedown_ref = 2;
+   */
+  takedownRef = "";
+
+  constructor(data?: PartialMessage<GetBlobTakedownResponse>) {
+    super();
+    proto3.util.initPartial(data, this);
+  }
+
+  static readonly runtime: typeof proto3 = proto3;
+  static readonly typeName = "codestash.GetBlobTakedownResponse";
+  static readonly fields: FieldList = proto3.util.newFieldList(() => [
+    { no: 1, name: "taken_down", kind: "scalar", T: 8 /* ScalarType.BOOL */ },
+    { no: 2, name: "takedown_ref", kind: "scalar", T: 9 /* ScalarType.STRING */ },
+  ]);
+
+  static fromBinary(bytes: Uint8Array, options?: Partial<BinaryReadOptions>): GetBlobTakedownResponse {
+    return new GetBlobTakedownResponse().fromBinary(bytes, options);
+  }
+
+  static fromJson(jsonValue: JsonValue, options?: Partial<JsonReadOptions>): GetBlobTakedownResponse {
+    return new GetBlobTakedownResponse().fromJson(jsonValue, options);
+  }
+
+  static fromJsonString(jsonString: string, options?: Partial<JsonReadOptions>): GetBlobTakedownResponse {
+    return new GetBlobTakedownResponse().fromJsonString(jsonString, options);
+  }
+
+  static equals(a: GetBlobTakedownResponse | PlainMessage<GetBlobTakedownResponse> | undefined, b: GetBlobTakedownResponse | PlainMessage<GetBlobTakedownResponse> | undefined): boolean {
+    return proto3.util.equals(GetBlobTakedownResponse, a, b);
+  }
+}
+
+/**
+ * @generated from message codestash.GetActorTakedownRequest
+ */
+export class GetActorTakedownRequest extends Message<GetActorTakedownRequest> {
+  /**
+   * @generated from field: string did = 1;
+   */
+  did = "";
+
+  constructor(data?: PartialMessage<GetActorTakedownRequest>) {
+    super();
+    proto3.util.initPartial(data, this);
+  }
+
+  static readonly runtime: typeof proto3 = proto3;
+  static readonly typeName = "codestash.GetActorTakedownRequest";
+  static readonly fields: FieldList = proto3.util.newFieldList(() => [
+    { no: 1, name: "did", kind: "scalar", T: 9 /* ScalarType.STRING */ },
+  ]);
+
+  static fromBinary(bytes: Uint8Array, options?: Partial<BinaryReadOptions>): GetActorTakedownRequest {
+    return new GetActorTakedownRequest().fromBinary(bytes, options);
+  }
+
+  static fromJson(jsonValue: JsonValue, options?: Partial<JsonReadOptions>): GetActorTakedownRequest {
+    return new GetActorTakedownRequest().fromJson(jsonValue, options);
+  }
+
+  static fromJsonString(jsonString: string, options?: Partial<JsonReadOptions>): GetActorTakedownRequest {
+    return new GetActorTakedownRequest().fromJsonString(jsonString, options);
+  }
+
+  static equals(a: GetActorTakedownRequest | PlainMessage<GetActorTakedownRequest> | undefined, b: GetActorTakedownRequest | PlainMessage<GetActorTakedownRequest> | undefined): boolean {
+    return proto3.util.equals(GetActorTakedownRequest, a, b);
+  }
+}
+
+/**
+ * @generated from message codestash.GetActorTakedownResponse
+ */
+export class GetActorTakedownResponse extends Message<GetActorTakedownResponse> {
+  /**
+   * @generated from field: bool taken_down = 1;
+   */
+  takenDown = false;
+
+  /**
+   * @generated from field: string takedown_ref = 2;
+   */
+  takedownRef = "";
+
+  constructor(data?: PartialMessage<GetActorTakedownResponse>) {
+    super();
+    proto3.util.initPartial(data, this);
+  }
+
+  static readonly runtime: typeof proto3 = proto3;
+  static readonly typeName = "codestash.GetActorTakedownResponse";
+  static readonly fields: FieldList = proto3.util.newFieldList(() => [
+    { no: 1, name: "taken_down", kind: "scalar", T: 8 /* ScalarType.BOOL */ },
+    { no: 2, name: "takedown_ref", kind: "scalar", T: 9 /* ScalarType.STRING */ },
+  ]);
+
+  static fromBinary(bytes: Uint8Array, options?: Partial<BinaryReadOptions>): GetActorTakedownResponse {
+    return new GetActorTakedownResponse().fromBinary(bytes, options);
+  }
+
+  static fromJson(jsonValue: JsonValue, options?: Partial<JsonReadOptions>): GetActorTakedownResponse {
+    return new GetActorTakedownResponse().fromJson(jsonValue, options);
+  }
+
+  static fromJsonString(jsonString: string, options?: Partial<JsonReadOptions>): GetActorTakedownResponse {
+    return new GetActorTakedownResponse().fromJsonString(jsonString, options);
+  }
+
+  static equals(a: GetActorTakedownResponse | PlainMessage<GetActorTakedownResponse> | undefined, b: GetActorTakedownResponse | PlainMessage<GetActorTakedownResponse> | undefined): boolean {
+    return proto3.util.equals(GetActorTakedownResponse, a, b);
+  }
+}
+
+/**
+ * @generated from message codestash.GetRecordTakedownRequest
+ */
+export class GetRecordTakedownRequest extends Message<GetRecordTakedownRequest> {
+  /**
+   * @generated from field: string record_uri = 1;
+   */
+  recordUri = "";
+
+  constructor(data?: PartialMessage<GetRecordTakedownRequest>) {
+    super();
+    proto3.util.initPartial(data, this);
+  }
+
+  static readonly runtime: typeof proto3 = proto3;
+  static readonly typeName = "codestash.GetRecordTakedownRequest";
+  static readonly fields: FieldList = proto3.util.newFieldList(() => [
+    { no: 1, name: "record_uri", kind: "scalar", T: 9 /* ScalarType.STRING */ },
+  ]);
+
+  static fromBinary(bytes: Uint8Array, options?: Partial<BinaryReadOptions>): GetRecordTakedownRequest {
+    return new GetRecordTakedownRequest().fromBinary(bytes, options);
+  }
+
+  static fromJson(jsonValue: JsonValue, options?: Partial<JsonReadOptions>): GetRecordTakedownRequest {
+    return new GetRecordTakedownRequest().fromJson(jsonValue, options);
+  }
+
+  static fromJsonString(jsonString: string, options?: Partial<JsonReadOptions>): GetRecordTakedownRequest {
+    return new GetRecordTakedownRequest().fromJsonString(jsonString, options);
+  }
+
+  static equals(a: GetRecordTakedownRequest | PlainMessage<GetRecordTakedownRequest> | undefined, b: GetRecordTakedownRequest | PlainMessage<GetRecordTakedownRequest> | undefined): boolean {
+    return proto3.util.equals(GetRecordTakedownRequest, a, b);
+  }
+}
+
+/**
+ * @generated from message codestash.GetRecordTakedownResponse
+ */
+export class GetRecordTakedownResponse extends Message<GetRecordTakedownResponse> {
+  /**
+   * @generated from field: bool taken_down = 1;
+   */
+  takenDown = false;
+
+  /**
+   * @generated from field: string takedown_ref = 2;
+   */
+  takedownRef = "";
+
+  constructor(data?: PartialMessage<GetRecordTakedownResponse>) {
+    super();
+    proto3.util.initPartial(data, this);
+  }
+
+  static readonly runtime: typeof proto3 = proto3;
+  static readonly typeName = "codestash.GetRecordTakedownResponse";
+  static readonly fields: FieldList = proto3.util.newFieldList(() => [
+    { no: 1, name: "taken_down", kind: "scalar", T: 8 /* ScalarType.BOOL */ },
+    { no: 2, name: "takedown_ref", kind: "scalar", T: 9 /* ScalarType.STRING */ },
+  ]);
+
+  static fromBinary(bytes: Uint8Array, options?: Partial<BinaryReadOptions>): GetRecordTakedownResponse {
+    return new GetRecordTakedownResponse().fromBinary(bytes, options);
+  }
+
+  static fromJson(jsonValue: JsonValue, options?: Partial<JsonReadOptions>): GetRecordTakedownResponse {
+    return new GetRecordTakedownResponse().fromJson(jsonValue, options);
+  }
+
+  static fromJsonString(jsonString: string, options?: Partial<JsonReadOptions>): GetRecordTakedownResponse {
+    return new GetRecordTakedownResponse().fromJsonString(jsonString, options);
+  }
+
+  static equals(a: GetRecordTakedownResponse | PlainMessage<GetRecordTakedownResponse> | undefined, b: GetRecordTakedownResponse | PlainMessage<GetRecordTakedownResponse> | undefined): boolean {
+    return proto3.util.equals(GetRecordTakedownResponse, a, b);
+  }
+}
+
+/**
+ * Ping
+ *
+ * @generated from message codestash.PingRequest
+ */
+export class PingRequest extends Message<PingRequest> {
+  constructor(data?: PartialMessage<PingRequest>) {
+    super();
+    proto3.util.initPartial(data, this);
+  }
+
+  static readonly runtime: typeof proto3 = proto3;
+  static readonly typeName = "codestash.PingRequest";
+  static readonly fields: FieldList = proto3.util.newFieldList(() => [
+  ]);
+
+  static fromBinary(bytes: Uint8Array, options?: Partial<BinaryReadOptions>): PingRequest {
+    return new PingRequest().fromBinary(bytes, options);
+  }
+
+  static fromJson(jsonValue: JsonValue, options?: Partial<JsonReadOptions>): PingRequest {
+    return new PingRequest().fromJson(jsonValue, options);
+  }
+
+  static fromJsonString(jsonString: string, options?: Partial<JsonReadOptions>): PingRequest {
+    return new PingRequest().fromJsonString(jsonString, options);
+  }
+
+  static equals(a: PingRequest | PlainMessage<PingRequest> | undefined, b: PingRequest | PlainMessage<PingRequest> | undefined): boolean {
+    return proto3.util.equals(PingRequest, a, b);
+  }
+}
+
+/**
+ * @generated from message codestash.PingResponse
+ */
+export class PingResponse extends Message<PingResponse> {
+  constructor(data?: PartialMessage<PingResponse>) {
+    super();
+    proto3.util.initPartial(data, this);
+  }
+
+  static readonly runtime: typeof proto3 = proto3;
+  static readonly typeName = "codestash.PingResponse";
+  static readonly fields: FieldList = proto3.util.newFieldList(() => [
+  ]);
+
+  static fromBinary(bytes: Uint8Array, options?: Partial<BinaryReadOptions>): PingResponse {
+    return new PingResponse().fromBinary(bytes, options);
+  }
+
+  static fromJson(jsonValue: JsonValue, options?: Partial<JsonReadOptions>): PingResponse {
+    return new PingResponse().fromJson(jsonValue, options);
+  }
+
+  static fromJsonString(jsonString: string, options?: Partial<JsonReadOptions>): PingResponse {
+    return new PingResponse().fromJsonString(jsonString, options);
+  }
+
+  static equals(a: PingResponse | PlainMessage<PingResponse> | undefined, b: PingResponse | PlainMessage<PingResponse> | undefined): boolean {
+    return proto3.util.equals(PingResponse, a, b);
+  }
+}
+
+/**
  * 
  * Interactions
  * 

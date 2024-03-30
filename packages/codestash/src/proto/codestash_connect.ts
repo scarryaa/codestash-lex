@@ -3,7 +3,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-import { Empty, GetActorsRequest, GetActorsResponse, GetCountsForUsersRequest, GetCountsForUsersResponse, GetDidsByHandlesRequest, GetDidsByHandlesResponse, GetIdentityByDidRequest, GetIdentityByDidResponse, GetIdentityByHandleRequest, GetIdentityByHandleResponse, GetLatestRevRequest, GetLatestRevResponse, GetProfileRecordsRequest, GetProfileRecordsResponse, GetRelationshipsRequest, GetRelationshipsResponse, GetRepositoriesRequest, GetRepositoriesResponse, GetRepositoryRecordsRequest, GetRepositoryRecordsResponse, URLResponse } from "./codestash_pb";
+import { Empty, GetActorsRequest, GetActorsResponse, GetActorTakedownRequest, GetActorTakedownResponse, GetBlobTakedownRequest, GetBlobTakedownResponse, GetCountsForUsersRequest, GetCountsForUsersResponse, GetDidsByHandlesRequest, GetDidsByHandlesResponse, GetIdentityByDidRequest, GetIdentityByDidResponse, GetIdentityByHandleRequest, GetIdentityByHandleResponse, GetLatestRevRequest, GetLatestRevResponse, GetProfileRecordsRequest, GetProfileRecordsResponse, GetRecordTakedownRequest, GetRecordTakedownResponse, GetRelationshipsRequest, GetRelationshipsResponse, GetRepositoriesRequest, GetRepositoriesResponse, GetRepositoryRecordsRequest, GetRepositoryRecordsResponse, URLResponse } from "./codestash_pb";
 import { MethodKind } from "@bufbuild/protobuf";
 
 /**
@@ -72,6 +72,35 @@ export const Service = {
       name: "GetDidsByHandles",
       I: GetDidsByHandlesRequest,
       O: GetDidsByHandlesResponse,
+      kind: MethodKind.Unary,
+    },
+    /**
+     * Moderation
+     *
+     * @generated from rpc codestash.Service.GetBlobTakedown
+     */
+    getBlobTakedown: {
+      name: "GetBlobTakedown",
+      I: GetBlobTakedownRequest,
+      O: GetBlobTakedownResponse,
+      kind: MethodKind.Unary,
+    },
+    /**
+     * @generated from rpc codestash.Service.GetRecordTakedown
+     */
+    getRecordTakedown: {
+      name: "GetRecordTakedown",
+      I: GetRecordTakedownRequest,
+      O: GetRecordTakedownResponse,
+      kind: MethodKind.Unary,
+    },
+    /**
+     * @generated from rpc codestash.Service.GetActorTakedown
+     */
+    getActorTakedown: {
+      name: "GetActorTakedown",
+      I: GetActorTakedownRequest,
+      O: GetActorTakedownResponse,
       kind: MethodKind.Unary,
     },
     /**

@@ -54,6 +54,11 @@ service Service {
     rpc GetActors(GetActorsRequest) returns (GetActorsResponse);
     rpc GetDidsByHandles(GetDidsByHandlesRequest) returns (GetDidsByHandlesResponse);
     
+    // Moderation
+    rpc GetBlobTakedown(GetBlobTakedownRequest) returns (GetBlobTakedownResponse);
+    rpc GetRecordTakedown(GetRecordTakedownRequest) returns (GetRecordTakedownResponse);
+    rpc GetActorTakedown(GetActorTakedownRequest) returns (GetActorTakedownResponse);
+
     // Records
     rpc GetProfileRecords(GetProfileRecordsRequest) returns (GetProfileRecordsResponse);
 
@@ -78,6 +83,44 @@ message GetProfileRecordsRequest {
 message GetProfileRecordsResponse {
   repeated Record records = 1;
 }
+
+//
+// Moderation
+//
+
+message GetBlobTakedownRequest {
+  string did = 1;
+  string cid = 2;
+}
+
+message GetBlobTakedownResponse {
+  bool taken_down = 1;
+  string takedown_ref = 2;
+}
+
+
+
+message GetActorTakedownRequest {
+  string did = 1;
+}
+
+message GetActorTakedownResponse {
+  bool taken_down = 1;
+  string takedown_ref = 2;
+}
+
+message GetRecordTakedownRequest {
+  string record_uri = 1;
+}
+
+message GetRecordTakedownResponse {
+  bool taken_down = 1;
+  string takedown_ref = 2;
+}
+
+// Ping
+message PingRequest {}
+message PingResponse {}
 
 // 
 // Interactions

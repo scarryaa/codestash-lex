@@ -21,7 +21,7 @@ const run = async () => {
       enableDidDocWithSession: true,
     },
     bsky: {
-      dbPostgresSchema: 'bsky',
+      dbPostgresSchema: 'codestash',
       port: 2584,
       publicUrl: 'http://localhost:2584',
     },
@@ -37,7 +37,7 @@ const run = async () => {
     `🌞 Personal Data server started http://localhost:${network.pds.port}`,
   )
   console.log(`🗼 Ozone server started http://localhost:${network.ozone.port}`)
-  console.log(`🌅 Bsky Appview started http://localhost:${network.codestash.port}`)
+  console.log(`🌅 Codestash Appview started http://localhost:${network.codestash.port}`)
   for (const fg of network.feedGens) {
     console.log(`🤖 Feed Generator started http://localhost:${fg.port}`)
   }

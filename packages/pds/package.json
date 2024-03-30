@@ -1,5 +1,5 @@
 {
-  "name": "@codestash-lex/pds",
+  "name": "@atproto/pds",
   "version": "0.0.0",
   "license": "MIT",
   "description": "Reference implementation of codestash Personal Data Server (PDS)",

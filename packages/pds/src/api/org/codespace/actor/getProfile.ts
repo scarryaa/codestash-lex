@@ -8,7 +8,7 @@
 // } from '../../../../read-after-write'
 // import { pipethrough } from '../../../../pipethrough'
 
-// const METHOD_NSID = 'app.bsky.actor.getProfile'
+// const METHOD_NSID = 'org.codestash.actor.getProfile'
 
 // export default function (server: Server, ctx: AppContext) {
 //     const { bskyAppView } = ctx.cfg

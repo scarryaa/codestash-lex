@@ -52,6 +52,7 @@ export const verifyJwt = async (
 ): Promise<ServiceJwtPayload> => {
   const parts = jwtStr.split('.')
   if (parts.length !== 3) {
+    console.log(parts);
     throw new AuthRequiredError('poorly formatted jwt', 'BadJwt')
   }
   const payload = parsePayload(parts[1])

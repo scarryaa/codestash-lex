@@ -8,13 +8,18 @@ import { ServerConfig } from './config';
 import { Keypair } from '@atproto/crypto'
 import events from 'events'
 import { AddressInfo } from 'net'
-import API, { health } from './api'
+import API, { blobResolver, health, wellKnown } from './api'
+import { IdResolver } from '@atproto/identity'
 import { AuthVerifier } from './auth-verifier';
 import { createDataPlaneClient } from './data-plane/client';
 import { Hydrator } from './hydration/hydrator';
 import { Views } from './views';
 import { ImageUriBuilder } from './image/uri';
 import { authWithApiKey as csyncAuth, createCsyncClient } from './csync'
+import { authWithApiKey as courierAuth, createCourierClient } from './courier'
+import AtpAgent from '@codestash-lex/api';
+import * as error from './error'
+import { BlobDiskCache, ImageProcessingServer } from './image/server';
 
 export * from './data-plane'
 export type { ServerConfigValues } from './config'
@@ -43,6 +48,25 @@ export class CodestashAppView {
         const app = express();
         app.use(cors());
 
+        // used solely for handle resolution: identity lookups occur on dataplane
+        const idResolver = new IdResolver({
+            plcUrl: config.didPlcUrl,
+            backupNameservers: config.handleResolveNameservers,
+        })
+
+        const searchAgent = config.searchUrl
+            ? new AtpAgent({ service: config.searchUrl })
+            : undefined
+
+        let imgProcessingServer: ImageProcessingServer | undefined
+        if (!config.cdnUrl) {
+            const imgProcessingCache = new BlobDiskCache(config.blobCacheLocation)
+            imgProcessingServer = new ImageProcessingServer(
+                config,
+                imgProcessingCache,
+            )
+        }
+
         const imgUriBuilder = new ImageUriBuilder(
             config.cdnUrl || `${config.publicUrl}/img`,
         )
@@ -65,17 +89,29 @@ export class CodestashAppView {
             baseUrl: config.csyncUrl,
             httpVersion: config.csyncHttpVersion ?? '2',
             nodeOptions: { rejectUnauthorized: !config.csyncIgnoreBadTls },
-            // @ts-ignore csync api key exists on ServerConfig
             interceptors: config.csyncApiKey ? [csyncAuth(config.csyncApiKey)] : [],
+        })
+
+        const courierClient = createCourierClient({
+            baseUrl: config.courierUrl,
+            httpVersion: config.courierHttpVersion ?? '2',
+            nodeOptions: { rejectUnauthorized: !config.courierIgnoreBadTls },
+            interceptors: config.courierApiKey
+                ? [courierAuth(config.courierApiKey)]
+                : [],
         })
 
         const ctx = new AppContext({
             cfg: config,
             dataplane,
+            searchAgent,
             hydrator,
             views,
             signingKey,
-            authVerifier
+            idResolver,
+            bsyncClient,
+            courierClient,
+            authVerifier,
         })
 
         let server = createServer({
@@ -90,6 +126,13 @@ export class CodestashAppView {
         server = API(server, ctx)
 
         app.use(health.createRouter(ctx))
+        app.use(wellKnown.createRouter(ctx))
+        app.use(blobResolver.createRouter(ctx))
+        if (imgProcessingServer) {
+            app.use('/img', imgProcessingServer.app)
+        }
+        app.use(server.xrpc.router)
+        app.use(error.handler)
 
         return new CodestashAppView({ app, ctx });
     }

@@ -1,4 +1,4 @@
-import * as pds from '@codestash-lex/pds'
+import * as pds from '@atproto/pds'
 import * as codestash from '@codestash-lex/codestash'
 import * as bsync from '@atproto/bsync'
 import * as ozone from '@atproto/ozone'
